@@ -4,15 +4,10 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
+use App\Repository\ActualiteRepository;
 
-/**
- * Actualite
- *
- * @ORM\Table(name="actualite")
- * @ORM\Entity
- */
 
- use App\Repository\ActualiteRepository;
 #[ORM\Entity(repositoryClass: ActualiteRepository::class)]
 
 class Actualite

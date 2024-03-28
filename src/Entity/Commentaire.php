@@ -3,30 +3,22 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Actualite;
+use App\Entity\User;
+use App\Repository\CommentaireRepository;
 
-/**
- * Commentaire
- *
- * @ORM\Table(name="commentaire", indexes={@ORM\Index(name="commentaire_fk_idUser", columns={"id_user"}), @ORM\Index(name="commentaire_fk_idAct", columns={"id_act"})})
- * @ORM\Entity
- */
+
+#[ORM\Entity(repositoryClass: CommentaireRepository::class)]
+
 class Commentaire
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_c", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $idC;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $idC = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="contenuC", type="string", length=255, nullable=false)
-     */
-    private $contenuc;
+    #[ORM\Column(length: 250)]
+    private ?string $contenuc = null;
 
     /**
      * @var \Actualite
@@ -36,7 +28,8 @@ class Commentaire
      *   @ORM\JoinColumn(name="id_act", referencedColumnName="id")
      * })
      */
-    private $idAct;
+    #[ORM\ManyToOne(inversedBy: 'commentaire')]
+    private ?Actualite $idAct = null;
 
     /**
      * @var \User
@@ -46,7 +39,8 @@ class Commentaire
      *   @ORM\JoinColumn(name="id_user", referencedColumnName="ID")
      * })
      */
-    private $idUser;
+    #[ORM\ManyToOne(inversedBy: 'commentaire')]
+    private ?User $idUser = null;
 
     public function getIdC(): ?int
     {
