@@ -11,44 +11,35 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="actualite")
  * @ORM\Entity
  */
+
+ use App\Repository\ActualiteRepository;
+#[ORM\Entity(repositoryClass: ActualiteRepository::class)]
+
 class Actualite
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="titre", type="string", length=100, nullable=false)
-     */
-    private $titre;
+     #[ORM\Id]
+     #[ORM\GeneratedValue]
+     #[ORM\Column]
+     private ?int $id = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="text", type="string", length=100, nullable=false)
-     */
-    private $text;
+
+    #[ORM\Column(length: 100)]
+    private ?string $titre = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $text = null;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="date", nullable=false)
      */
-    private $date;
+    #[ORM\Column(type:"date", length: 50)]
+    private ?DateTime $date = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="image", type="string", length=255, nullable=false)
-     */
-    private $image;
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
 
     public function getId(): ?int
     {
