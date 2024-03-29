@@ -62,15 +62,15 @@
 											<td>{{ cat.nom|upper }}</td>
 											<td>
 
-												<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal{{ cat.id }}">
+												<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal{{ cat.id }}">
 													<i class="fas fa-edit"></i>
-													Edit
+													Editer
 												</button>
 
 
 												<button type="button" data-bs-toggle="modal" class="btn btn-danger btn-sm" data-bs-target="#deleteModal{{ cat.id }}">
 													<i class="fas fa-trash-alt"></i>
-													Delete
+													Supprimer
 												</button>
 
 											</td>
@@ -104,105 +104,121 @@
 			</div>
 		</div>
 	</div>
-	<!-- Update Modal for each category -->
- <!-- Update Modal for each category -->
- <!-- Update Modal for each category -->
-{% for category in categories %}
-    <div class="modal fade" id="updateModal{{ category.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ category.id }}" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel{{ category.id }}">Modifier Catégorie</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Update Form for the category -->
-                    <form method="post" action="{{ path('app_update_cat', {'id': category.id}) }}">
-                        <div class="form-group">
-                            <label for="nom{{ category.id }}">Nom:</label>
-                            <input type="text" id="nom{{ category.id }}" name="nom" class="form-control" value="{{ category.nom }}" required>
-                        </div>
-                        <!-- Add more fields as needed -->
-                        <button type="submit" class="btn btn-primary"  onclick="updateCategory({{ category.id }})">Modifier</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endfor %}
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Ajouter Catégorie</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div
-				class="modal-body">
-				<!-- Form for adding the entity -->
-
-				{{ form_start(f) }}
-				<div class="mb-3">
-
-					{{ form_label(f.nom, "Nom catégorie:", {'label_attr': {'class': 'form-label'}}) }}
-					{{ form_widget(f.nom, {'attr': {'class': 'form-control','placeholder': 'Entré nom de la catégorie'}}) }}
+	<!-- Delete Modal -->
+	{% for cat in categories %}
+		<div class="modal fade" id="deleteModal{{ cat.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ cat.id }}" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteModalLabel{{ cat.id }}">Confirmer Supprission</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						Etes-vous sûr que vous voulez supprimer "{{ cat.nom }}"?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+						<a href="{{ path('app_categorie_delete', {'id': cat.id}) }}" class="btn btn-danger">Supprimer</a>
+					</div>
 				</div>
-				<!-- Add more fields as needed -->
+			</div>
+		</div>
+	{% endfor %}
+	<!-- Update Modal for each category -->
+	{% for category in categories %}
+		<div class="modal fade" id="updateModal{{ category.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ category.id }}" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="updateModalLabel{{ category.id }}">Modifier Catégorie</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div
+						class="modal-body">
+						<!-- Update Form for the category -->
+						<form method="post" action="{{ path('app_update_cat', {'id': category.id}) }}">
+							<div class="form-group">
+								<label for="nom{{ category.id }}">Nom:</label>
+								<input type="text" id="nom{{ category.id }}" name="nom" class="form-control" value="{{ category.nom }}" required>
+							</div>
+							<!-- Add more fields as needed -->
+							<button type="submit" class="btn btn-primary" onclick="updateCategory({{ category.id }})">Modifier</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ajouter Catégorie</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div
+					class="modal-body">
+					<!-- Form for adding the entity -->
+
+					{{ form_start(f) }}
+					<div class="mb-3">
+
+						{{ form_label(f.nom, "Nom catégorie:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.nom, {'attr': {'class': 'form-control','placeholder': 'Entré nom de la catégorie'}}) }}
+					</div>
+					<!-- Add more fields as needed -->
 
 
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					{{ form_widget(f.Ajouter, {'attr': {'class': 'btn btn-primary'}}) }}
+				</div>
+				{{ form_end(f) }}
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				{{ form_widget(f.Ajouter, {'attr': {'class': 'btn btn-primary'}}) }}
-			</div>
-			{{ form_end(f) }}
 		</div>
 	</div>
-</div>
-<script>
-	$(document).ready(function () {
-$('#exampleModal form').submit(function (e) {
-e.preventDefault();
+	<script>
+		$(document).ready(function () {
+			$('#exampleModal form').submit(function (e) {
+			e.preventDefault();
 
-$.ajax({
-type: 'POST',
-url: '{{ path('app_add_cat') }}',
-data: $(this).serialize(),
-success: function (response) {
+			$.ajax({
+			type: 'POST',
+			url: '{{ path('app_add_cat') }}',
+			data: $(this).serialize(),
+			success: function (response) {
 
-$('#exampleModal').modal('hide');
-location.reload();
-},
-error: function (error) { // Handle error
-}
-});
+			$('#exampleModal').modal('hide');
+			location.reload();
+			},
+			error: function (error) {}
+			});
 
-});
-});
+			});
+		});
 
-function updateCategory(categoryId) {
-    var form = document.getElementById('updateForm' + categoryId);
-    var formData = new FormData(form);
+		function updateCategory(categoryId) {
+			var form = document.getElementById('updateForm' + categoryId);
+			var formData = new FormData(form);
 
-    fetch(form.action, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Reload the page to reflect the changes
-            location.reload();
-        } else {
-            // Handle error
-            console.error(data.message);
-        }
-    })
-    .catch(error => {
-        // Handle fetch error
-        console.error(error);
-    });
-}
-</script>{% endblock %}
+			fetch(form.action, {
+			method: 'POST',
+			body: formData
+			}).then(response => response.json()).then(data => {
+			if (data.success) { // Reload  page
+			location.reload();
+			} else {
+
+			console.error(data.message);
+			}
+			}).catch(error => {
+
+			console.error(error);
+			});
+		}
+	</script>
+{% endblock %}
