@@ -9,8 +9,7 @@
 
     <!-- Favicon -->
     <link href="{{asset('img/favicon.ico' )}}" rel="icon" />
-
-    <!-- Google Web Fonts -->
+     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -33,10 +32,10 @@
     <link href="{{asset('lib/owlcarousel/assets/owl.carousel.min.css' )}}" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="{{asset('css/bootstrap.min.css' )}}" rel="stylesheet" />
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet" />
+    <link href="{{asset('css/style.css' )}}" rel="stylesheet" />
 
     {% endblock %}
 
@@ -52,46 +51,11 @@
     </div>
     <!-- Spinner End -->
 
-    <!-- Topbar Start -->
-    <div class="container-fluid bg-light p-0">
-      <div class="row gx-0 d-none d-lg-flex">
-        <div class="col-lg-7 px-5 text-start">
-          <div
-            class="h-100 d-inline-flex align-items-center border-start border-end px-3"
-          >
-            <small class="fa fa-phone-alt me-2"></small>
-            <small>+012 345 6789</small>
-          </div>
-          <div class="h-100 d-inline-flex align-items-center border-end px-3">
-            <small class="far fa-envelope-open me-2"></small>
-            <small>info@example.com</small>
-          </div>
-          <div class="h-100 d-inline-flex align-items-center border-end px-3">
-            <small class="far fa-clock me-2"></small>
-            <small>Mon - Fri : 09 AM - 09 PM</small>
-          </div>
-        </div>
-        <div class="col-lg-5 px-5 text-end">
-          <div class="h-100 d-inline-flex align-items-center">
-            <a class="btn btn-square border-end border-start" href=""
-              ><i class="fab fa-facebook-f"></i
-            ></a>
-            <a class="btn btn-square border-end" href=""
-              ><i class="fab fa-twitter"></i
-            ></a>
-            <a class="btn btn-square border-end" href=""
-              ><i class="fab fa-linkedin-in"></i
-            ></a>
-            <a class="btn btn-square border-end" href=""
-              ><i class="fab fa-instagram"></i
-            ></a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Topbar End -->
 
-    <!-- Navbar Start -->
+  
+
+{% block body %}
+  <!-- Navbar Start -->
     <nav
       class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0"
     >
@@ -109,9 +73,9 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto py-3 py-lg-0">
-          <a href="index.html" class="nav-item nav-link active">Home</a>
-          <a href="about.html" class="nav-item nav-link">About Us</a>
-          <a href="service.html" class="nav-item nav-link">Our Services</a>
+          <a href="{{path('main')}}" class="nav-item nav-link active">Home</a>
+          <a href="{{path('about')}}" class="nav-item nav-link">About Us</a>
+          <a href="{{path('services')}}" class="nav-item nav-link">Our Services</a>
           <div class="nav-item dropdown">
             <a
               href="#"
@@ -120,23 +84,18 @@
               >Pages</a
             >
             <div class="dropdown-menu bg-light m-0">
-              <a href="#" class="dropdown-item">Features</a>
-              <a href="#" class="dropdown-item">Appointment</a>
-              <a href="#" class="dropdown-item">Our Team</a>
-              <a href="#" class="dropdown-item">Testimonial</a>
-              <a href="#" class="dropdown-item">404 Page</a>
+              <a href="{{path('features')}}" class="dropdown-item">Features</a>
+              <a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
+              <a href="{{path('team')}}" class="dropdown-item">Our Team</a>
+              <a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
+              <a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
             </div>
           </div>
-          <a href="contact.html" class="nav-item nav-link">Contact Us</a>
+          <a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
         </div>
       </div>
     </nav>
     <!-- Navbar End -->
-
-{% block body %}
-{# <div>
-hellllllo
-</div> #}
 
 
     <!-- Carousel Start -->
@@ -804,7 +763,7 @@ hellllllo
     <!-- Testimonial End -->
 
  {% endblock %}
-    <!-- Footer Start -->
+   <!-- Footer Start -->
     <div
       class="container-fluid bg-dark footer mt-5 pt-5 wow fadeIn"
       data-wow-delay="0.1s"
@@ -813,7 +772,7 @@ hellllllo
         <div class="row g-5">
           <div class="col-lg-3 col-md-6">
             <h1 class="text-white mb-4">
-              <i class="fa fa-building text-primary me-3"></i>APEX
+             <img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
             </h1>
             <p>
               Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat
@@ -885,7 +844,6 @@ hellllllo
         </div>
       </div>
     </div>
-    <!-- Footer End -->
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"
@@ -902,6 +860,6 @@ hellllllo
 
     <!-- Template Javascript -->
     <script src="{{asset('js/main.js' )}}"></script>
-    {% endblock %}
+  {% endblock %}
   </body>
 </html>
