@@ -16,34 +16,36 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ConcoursRepository::class)]
 class Concours
 {
-    #[ORM\Column(name: 'Reference', type: 'integer', nullable: false)]
+    #[ORM\Column]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $reference;
+
+    private ?int $Refrence  = null;
+
 
     #[ORM\Column(name: 'Date', type: 'date', nullable: false)]
-    private \DateTime $date;
+    private ?\DateTime $date = null;
     
 
     #[ORM\Column(name: 'Type', type: 'string', length: 20, nullable: false)]
-    private string $type;
+    private ?string $type = null;
     
 
     #[ORM\Column(name: 'Prix', type: 'integer', nullable: false)]
-    private int $prix;
+    private ?int $prix = null;
     
 
     #[ORM\Column(name: 'Lien', type: 'string', length: 255, nullable: false)]
-    private string $lien= null;
+    private ?string $lien= null;
     
 
     #[ORM\Column(name: 'nom', type: 'string', length: 25, nullable: false)]
-    private string $nom;
+    private ?string $nom = null;
 
     
-    public function getRefrence(): ?int
+    public function getRfrence(): ?int
     {
-        return $this->refrence;
+        return $this->Refrence;
     }
 
     public function getDate(): ?\DateTimeInterface
