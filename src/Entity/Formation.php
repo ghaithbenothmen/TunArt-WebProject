@@ -2,62 +2,81 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use DateTime;
-use App\Entity\Categorie;
-use App\Repository\FormationRepository;
 
-
-#[ORM\Entity(repositoryClass: FormationRepository::class)]
+/**
+ * Formation
+ *
+ * @ORM\Table(name="formation", indexes={@ORM\Index(name="fk_cat", columns={"cat_id"}), @ORM\Index(name="fk_userr", columns={"artiste_id"})})
+ * @ORM\Entity
+ */
 class Formation
 {
-     #[ORM\Id]
-     #[ORM\GeneratedValue]
-     #[ORM\Column]
-     private ?int $id = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $nom = null;
-    
-    #[ORM\Column(length: 50)]
-    private ?string $niveau = null;
-
-    #[ORM\Column(length: 50)]
-    private ?DateTime $datedebut = null;
-
-
-    #[ORM\Column(length: 50)]
-    private ?DateTime $datefin = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $image = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $description = null;
-
-    #[ORM\Column]
-    private ?int $prix = null;
-
-    #[ORM\ManyToOne(inversedBy: 'formation')]
-    private ?Categorie $cat = null;
-   
-    #[ORM\ManyToOne(inversedBy: 'formation')]
-    private ?User $artiste = null;
-
-    
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: "formation")]
-    private $user;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
     /**
-     * Constructor
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=50, nullable=false)
      */
-    public function __construct()
-    {
-        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    private $nom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="niveau", type="string", length=50, nullable=false)
+     */
+    private $niveau;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateDebut", type="date", nullable=false)
+     */
+    private $datedebut;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateFin", type="date", nullable=false)
+     */
+    private $datefin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", length=100, nullable=false)
+     */
+    private $image;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cat_id", type="integer", nullable=false)
+     */
+    private $catId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=150, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="artiste_id", type="integer", nullable=false)
+     */
+    private $artisteId;
 
     public function getId(): ?int
     {
@@ -124,6 +143,18 @@ class Formation
         return $this;
     }
 
+    public function getCatId(): ?int
+    {
+        return $this->catId;
+    }
+
+    public function setCatId(int $catId): static
+    {
+        $this->catId = $catId;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -136,67 +167,17 @@ class Formation
         return $this;
     }
 
-    public function getPrix(): ?int
+    public function getArtisteId(): ?int
     {
-        return $this->prix;
+        return $this->artisteId;
     }
 
-    public function setPrix(int $prix): static
+    public function setArtisteId(int $artisteId): static
     {
-        $this->prix = $prix;
+        $this->artisteId = $artisteId;
 
         return $this;
     }
 
-    public function getCat(): ?Categorie
-    {
-        return $this->cat;
-    }
-
-    public function setCat(?Categorie $cat): static
-    {
-        $this->cat = $cat;
-
-        return $this;
-    }
-
-    public function getArtiste(): ?User
-    {
-        return $this->artiste;
-    }
-
-    public function setArtiste(?User $artiste): static
-    {
-        $this->artiste = $artiste;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
-
-    public function addUser(User $user): static
-    {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-            $user->addFormation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): static
-    {
-        if ($this->user->removeElement($user)) {
-            $user->removeFormation($this);
-        }
-
-        return $this;
-    }
 
 }

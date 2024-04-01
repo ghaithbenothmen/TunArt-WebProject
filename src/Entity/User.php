@@ -2,67 +2,73 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-use App\Repository\UserRepository;
-
-
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+/**
+ * User
+ *
+ * @ORM\Table(name="user")
+ * @ORM\Entity
+ */
 class User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
     private $id;
 
-    #[ORM\Column(length: 50)]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $prenom = null;
-   
-    #[ORM\Column(length: 50)]
-    private ?string $email = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $mdp = null;
-
-    #[ORM\Column]
-    private ?int $tel = null;
-
-
-    #[ORM\Column(length: 30)]
-    private ?string $role = null;
-
-    #[ORM\Column(length: 30)]
-    private ?string $image = null;
-  
-
-    
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var string
      *
-     * @ORM\ManyToMany(targetEntity="Formation", inversedBy="user")
-     * @ORM\JoinTable(name="inscription",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="ID")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="formation_id", referencedColumnName="id")
-     *   }
-     * )
+     * @ORM\Column(name="Nom", type="string", length=100, nullable=false)
      */
-    private $formation = array();
+    private $nom;
 
     /**
-     * Constructor
+     * @var string
+     *
+     * @ORM\Column(name="Prenom", type="string", length=100, nullable=false)
      */
-    public function __construct()
-    {
-        $this->formation = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    private $prenom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Email", type="string", length=100, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Mdp", type="string", length=100, nullable=false)
+     */
+    private $mdp;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Tel", type="integer", nullable=false)
+     */
+    private $tel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Role", type="string", length=100, nullable=false)
+     */
+    private $role;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="image", type="string", length=255, nullable=true)
+     */
+    private $image;
 
     public function getId(): ?int
     {
@@ -153,28 +159,5 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, Formation>
-     */
-    public function getFormation(): Collection
-    {
-        return $this->formation;
-    }
-
-    public function addFormation(Formation $formation): static
-    {
-        if (!$this->formation->contains($formation)) {
-            $this->formation->add($formation);
-        }
-
-        return $this;
-    }
-
-    public function removeFormation(Formation $formation): static
-    {
-        $this->formation->removeElement($formation);
-
-        return $this;
-    }
 
 }
