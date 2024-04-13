@@ -23,7 +23,11 @@
                 <td>{{ actualite.titre }}</td>
                 <td>{{ actualite.text }}</td>
                 <td>{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}</td>
-                <td>{{ actualite.image }}</td>
+                <td> {% if actualite.image %}
+                    <img src="{{ asset('imgAct/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 20px; max-height: 20px;">
+                        {% else %}
+                            Pas d'image
+                        {% endif %}</td>
                 <td>
                     <a href="{{ path('app_actualite_show', {'id': actualite.id}) }}">show</a>
                     <a href="{{ path('app_actualite_edit', {'id': actualite.id}) }}">edit</a>

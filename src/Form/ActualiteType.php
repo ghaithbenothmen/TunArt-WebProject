@@ -6,6 +6,7 @@ use App\Entity\Actualite;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ActualiteType extends AbstractType
 {
@@ -15,7 +16,11 @@ class ActualiteType extends AbstractType
             ->add('titre')
             ->add('text')
             ->add('date')
-            ->add('image')
+            ->add('image', FileType::class, [
+                'label' => 'Image du actualite',
+                'required' => false, // La rend facultative
+                'mapped' => false,
+            ])
         ;
     }
 
