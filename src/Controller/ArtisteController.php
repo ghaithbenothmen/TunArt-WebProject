@@ -55,22 +55,61 @@ class ArtisteController extends AbstractController
         $cat = new Categorie();
         $form = $this->createForm(CategorieFormType::class, $cat);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $manager->getManager()->persist($cat);
                 $manager->getManager()->flush();
-
+    
                 return new JsonResponse(['success' => true]);
             } catch (\Exception $e) {
                 return new JsonResponse(['success' => false, 'message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-
-        $errors = $this->getErrorsFromForm($form);
+    
+        // Get errors from the form
+        $errors = $this->getFormErrors($form);
+    
         return new JsonResponse(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
+    
+    private function getFormErrors(FormInterface $form): array
+    {
+        $errors = [];
+        foreach ($form->getErrors(true, false) as $error) {
+            $errors[] = $error->getMessage();
+        }
+    
+        foreach ($form->all() as $childForm) {
+            if ($childErrors = $this->getFormErrors($childForm)) {
+                $errors[$childForm->getName()] = $childErrors;
+            }
+        }
+    
+        return $errors;
+    }
+    
+    #[Route('/addCategorie', name: 'app_add_categorie')]
+public function addCategorie(Request $request): Response
+{
+    $cat = new Categorie();
+    $form = $this->createForm(CategorieFormType::class, $cat);
+    $form->handleRequest($request);
 
+    if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($cat);
+        $entityManager->flush();
+
+        // Redirect to a success page or return a success response
+        return $this->redirectToRoute('app_artiste_listeCat');
+    }
+
+    // Render the form template with validation errors
+    return $this->render('artiste/addcategorie.html.twig', [
+        'f' => $form->createView(),
+    ]);
+}
 
     #[Route('/categorie/delete/{id}', name: 'app_categorie_delete')]
     public function deleteCat($id, ManagerRegistry $manager, CategorieRepository $repo)

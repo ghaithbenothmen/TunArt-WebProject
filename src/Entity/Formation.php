@@ -25,17 +25,17 @@ class Formation
     #[ORM\Column(length: 50)]
     private ?string $niveau = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(type: 'date', length: 50)]
     private ?DateTime $datedebut = null;
 
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(type: 'date', length: 50)]
     private ?DateTime $datefin = null;
 
     #[ORM\Column(length: 100)]
     private ?string $image = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 200)]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -47,17 +47,25 @@ class Formation
     #[ORM\ManyToOne(inversedBy: 'formation')]
     private ?User $artiste = null;
 
-    
+    #[ORM\OneToMany(mappedBy: 'formation_id', targetEntity: Inscription::class)]
+    private Collection $inscriptions;
+
+    public function __construct()
+    {
+        $this->inscriptions = new ArrayCollection();
+    }
+
+    /*
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: "formation")]
-    private $user;
+    private $user;*/
 
     /**
      * Constructor
      */
-    public function __construct()
+   /*  public function __construct()
     {
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    } */
 
     public function getId(): ?int
     {
@@ -159,8 +167,7 @@ class Formation
 
         return $this;
     }
-
-    public function getArtiste(): ?User
+     public function getArtiste(): ?User
     {
         return $this->artiste;
     }
@@ -170,12 +177,10 @@ class Formation
         $this->artiste = $artiste;
 
         return $this;
-    }
+    } 
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    /*** @return Collection<int, User>*/
+    /* public function getUser(): Collection
     {
         return $this->user;
     }
@@ -198,5 +203,35 @@ class Formation
 
         return $this;
     }
+ */
 
+    /**
+     * @return Collection<int, Inscription>
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscription $inscription): static
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
+            $inscription->setFormationId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscription $inscription): static
+    {
+        if ($this->inscriptions->removeElement($inscription)) {
+            // set the owning side to null (unless already changed)
+            if ($inscription->getFormationId() === $this) {
+                $inscription->setFormationId(null);
+            }
+        }
+
+        return $this;
+    }
 }
