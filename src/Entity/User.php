@@ -39,7 +39,7 @@ class User
     #[ORM\Column(length: 30)]
     private ?string $image = null;
   
-
+/***
     
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -53,12 +53,12 @@ class User
      *     @ORM\JoinColumn(name="formation_id", referencedColumnName="id")
      *   }
      * )
-     */
+     
     private $formation = array();
 
     /**
      * Constructor
-     */
+     
     public function __construct()
     {
         $this->formation = new \Doctrine\Common\Collections\ArrayCollection();
@@ -80,7 +80,7 @@ class User
 
         return $this;
     }
-
+*/
     public function getPrenom(): ?string
     {
         return $this->prenom;
@@ -152,10 +152,10 @@ class User
 
         return $this;
     }
-
+/*
     /**
      * @return Collection<int, Formation>
-     */
+    
     public function getFormation(): Collection
     {
         return $this->formation;
@@ -176,5 +176,6 @@ class User
 
         return $this;
     }
+*/
 
 }

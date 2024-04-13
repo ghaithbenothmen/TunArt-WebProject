@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin-dash.html.twig' %}
 
 {% block title %}Commentaire index{% endblock %}
 
@@ -9,6 +9,8 @@
         <thead>
             <tr>
                 <th>IdC</th>
+                <th>Titre</th>
+                <th>Prenom</th>
                 <th>Contenuc</th>
                 <th>actions</th>
             </tr>
@@ -17,6 +19,8 @@
         {% for commentaire in commentaires %}
             <tr>
                 <td>{{ commentaire.idC }}</td>
+                <td>{{ commentaire.actualite.titre}}</td>
+                <td>{{ commentaire.user.Prenom}}</td>
                 <td>{{ commentaire.contenuc }}</td>
                 <td>
                     <a href="{{ path('app_commentaire_show', {'idC': commentaire.idC}) }}">show</a>

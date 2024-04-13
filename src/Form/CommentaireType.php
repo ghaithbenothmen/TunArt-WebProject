@@ -1,8 +1,11 @@
 <?php
 
+// src/Form/CommentaireType.php
+
 namespace App\Form;
 
 use App\Entity\Commentaire;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType; // Import EntityType
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,9 +16,15 @@ class CommentaireType extends AbstractType
     {
         $builder
             ->add('contenuc')
-            ->add('idAct')
-            ->add('idUser')
-        ;
+            ->add('actualite', EntityType::class, [ // Specify EntityType for actualite
+                'class' => 'App\Entity\Actualite',
+                'choice_label' => 'titre', // Customize this according to your Actualite entity
+            ])
+            ->add('user', EntityType::class, [ // Specify EntityType for actualite
+                'class' => 'App\Entity\User',
+                'choice_label' => 'Prenom', // Customize this according to your Actualite entity
+            ])
+                    ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -25,3 +34,4 @@ class CommentaireType extends AbstractType
         ]);
     }
 }
+

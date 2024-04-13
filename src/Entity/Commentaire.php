@@ -17,9 +17,6 @@ class Commentaire
     #[ORM\Column]
     private ?int $idC = null;
 
-    #[ORM\Column(length: 250)]
-    private ?string $contenuc = null;
-
     /**
      * @var \Actualite
      *
@@ -29,7 +26,7 @@ class Commentaire
      * })
      */
     #[ORM\ManyToOne(inversedBy: 'commentaire')]
-    private ?Actualite $idAct = null;
+    private ?Actualite $actualite = null;
 
     /**
      * @var \User
@@ -40,11 +37,38 @@ class Commentaire
      * })
      */
     #[ORM\ManyToOne(inversedBy: 'commentaire')]
-    private ?User $idUser = null;
+    private ?User $user= null;
+
+    #[ORM\Column(length: 250)]
+    private ?string $contenuc = null;
 
     public function getIdC(): ?int
     {
         return $this->idC;
+    }
+
+    public function getActualite(): ?Actualite
+    {
+        return $this->actualite;
+    }
+
+    public function setActualite(?Actualite $actualite): static
+    {
+        $this->actualite = $actualite;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     public function getContenuc(): ?string
@@ -55,30 +79,6 @@ class Commentaire
     public function setContenuc(string $contenuc): static
     {
         $this->contenuc = $contenuc;
-
-        return $this;
-    }
-
-    public function getIdAct(): ?Actualite
-    {
-        return $this->idAct;
-    }
-
-    public function setIdAct(?Actualite $idAct): static
-    {
-        $this->idAct = $idAct;
-
-        return $this;
-    }
-
-    public function getIdUser(): ?User
-    {
-        return $this->idUser;
-    }
-
-    public function setIdUser(?User $idUser): static
-    {
-        $this->idUser = $idUser;
 
         return $this;
     }
