@@ -11,11 +11,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/commentaire')]
+#[Route('/admin')]
 class CommentaireController extends AbstractController
 {
-    #[Route('/', name: 'app_commentaire_index', methods: ['GET'])]
-    public function index(CommentaireRepository $commentaireRepository): Response
+    #[Route('/', name: 'app_admin')]
+    public function index(): Response
+    {
+        return $this->render('admin-dash.html.twig', [
+            'controller_name' => 'CommentaireController',
+        ]);
+    }
+
+    #[Route('/commentaire', name: 'app_commentaire_index', methods: ['GET'])]
+    public function commentaire(CommentaireRepository $commentaireRepository): Response
     {
         return $this->render('commentaire/index.html.twig', [
             'commentaires' => $commentaireRepository->findAll(),

@@ -41,7 +41,7 @@ class ActualiteController extends AbstractController
             $entityManager->persist($actualite);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_actualite_liste', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('actualite/new.html.twig', [
