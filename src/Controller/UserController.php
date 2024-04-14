@@ -194,7 +194,7 @@ public function register(
 
             $this->addFlash('success', 'User updated successfully.');
 
-            return $this->redirectToRoute('UserDashboard');
+            return $this->redirectToRoute('userss');
         }
 
         return $this->render('user/update.html.twig', [
