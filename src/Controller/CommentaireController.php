@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
+use App\Entity\User;
+use App\Entity\Actualite;
+use App\Form\ActualiteType;
 use App\Entity\Commentaire;
 use App\Form\CommentaireType;
 use App\Repository\CommentaireRepository;
@@ -85,5 +89,22 @@ class CommentaireController extends AbstractController
         }
 
         return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/addCommentaire', name: 'addCommentaire', methods: ['GET', 'POST'])]
+    public function addcommentaire(Actualite $actualite,UserRepository $repoUser, Request $request ,EntityManagerInterface $entityManager)
+    {
+        $commentaire = new Commentaire(); // Créez une nouvelle instance de votre entité Commentaire
+        $commentaire->setActualite($actualite);
+        $user_id = 26; //static ba3ed twali b userLoggin
+        $user = $repoUser->find($user_id);
+        $commentaire->setUser($user);
+        $commentaire->setContenuC($request->request->get('commentaire')); // Assurez-vous que 'contenuC' est le nom du champ dans votre formulaire
+       
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($commentaire);
+        $em->flush();
+    
+        return $this->redirectToRoute('app_actualite_commentaire', ['id' => $actualite->getId()]);
     }
 }

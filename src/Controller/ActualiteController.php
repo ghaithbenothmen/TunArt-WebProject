@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+
+use App\Entity\Commentaire;
+use App\Form\CommentaireType;
 use App\Entity\Actualite;
 use App\Form\ActualiteType;
 use App\Repository\ActualiteRepository;
@@ -130,4 +133,46 @@ class ActualiteController extends AbstractController
 
         return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/actualite/{id}/commentaire', name: 'app_actualite_commentaire', methods: ['GET', 'POST'])]
+    public function commentaire(Request $request, Actualite $actualite, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ActualiteType::class, $actualite);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Handle the image upload
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // This ensures that the filename is unique
+                $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+    
+                // Move the file to the directory where images are stored
+                try {
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Handle exception if something happens during file upload
+                }
+    
+                // Update the image path in the actualite entity
+                $actualite->setImage($newFilename);
+            }
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('app/commentaire.html.twig', [
+            'actualite' => $actualite,
+            'form' => $form,
+        ]);
+    }
+
+
 }
