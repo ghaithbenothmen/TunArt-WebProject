@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use App\Repository\ActualiteRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ActualiteRepository::class)]
@@ -18,18 +19,15 @@ class Actualite
      #[ORM\Column]
      private ?int $id = null;
 
-
+    #[Assert\NotBlank(message: "Veuillez Remplir Titre ")]
     #[ORM\Column(length: 100)]
     private ?string $titre = null;
 
+    #[Assert\NotBlank(message: "Veuillez Remplir Text")]
     #[ORM\Column(length: 100)]
     private ?string $text = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date", type="date", nullable=false)
-     */
+    #[Assert\NotBlank(message: "Veuillez Remplir Date")]
     #[ORM\Column(type:"date", length: 50)]
     private ?DateTime $date = null;
 

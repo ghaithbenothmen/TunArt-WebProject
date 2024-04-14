@@ -7,6 +7,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
+
 
 class ActualiteType extends AbstractType
 {
@@ -17,9 +19,18 @@ class ActualiteType extends AbstractType
             ->add('text')
             ->add('date')
             ->add('image', FileType::class, [
-                'label' => 'Image du actualite',
-                'required' => false, // La rend facultative
+                'required' => false,
                 'mapped' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger un fichier image valide (JPG, PNG).',
+                    ]),
+                ],
             ])
         ;
     }

@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Actualite;
+use App\Form\ActualiteType;
+use App\Repository\ActualiteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,6 +32,14 @@ class AppController extends AbstractController
     {
         return $this->render('app/about.html.twig', [
             'controller_name' => 'AppController',
+        ]);
+    }
+
+    #[Route('/actualite', name: 'actualite', methods: ['GET'])]
+    public function actualite(ActualiteRepository $actualiteRepository): Response
+    {
+        return $this->render('app/actualite.html.twig', [
+            'actualites' => $actualiteRepository->findAll(),
         ]);
     }
 
