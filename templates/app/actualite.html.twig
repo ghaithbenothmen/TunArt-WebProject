@@ -71,12 +71,12 @@
 						{% else %}
 							<span>Aucune image disponible</span>
 						{% endif %}
-              <div class="facts-overlay">
-							<h5 class="mb-3">{{ actualite.titre}}</h5>
+              <div class="facts-overlay ">
+							<h5 style="color:white;" class="mb-3">{{ actualite.titre}}</h5>
 							<span>
 								{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}
 						</span>
-							<p>
+							<p
 								<td>{{ actualite.text }}</td>
 							</p>
 							<a class="small" href="{{ path('app_actualite_commentaire', {'id': actualite.id}) }}">Commentaire<i class="fa fa-arrow-right ms-3"></i>

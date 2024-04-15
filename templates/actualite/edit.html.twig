@@ -1,13 +1,29 @@
 {% extends 'admin-dash.html.twig' %}
 
-{% block title %}Edit Actualite{% endblock %}
+{% block title %}Modifier une Actualité{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Actualite</h1>
+    <div class="container">
+        <h1 class="page-title">Modifier une Actualité</h1>
 
-    {{ include('actualite/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="form-container">
+            {{ include('actualite/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
 
-    <a href="{{ path('app_actualite_index') }}">back to list</a>
+        <div class="navigation">
+            <a href="{{ path('app_actualite_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
 
-    {{ include('actualite/_delete_form.html.twig') }}
+        <div class="delete-section">
+            {{ include('actualite/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    {% block javascripts %}
+        <script src="{{ asset('js/main.js') }}"></script>
+    {% endblock %}
 {% endblock %}
