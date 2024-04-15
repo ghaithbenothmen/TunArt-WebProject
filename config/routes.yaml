@@ -1,3 +1,55 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+# config/routes.yaml
+
+registration_success:
+    path: '/users'
+    controller: App\Controller\UserController
+
+
+
+# routes.yaml
+
+update_user:
+    path: '/user/{id}/update'
+    controller: App\Controller\UserController::update
+    methods: ['GET', 'POST']
+
+
+
+# routes.yaml
+
+delete_user:
+    path: '/user/{id}/delete'
+    controller: App\Controller\UserController::delete
+    methods: ['GET', 'POST']
+
+
+reactivate_user:
+    path: /user/{id}/reactivate
+    controller: 'App\Controller\UserController::reactivateUser'
+    methods: ['POST']
+
+adminDashboard:
+    path: /admin/adminDashboard
+    controller: 'App\Controller\HomeController::index'
+   
+userDashboard:
+    path: /user/UserDashboard
+    controller: 'App\Controller\HomeController::UserDash'
+   
+
+updateUser:
+    path: /user/{id}/updateUser
+    controller: 'App\Controller\UserController::updateUser'
+   
+login:
+    path: /LoginRedirect
+    controller: 'App\Controller\LoginController::loredirect'
+   
+
+
+user_list_pdf_download:
+    path: '/download-user-list-pdf'
+    controller: App\Controller\PdfController::downloadUserListPdf

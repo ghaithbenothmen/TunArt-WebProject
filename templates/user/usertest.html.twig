@@ -1,0 +1,81 @@
+{% extends "base.html.twig" %}
+
+{% block contenpage %}
+    <div class="">
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x_panel">
+                    <div class="x_content">
+                        <h1>User List</h1>
+                        {# Search Form #}
+                        <form id="search-form">
+                            <input type="text" id="search-input" name="search" placeholder="Search by Email">
+                        </form>
+                        <div class="text-right mb-2">
+                            <a href="{{ path('downloadUserListPdf') }}" class="btn btn-primary">Download User List PDF</a>
+                        </div>
+                        {# Sort Button #}
+                        <form id="sort-form" action="{{ path('userss') }}" method="get">
+                            <button type="submit" name="sort" value="email">Sort by Email</button>
+                        </form>
+
+                        {% if users is empty %}
+                            <p>No users found.</p>
+                        {% else %}
+                            <table style="border-collapse: collapse; width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid black; padding: 8px;">Nom</th>
+                                        <th style="border: 1px solid black; padding: 8px;">Prenom</th>
+                                        <th style="border: 1px solid black; padding: 8px;">Email</th>
+                                        <th style="border: 1px solid black; padding: 8px;">Role</th>
+                                        <th style="border: 1px solid black; padding: 8px;">Telephone</th>
+                                        <th style="border: 1px solid black; padding: 8px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-list">
+                                    {% for user in users %}
+                                        <tr>
+                                            <td style="border: 1px solid black; padding: 8px;">{{ user.nom }}</td>
+                                            <td style="border: 1px solid black; padding: 8px;">{{ user.prenom }}</td>
+                                            <td style="border: 1px solid black; padding: 8px;">{{ user.email }}</td>
+                                            <td style="border: 1px solid black; padding: 8px;">{{ user.role }}</td>
+                                            <td style="border: 1px solid black; padding: 8px;">{{ user.tel }}</td>
+                                            <td style="border: 1px solid black; padding: 8px;">
+                                                <a href="{{ path('update_userAdmin', {'id': user.id}) }}">Update</a>
+                                                <a href="{{ path('delete_user', {'id': user.id}) }}">Delete</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const searchInput = document.getElementById('search-input');
+                                const userList = document.getElementById('user-list');
+
+                                searchInput.addEventListener('input', function(event) {
+                                    const searchTerm = event.target.value.trim().toLowerCase();
+                                    const users = Array.from(userList.getElementsByTagName('tr'));
+
+                                    users.forEach(function(user) {
+                                        const userEmail = user.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
+
+                                        if (userEmail.includes(searchTerm)) {
+                                            user.style.display = 'table-row';
+                                        } else {
+                                            user.style.display = 'none';
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{# templates/User/user_list.html.twig #}
+
+{% extends 'admin-dash.html.twig' %}
+
+{% block title %}User List{% endblock %}
+
+{% block body %}
+    <h1>User List</h1>
+
+    {# Search Form #}
+    <form id="search-form">
+        <input type="text" id="search-input" name="search" placeholder="Search by Email">
+    </form>
+
+    {# Sort Button #}
+    <form id="sort-form" action="{{ path('user_list') }}" method="get">
+        <button type="submit" name="sort" value="email">Sort by Email</button>
+    </form>
+
+    {% if users is empty %}
+        <p>No users found.</p>
+    {% else %}
+        <table style="border-collapse: collapse; width: 100%;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid black; padding: 8px;">Nom</th>
+                    <th style="border: 1px solid black; padding: 8px;">Prenom</th>
+                    <th style="border: 1px solid black; padding: 8px;">Email</th>
+                    <th style="border: 1px solid black; padding: 8px;">Role</th>
+                    <th style="border: 1px solid black; padding: 8px;">Telephone</th>
+                    <th style="border: 1px solid black; padding: 8px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="user-list">
+                {% for user in users %}
+                    <tr>
+                        <td style="border: 1px solid black; padding: 8px;">{{ user.nom }}</td>
+                        <td style="border: 1px solid black; padding: 8px;">{{ user.prenom }}</td>
+                        <td style="border: 1px solid black; padding: 8px;">{{ user.email }}</td>
+                        <td style="border: 1px solid black; padding: 8px;">{{ user.role }}</td>
+                        <td style="border: 1px solid black; padding: 8px;">{{ user.tel }}</td>
+                        <td style="border: 1px solid black; padding: 8px;">
+                            <a href="{{ path('update_user', {'id': user.id}) }}">Update</a>
+                            <a href="{{ path('delete_user', {'id': user.id}) }}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const userList = document.getElementById('user-list');
+
+            searchInput.addEventListener('input', function(event) {
+                const searchTerm = event.target.value.trim().toLowerCase();
+                const users = Array.from(userList.getElementsByTagName('tr'));
+
+                users.forEach(function(user) {
+                    const userEmail = user.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
+
+                    if (userEmail.includes(searchTerm)) {
+                        user.style.display = 'table-row';
+                    } else {
+                        user.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
