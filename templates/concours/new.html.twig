@@ -1,0 +1,11 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}New Concours{% endblock %}
+
+{% block body %}
+    <h1>Create new Concours</h1>
+
+    {{ include('concours/_form.html.twig') }}
+
+    <a href="{{ path('app_concours_index') }}">back to list</a>
+{% endblock %}
