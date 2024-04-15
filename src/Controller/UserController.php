@@ -21,6 +21,8 @@ use Dompdf\Dompdf;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
+
+#[Route('/admin')]
 class UserController extends AbstractController
 {
 
@@ -149,6 +151,14 @@ public function register(
         // Render the template and pass the users to it
         return $this->render('user/user_list.html.twig', [
             'users' => $users,
+        ]);
+    }
+
+    #[Route('/', name: 'app_admin')]
+    public function index(): Response
+    {
+        return $this->render('admin-dash.html.twig', [
+            'controller_name' => 'UserController',
         ]);
     }
     
