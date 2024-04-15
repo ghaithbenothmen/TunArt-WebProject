@@ -1,0 +1,80 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}Update{% endblock %}
+
+{% block body %}
+<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ajouter formation</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div
+					class="modal-body">
+					<!-- Form for adding the entity -->
+
+					{{ form_start(f) }}
+					<div class="mb-3">
+						{{ form_label(f.nom, "Nom formation:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.nom, {'attr': {'class': 'form-control','placeholder': 'Entré nom de la formation'}}) }}
+							<div class="text-danger">
+										{{ form_errors(f.nom) }}
+									</div>
+					</div>
+					<div class="mb-3">
+						{{ form_label(f.niveau, "Niveau formation:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.niveau, {'attr': {'class': 'form-control','placeholder': 'Entré niveau de la formation'}}) }}
+						<div class="text-danger">
+										{{ form_errors(f.niveau) }}
+									</div>
+					</div>
+					<div class="mb-3">
+						{{ form_label(f.datedebut, "Date de début:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.datedebut, {'attr': {'class': 'form-control datepicker', 'placeholder': 'Entrer la date'}}) }}
+					</div>
+                    <div class="mb-3">
+						{{ form_label(f.datefin, "Date de début:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.datefin, {'attr': {'class': 'datepicker', 'placeholder': 'Entrer la date'}}) }}
+						 <div class="text-danger">
+										{{ form_errors(f.datefin) }}
+									</div>
+					</div>
+                    <div class="mb-3">
+						{{ form_label(f.image, "Image formation:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_row(f.image) }}
+						 <div class="text-danger">
+										{{ form_errors(f.image) }}
+									</div>
+					</div>
+                    <div class="mb-3">
+						{{ form_label(f.description, "Description formation:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.description, {'attr': {'class': 'form-control','placeholder': 'Entrer la description'}}) }}
+						<div class="text-danger">
+										{{ form_errors(f.description) }}
+									</div>
+					</div>
+                     <div class="mb-3">
+						{{ form_label(f.prix, "Prix formation:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.prix, {'attr': {'class': 'form-control','placeholder': 'Entrer le prix'}}) }}
+						<div class="text-danger">
+										{{ form_errors(f.prix) }}
+									</div>
+					</div>
+                    <div class="mb-3">
+						{{ form_label(f.cat, "Catégorie Formation:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.cat, {'attr': {'class': 'form-control','placeholder': 'Sélectionner la catégorie '}}) }}
+					</div>
+                    <div class="mb-3">
+						{{ form_label(f.artiste, "Artiste Formation:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.artiste, {'attr': {'class': 'form-control','placeholder': 'Sélectionner artiste '}}) }}
+					</div>
+					<!-- Add more fields as needed -->
+
+
+				</div>
+				<div class="modal-footer">
+					
+					{{ form_widget(f.Ajouter, {'label': 'Modifier', 'attr': {'class': 'btn btn-primary'}}) }}
+				</div>
+				{{ form_end(f) }}
+			</div>
+{% endblock %}

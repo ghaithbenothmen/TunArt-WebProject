@@ -2,6 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Formation;
+use App\Entity\Inscription;
+use App\Entity\User;
+use App\Repository\FormationRepository;
+use App\Repository\InscriptionRepository;
+use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,13 +39,59 @@ class AppController extends AbstractController
         ]);
     }
 
-    #[Route('/services', name: 'services')]
-    public function services(): Response
+    #[Route('/formations', name: 'services')]
+    public function formations(FormationRepository $repo): Response
     {
-        return $this->render('app/services.html.twig', [
-            'controller_name' => 'AppController',
-        ]);
+        $formations = $repo->findAll();
+        return $this->render(
+            'app/formations.html.twig',
+            ['formations' => $formations]
+        );
     }
+
+    #[Route('/details/{id}', name: 'app_formation_details')]
+    public function details($id, FormationRepository $repo): Response
+    {
+        $formation = $repo->find($id);
+        return $this->render('formation/index.html.twig', ['formation' => $formation]);
+    }
+
+    #[Route('/inscription/{id}', name: 'app_inscription')]
+public function inscription($id, ManagerRegistry $manager,InscriptionRepository $repoIns, UserRepository $repoUser, FormationRepository $repo): Response
+{
+    $userId = 26; //static ba3ed twali b userLoggin
+
+    $entityManager = $manager->getManager();
+
+    $user = $repoUser->find($userId);
+
+    $formation = $repo->find($id);
+
+dump($user);
+dump($formation);
+
+    if (!$user || !$formation) {
+        return new Response('User or formation not found', Response::HTTP_NOT_FOUND);
+    }
+
+    // Check if the user is already registered for this formation
+    $check_inscription = $repoIns->findOneBy(['user' => $user, 'formation' => $formation]);
+
+    if ($check_inscription) {
+        return new Response('User already registered for this formation', Response::HTTP_BAD_REQUEST);
+    }
+
+    
+    $inscription = new Inscription();
+    $inscription->setUserId($user);
+    $inscription->setFormationId($formation);
+
+    $entityManager->persist($inscription);
+    $entityManager->flush();
+
+    return $this->redirectToRoute('services');
+}
+
     #[Route('/contact', name: 'contact')]
     public function contact(): Response
     {
