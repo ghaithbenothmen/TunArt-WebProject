@@ -112,9 +112,7 @@
 				</div>
 
 			</div>
-			<a href="" type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">
-				SigInscrirenUp
-			</a>
+			
 		</div>
 	</div>
 </div></div></div><!-- Features End --><!-- Testimonial Start --><div class="container-xxl py-5"><div class="container">
@@ -122,10 +120,69 @@
 	<div class="col-lg-5 wow fadeInUp" data-wow-delay="0.1s">
 		<div class="border-start border-5 border-primary ps-4 mb-5">
 
-			<a href="{{ path('app_inscription', {'id': formation.id}) }}" type="button" class="btn btn-primary btn-lg py-2 top-0 end-0 mt-2 me-2 ">
-				S'inscrire
-			</a>
+			   <a href="#" id="registerButton" type="button" class="btn btn-primary btn-lg py-2 top-0 end-0 mt-2 me-2" data-bs-toggle="modal" >
+                            S'inscrire
+                        </a>
 		</div>
 
 	</div>
-</div></div></div><!-- Testimonial End -->{% endblock %}
+</div></div></div>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You are already registered for this formation.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Etes-vous sûr de vouloir vous inscrire à cette formation ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="{{ path('app_inscription', {'id': formation.id}) }}" class="btn btn-primary">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	
+<script>
+  
+    var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
+        keyboard: false
+    });
+
+    var errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {
+        keyboard: false
+    });
+
+    document.getElementById('registerButton').addEventListener('click', function (event) {
+        event.preventDefault();
+       
+        {% if user_already_registered %}
+        errorModal.show();
+        {% else %}
+        confirmModal.show();
+        {% endif %}
+    });
+</script>
+{% endblock %}
