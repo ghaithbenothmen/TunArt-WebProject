@@ -13,7 +13,7 @@
                 <th>Text</th>
                 <th>Date</th>
                 <th>Image</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -24,13 +24,13 @@
                 <td>{{ actualite.text }}</td>
                 <td>{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}</td>
                 <td> {% if actualite.image %}
-                    <img src="{{ asset('imgAct/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 20px; max-height: 20px;">
+                    <img src="{{ asset('imgAct/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 100px; max-height: 100px;">
                         {% else %}
                             Pas d'image
                         {% endif %}</td>
                 <td>
-                    <a href="{{ path('app_actualite_show', {'id': actualite.id}) }}">show</a>
-                    <a href="{{ path('app_actualite_edit', {'id': actualite.id}) }}">edit</a>
+                    <a href="{{ path('app_actualite_show', {'id': actualite.id}) }} "class="btn btn-warning">show</a>
+                    <a href="{{ path('app_actualite_edit', {'id': actualite.id}) }} "class="btn btn-success">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -41,5 +41,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_actualite_new') }}">Create new</a>
+    <a href="{{ path('app_actualite_new') }}"class="btn btn-info">Create new</a>
 {% endblock %}

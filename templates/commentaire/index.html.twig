@@ -12,7 +12,7 @@
                 <th>Titre</th>
                 <th>Prenom</th>
                 <th>Contenuc</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -23,8 +23,8 @@
                 <td>{{ commentaire.user.Prenom}}</td>
                 <td>{{ commentaire.contenuc }}</td>
                 <td>
-                    <a href="{{ path('app_commentaire_show', {'idC': commentaire.idC}) }}">show</a>
-                    <a href="{{ path('app_commentaire_edit', {'idC': commentaire.idC}) }}">edit</a>
+                    <a href="{{ path('app_commentaire_show', {'idC': commentaire.idC}) }} "class="btn btn-warning">show</a>
+                    <a href="{{ path('app_commentaire_edit', {'idC': commentaire.idC}) }} "class="btn btn-success">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -35,5 +35,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_commentaire_new') }}">Create new</a>
+    <a href="{{ path('app_commentaire_new') }} "class="btn btn-info">Create new</a>
 {% endblock %}
