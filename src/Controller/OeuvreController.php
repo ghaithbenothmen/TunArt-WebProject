@@ -104,6 +104,14 @@ class OeuvreController extends AbstractController
         }
         return $this->render('oeuvre/UpdateOeuvre.html.twig', ['f' => $form->createView()]); //create vue bch ybadel form l html ou renderForm
     }
+    #[Route('/oeuvre/delete/{id}', name: 'app_oeuvre_delete')]
+    public function deleteOeuvre($id, ManagerRegistry $manager, OeuvreRepository $repo)
+    {
+        $oeuvre = $repo->find($id);
+        $manager->getManager()->remove($oeuvre);
+        $manager->getManager()->flush();
+        return $this->redirectToRoute('app_artiste_oeuvre');
+    }
     
  
 }

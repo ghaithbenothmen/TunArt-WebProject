@@ -179,10 +179,25 @@
 
 <!-- Delete Modals -->
 {% for form in oeuvres %}
-<div class="modal fade" id="deleteModal{{ form.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ form.id }}" aria-hidden="true">
-    <!-- Modal Content -->
-</div>
-{% endfor %}
+		<div class="modal fade" id="deleteModal{{ form.id }}"aria-labelledby="deleteModalLabel{{ form.id }}" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteModalLabel{{ form.id }}">Confirmer Supprission</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						Etes-vous sûr que vous voulez supprimer "{{ form.nomOeuvre }}"?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+						<a href="{{ path('app_oeuvre_delete', {'id': form.id}) }}" class="btn btn-danger">Supprimer</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
