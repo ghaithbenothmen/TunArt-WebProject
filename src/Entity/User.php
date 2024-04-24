@@ -208,4 +208,10 @@ class User
         return $this;
     }
 
+    public function __toString()
+    {
+        // Return the property you want to display
+        return $this->nom;
+    }
+
 }

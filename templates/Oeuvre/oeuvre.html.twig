@@ -4,139 +4,189 @@
 
 {% block body %}
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Symfony Project</title>
-    
-    <style>
-	.pagination {
-  display: inline-block;
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Symfony Project</title>
+
+<style>
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
 }
 
-.pagination a {
-  color: black;
-  float: left;
-  padding: 8px 16px;
-  text-decoration: none;
-  transition: background-color .3s;
-  border: 1px solid #ddd;
+/* Modal Body */
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
 }
 
-.pagination a.active {
-  background-color: #4CAF50;
-  color: white;
-  border: 1px solid #4CAF50;
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
 }
+    .pagination {
+        display: inline-block;
+    }
 
-.pagination a:hover:not(.active) {background-color: #ddd;}
-        .datepicker {
-            display: block;
-            width: 100%;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-    </style>
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #ddd;
+    }
 
-    <div class="page-breadcrumb">
-        <div class="row">
-            <div class="col-7 align-self-center">
-                <h4 class="page-title text-trunforme text-dark font-weight-medium mb-1">Liste des oeuvres</h4>
-                <div class="d-flex align-items-center">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb m-0 p-0">
-                            <li class="breadcrumb-item">
-                                <a href="index.html" class="text-muted">Artiste</a>
-                            </li>
-                            <li class="breadcrumb-item text-muted active" aria-current="page">Liste oeuvres</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+    .pagination a.active {
+        background-color: #4CAF50;
+        color: white;
+        border: 1px solid #4CAF50;
+    }
 
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
 
-            <div class="col-5 align-self-center">
-                <div class="customize-input float-right">
-                    <a href="{{ path('app_add_oeuvre') }}" class="btn btn-primary">Ajouter Oeuvre</a>
-                </div>
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .card .card-body {
+        padding: 20px;
+    }
+
+    .card h5 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 14px;
+        color: #666;
+    }
+</style>
+
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-7 align-self-center">
+            <h4 class="page-title text-trunforme text-dark font-weight-medium mb-1">Liste des oeuvres</h4>
+            <div class="d-flex align-items-center">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0 p-0">
+                        <li class="breadcrumb-item">
+                            <a href="index.html" class="text-muted">Artiste</a>
+                        </li>
+                        <li class="breadcrumb-item text-muted active" aria-current="page">Liste oeuvres</li>
+                    </ol>
+                </nav>
             </div>
         </div>
-    </div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="zero_config" class="table table-striped table-bordered no-wrap">
-                                <thead>
-                                    <tr>
-                                        <th>Id</th>
-                                        <th>Nom</th>
-                                        <th>TypeOeuvre</th>
-                                        <th>img</th>
-                                        <th>Date debut</th>
-                                        <th>Description</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for form in oeuvres %}
-                                        <tr>
-                                            <td>{{ form.Id }}</td>
-                                            <td>{{ form.nomOeuvre|upper }}</td>
-                                            <td>{{ form.TypeOeuvre }}</td>
-                                            <td>
-                                                {% if form.img %}
-                                                    <img src="{{ asset('uploads/' ~ form.img) }}" alt="Image du actualite" style="max-width: 100px; max-height: 100px;">
-                                                {% else %}
-                                                    Pas d'image
-                                                {% endif %}
-                                            </td>
-                                            <td>{{ form.datePublication ? form.datePublication|date('Y-m-d') : ''}}</td>
-                                            <td>{{ form.description }}</td>
-                                            <td>
-                                                <a href="{{ path('app_oeuvre_update', {'Id': form.Id}) }}" class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-edit"></i> Editer
-                                                </a>
-                                                <button type="button" data-bs-toggle="modal" class="btn btn-danger btn-sm" data-bs-target="#deleteModal{{ form.Id }}">
-                                                    <i class="fas fa-trash-alt"></i> Supprimer
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-						
 
-                        <!-- Pagination Links -->
-                        <div class="container">
-        <!-- Your content goes here -->
-
-        <!-- Pagination -->
-        <div class="d-flex justify-content-center">
-    <div class="pagination">
-        {{ knp_pagination_render(oeuvres) }}
+        <div class="col-5 align-self-center">
+            <div class="customize-input float-right">
+                <a href="{{ path('app_add_oeuvre') }}" class="btn btn-primary">Ajouter Oeuvre</a>
+            </div>
+        </div>
     </div>
 </div>
-    </div>
-                    </div>
-                </div>
+
+<div class="row g-4 justify-content-center">
+    {% for oeuvre in oeuvres %}
+    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+        <div class="card" data-toggle="modal" data-target="#popup{{ oeuvre.id }}">
+            {% if oeuvre.img %}
+            <img src="{{ asset('uploads/' ~ oeuvre.img) }}" alt="Image" class="card-img-top">
+            {% else %}
+            <span class="card-img-top">Aucune image disponible</span>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title mb-3">Nom de l'oeuvre: {{ oeuvre.nomOeuvre }}</h5>
+                <p class="card-text mb-3">Nom de l'artiste: {{ oeuvre.artisteId.nom }}</p>
+                <p class="card-text mb-3">Type de l'oeuvre: {{ oeuvre.typeoeuvre }}</p>
             </div>
         </div>
     </div>
+	
+    <!-- Modal for each card -->
+    <div class="modal fade" id="popup{{ oeuvre.id }}" tabindex="-1" role="dialog" aria-labelledby="popup{{ oeuvre.id }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popup{{ oeuvre.id }}Label">Détails de l'oeuvre</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="{{ asset('uploads/' ~ oeuvre.img) }}" alt="Image" class="img-fluid mb-3">
+                <p><strong>Nom de l'oeuvre:</strong> {{ oeuvre.nomOeuvre }}</p>
+                <p><strong>Nom de l'artiste:</strong> {{ oeuvre.artisteId.nom }}</p>
+                <p><strong>Type de l'oeuvre:</strong> {{ oeuvre.typeoeuvre }}</p>
+                <p><strong>Description:</strong> {{ oeuvre.description }}</p>
+                <p><strong>Date de publication:</strong> {{ oeuvre.datePublication|date('d/m/Y') }}</p>
+                <p><strong>Note:</strong> {{ oeuvre.note }}</p>
+				
+            </div>
+			
+            <div class="modal-footer">
+                
+				<a href="{{ path('app_oeuvre_update', {'Id': oeuvre.id}) }}" class="btn btn-primary btn-sm ">
+													<i class="fas fa-edit"></i>
+													Editer
+												</a>
+												{# <a href="{{ path('app_update_for', {'id': form.id}) }}" class="btn btn-warning btn-sm" role="button">Edit</a> #}
 
-    <!-- Delete Modals -->
-    {% for form in oeuvres %}
-        <div class="modal fade" id="deleteModal{{ form.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ form.id }}" aria-hidden="true">
-            <!-- Modal Content -->
+												<button type="button" data-bs-toggle="modal" class="btn btn-danger btn-sm" data-bs-target="#deleteModal{{ oeuvre.id }}">
+													<i class="fas fa-trash-alt"></i>
+													Supprimer
+												</button>
+            </div>
+			
         </div>
+    </div>
+</div>
     {% endfor %}
+</div>
+
+<!-- Pagination Links -->
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="pagination">
+            {{ knp_pagination_render(oeuvres) }}
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modals -->
+{% for form in oeuvres %}
+<div class="modal fade" id="deleteModal{{ form.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ form.id }}" aria-hidden="true">
+    <!-- Modal Content -->
+</div>
+{% endfor %}
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 {% endblock %}

@@ -32,7 +32,7 @@ class OeuvreController extends AbstractController
         $oeuvres = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1), // Get the page number from the request, default to 1
-            5 // Number of items per page
+            6 // Number of items per page
         );
 
         return $this->render('oeuvre/oeuvre.html.twig', ['oeuvres' => $oeuvres]);
