@@ -14,6 +14,7 @@ use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class ReclamationController extends AbstractController
 {
     #[Route('/artiste', name: 'app_artiste')]
@@ -31,45 +32,41 @@ class ReclamationController extends AbstractController
         $form = $this->createForm(ReclamationFormType::class, $rec);
         return $this->render('artiste/Reclamation.html.twig', ['reclamations' => $reclamations, 'f' => $form->createView()]);
     }
+    
 
 
-    private function getErrorsFromForm(FormInterface $form): array
-    {
-        $errors = [];
-        foreach ($form->getErrors(true, true) as $error) {
-            $errors[] = $error->getMessage();
-        }
+   
+    
 
-        foreach ($form->all() as $childForm) {
-            if ($childErrors = $this->getErrorsFromForm($childForm)) {
-                $errors[$childForm->getName()] = $childErrors;
-            }
-        }
 
-        return $errors;
-    }
 
-    #[Route('/addRec', name: 'app_add_rec')]
-    public function addRec(Request $request, ManagerRegistry $manager): Response
+#[Route('/addRec', name: 'app_add_rec')]
+public function addRec(Request $request, ManagerRegistry $manager): Response
     {
         $rec = new Reclamation();
         $form = $this->createForm(ReclamationFormType::class, $rec);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $manager->getManager()->persist($rec);
                 $manager->getManager()->flush();
-
-                return new JsonResponse(['success' => true]);
+                dump($rec);
+    
+                return $this->redirectToRoute('app_artiste_listeRec');
             } catch (\Exception $e) {
-                return new JsonResponse(['success' => false, 'message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement.');
             }
         }
-
-        $errors = $this->getErrorsFromForm($form);
-        return new JsonResponse(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
+    
+        // Return a response even when form submission fails
+        return $this->render('artiste/addReclamation.html.twig', [
+            'f' => $form->createView(),
+        ]);
     }
+
+
+
 
 
     #[Route('/reclamation/delete/{id}', name: 'app_reclamation_delete')]
@@ -111,7 +108,7 @@ class ReclamationController extends AbstractController
         if (!$reclamation) {
             throw $this->createNotFoundException('Reclamation not found');
         }
-        $reclamation->setType($request->request->get('type')); 
+        //$reclamation->setType($request->request->get('type')); 
         $reclamation->setText($request->request->get('text')); 
         
 

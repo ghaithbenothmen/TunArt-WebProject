@@ -16,11 +16,11 @@ class Oeuvre
     /**
      * @var int
      *
-     * @ORM\Column(name="Ref", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $ref;
+    private $id;
 
     /**
      * @var string
@@ -65,15 +65,18 @@ class Oeuvre
     private $note;
 
     /**
-     * @var int
+     * @var \User
      *
-     * @ORM\Column(name="artiste_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="artiste_id", referencedColumnName="ID")
+     * })
      */
-    private $artisteId;
+    private $artiste;
 
-    public function getRef(): ?int
+    public function getId(): ?int
     {
-        return $this->ref;
+        return $this->id;
     }
 
     public function getNomOeuvre(): ?string
@@ -148,14 +151,14 @@ class Oeuvre
         return $this;
     }
 
-    public function getArtisteId(): ?int
+    public function getArtisteId(): ?User
     {
-        return $this->artisteId;
+        return $this->artiste;
     }
 
-    public function setArtisteId(int $artisteId): static
+    public function setArtisteId(?User $artiste): static
     {
-        $this->artisteId = $artisteId;
+        $this->artiste = $artiste;
 
         return $this;
     }

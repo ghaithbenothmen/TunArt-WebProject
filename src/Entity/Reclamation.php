@@ -22,13 +22,6 @@ class Reclamation
     private $id;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id_user", type="integer", nullable=false)
-     */
-    private $idUser;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255, nullable=false)
@@ -42,21 +35,19 @@ class Reclamation
      */
     private $text;
 
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_user", referencedColumnName="ID")
+     * })
+     */
+    private $idUser;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdUser(): ?int
-    {
-        return $this->idUser;
-    }
-
-    public function setIdUser(int $idUser): static
-    {
-        $this->idUser = $idUser;
-
-        return $this;
     }
 
     public function getType(): ?string
@@ -79,6 +70,18 @@ class Reclamation
     public function setText(string $text): static
     {
         $this->text = $text;
+
+        return $this;
+    }
+
+    public function getIdUser(): ?User
+    {
+        return $this->idUser;
+    }
+
+    public function setIdUser(?User $idUser): static
+    {
+        $this->idUser = $idUser;
 
         return $this;
     }

@@ -4,19 +4,15 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        
         "php": ">=8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
-
-        "doctrine/annotations": "*",
-
         "doctrine/annotations": "^2.0",
-
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^2.9",
+        "knplabs/knp-paginator-bundle": "^5.9",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.25",
         "sensio/framework-extra-bundle": "^6.2",
@@ -57,10 +53,7 @@
             "composer/package-versions-deprecated": true,
             "php-http/discovery": true,
             "symfony/flex": true,
-            "symfony/runtime": true,
-            "platform-check": false
-
-
+            "symfony/runtime": true
         },
         "optimize-autoloader": true,
         "preferred-install": {
@@ -114,8 +107,4 @@
         "symfony/stopwatch": "5.4.*",
         "symfony/web-profiler-bundle": "5.4.*"
     }
-    
-
-
-    
 }

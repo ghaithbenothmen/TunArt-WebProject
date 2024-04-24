@@ -24,14 +24,18 @@
 			</div>
 
 			<div class="col-5 align-self-center">
-				<div class="customize-input float-right">
-					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-						Ajouter Reclamations
-					</button>
+				<div
+					class="customize-input float-right">
+					
+					<a href="{{ path('app_add_rec') }}" class="btn btn-primary">
+						Ajouter Reclamation
+					</a>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+				
 	<!-- ============================================================== -->
 	<!-- End Bread crumb and right sidebar toggle -->
 	<!-- ============================================================== -->
@@ -140,9 +144,9 @@
 						<!-- Update Form for the reclamation -->
 						<form method="post" action="{{ path('app_update_rec', {'id': reclamation.id}) }}">
 							<div class="form-group">
-								<label for="type{{ reclamation.id }}">Nom:</label>
+								<label for="type{{ reclamation.id }}">Type:</label>
 								<input type="text" id="nom{{ reclamation.id }}" name="text" class="form-control" value="{{ reclamation.type }}" required>
-								<label for="text{{ reclamation.id }}">Nom:</label>
+								<label for="text{{ reclamation.id }}">Text:</label>
 								<input type="text" id="nom{{ reclamation.id }}" name="text" class="form-control" value="{{ reclamation.text }}" required>
 							</div>
 							<!-- Add more fields as needed -->
@@ -154,59 +158,9 @@
 		</div>
 	{% endfor %}
 
-	<!-- Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ajouter Reclamation</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div
-					class="modal-body">
-					<!-- Form for adding the entity -->
-
-					{{ form_start(f) }}
-					<div class="mb-3">
-
-						{{ form_label(f.type, "Type reclamation:", {'label_attr': {'class': 'form-label'}}) }}
-						
-						{{ form_widget(f.type, {'attr': {'class': 'form-control','placeholder': 'Entré type de la reclamation'}}) }}
-						{{ form_label(f.text, " reclamation:", {'label_attr': {'class': 'form-label'}}) }}
-						{{ form_widget(f.text, {'attr': {'class': 'form-control','placeholder': 'Entré votre reclamation'}}) }}
-						
-					</div>
-					<!-- Add more fields as needed -->
-
-
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					{{ form_widget(f.Ajouter, {'attr': {'class': 'btn btn-primary'}}) }}
-				</div>
-				{{ form_end(f) }}
-			</div>
-		</div>
-	</div>
+	
 	<script>
-		$(document).ready(function () {
-			$('#exampleModal form').submit(function (e) {
-			e.preventDefault();
-
-			$.ajax({
-			type: 'POST',
-			url: '{{ path('app_add_rec') }}',
-			data: $(this).serialize(),
-			success: function (response) {
-
-			$('#exampleModal').modal('hide');
-			location.reload();
-			},
-			error: function (error) {}
-			});
-
-			});
-		});
+		
 
 		function updateReclamation(reclamationId) {
 			var form = document.getElementById('updateForm' + reclamationId);
