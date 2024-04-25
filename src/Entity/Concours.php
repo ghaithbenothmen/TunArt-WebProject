@@ -44,6 +44,12 @@ class Concours
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank(message:'nom obligatoire' )]
     private ?string $nom;
+
+    #[ORM\Column]
+    private ?int $Nparticipant = 0;
+
+    #[ORM\Column]
+    private ?int $Nvote = 0;
     
 
     public function getRefrence(): ?int
@@ -107,6 +113,30 @@ class Concours
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getNparticipant(): ?int
+    {
+        return $this->Nparticipant;
+    }
+
+    public function setNparticipant(int $Nparticipant): static
+    {
+        $this->Nparticipant = $Nparticipant;
+
+        return $this;
+    }
+
+    public function getNvote(): ?int
+    {
+        return $this->Nvote;
+    }
+
+    public function setNvote(int $Nvote): static
+    {
+        $this->Nvote = $Nvote;
 
         return $this;
     }
