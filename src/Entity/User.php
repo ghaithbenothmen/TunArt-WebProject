@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 /**
  * User
@@ -11,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User
+class User implements UserInterface
 {
     /**
      * @var int
@@ -67,14 +69,7 @@ class User
      */
     private $tel;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Role", type="string", length=100, nullable=false)
-     * @Assert\NotBlank
-     * @Assert\Length(max=255)
-     */
-    private $role;
+  
 
     /**
      * @var string|null
@@ -84,10 +79,23 @@ class User
      */
     private $image;
 
+ /**
+     * @var string
+     *
+     * @ORM\Column(name="Role", type="string", length=255, nullable=true)
+     */
+    private $role;
+
+    
+
+
+
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
 
     public function getNom(): ?string
     {
@@ -137,7 +145,8 @@ class User
     return $this;
     }
 
-    public function getRole(): ?string
+    
+   public function getRole(): ?string
     {
         return $this->role;
     }
@@ -175,10 +184,69 @@ class User
         return $this;
     }
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private array $roles = [];
+
+    // ...
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
     
     
 
+
+
+
+
+
+
+
+
+ /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
    
+
+    // Methods required by UserInterface
+
+    public function getUsername(): ?string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->mdp;
+    }
 
 
 }

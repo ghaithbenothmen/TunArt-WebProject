@@ -18,7 +18,7 @@ class UserRepository extends ServiceEntityRepository
     public function searchBynom(string $nom): array
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.nom LIKE :nom')
+            ->andWAhere('u.nom LIKE :nom')
             ->setParameter('nom', '%' . $nom . '%')
             ->getQuery()
             ->getResult();

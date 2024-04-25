@@ -13,16 +13,18 @@
                 <th>Email</th>
                 <th>Role</th>
                 <th>Telephone</th>
+                
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
                 <tr>
                     <td>{{ user.nom }}</td>
-                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.prenom}}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
                     <td>{{ user.tel }}</td>
+                    
                 </tr>
             {% endfor %}
         </tbody>

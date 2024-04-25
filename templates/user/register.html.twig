@@ -77,7 +77,8 @@
                         {{ form_row(registration_form.mdp, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
                     </div>
                     <div class="form-group">
-                        {{ form_row(registration_form.role, {'attr': {'class': 'form-control', 'placeholder': 'Role'}}) }}
+                        {{ form_label(registration_form.roles) }}
+                        {{ form_widget(registration_form.roles) }}
                     </div>
                     <div class="form-group">
                         {{ form_row(registration_form.tel, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}

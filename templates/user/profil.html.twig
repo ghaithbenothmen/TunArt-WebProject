@@ -1,0 +1,41 @@
+{# templates/user/profile.html.twig #}
+
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}User Profil{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title text-center">User Profil</h2>
+                </div> 
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="profile-picture text-center mb-4">
+                                {% if user.image is not null %}
+                                    <img src="{{ asset('uploads/images/' ~ user.image) }}" alt="Profil Picture" class="img-fluid rounded-circle">
+                                {% else %}
+                                    <div class="text-muted">No profil picture available</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <ul class="list-group">
+                                <li class="list-group-item"><strong>Nom:</strong> {{ user.nom }}</li>
+                                <li class="list-group-item"><strong>Prénom:</strong> {{ user.prenom }}</li>
+                                <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+                                <li class="list-group-item"><strong>Téléphone:</strong> {{ user.tel }}</li>
+                                <li class="list-group-item"><strong>Role:</strong> {{ user.role }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

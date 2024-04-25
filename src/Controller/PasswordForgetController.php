@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 use App\Service\MailerService;
 use App\Entity\User;
@@ -47,7 +48,10 @@ class PasswordForgetController extends AbstractController
     }
 
 
-    #[Route('/EmailVerif', name: 'EmailVerif')]
+
+
+
+#[Route('/EmailVerif', name: 'EmailVerif')]
 public function EmailVerif(Request $request, UserRepository $repo, SessionInterface $session,MailerInterface $mailer)
 {
 
@@ -100,7 +104,7 @@ if ($form->isSubmitted() && $form->isValid()) {
 }
 
 
-return $this->render('user/EmailSet.html.twig', [
+return $this->render('/user/EmailSet.html.twig', [
     'form' => $form->createView(),
 ]);
 }
@@ -114,48 +118,24 @@ return $this->render('user/EmailSet.html.twig', [
 #[Route('/CodeVerif', name: 'CodeVerif')]
 public function CodeVerif(Request $request, UserRepository $repo, SessionInterface $session)
 {
-
-
-
 $formBuilder = $this->createFormBuilder();
-
-
 $formBuilder->add('code', NumberType::class, [
     'invalid_message' => 'le code doit être numérique.']);
 
-
-
-
-
 $form = $formBuilder->getForm();
-
-
 $form->handleRequest($request);
 
 if ($form->isSubmitted() && $form->isValid()) {
-    
     $code = $form->getData()['code'];
-    
-
     if($code!=$session->get('code')){
-
-
         $this->addFlash('error', 'Code incorrecte');
         return $this->redirectToRoute('CodeVerif');
     }
-
-
     else{
-    
         return $this->redirectToRoute('PassUpdate');
-
     }
-
-    
 }
-
-
-return $this->render('user/code.html.twig', [
+return $this->render('/user/code.html.twig', [
     'form' => $form->createView(),
 ]);
 }
@@ -169,12 +149,7 @@ return $this->render('user/code.html.twig', [
 public function PassUpdate(Request $request, UserRepository $repo, SessionInterface $session)
 {
 
-    
-
-
 $formBuilder = $this->createFormBuilder();
-
-
 $formBuilder
     ->add('pass1', TextType::class, [
         'attr' => ['placeholder' => 'Mot de passe']
@@ -185,47 +160,32 @@ $formBuilder
 
     $entityManager = $this->getDoctrine()->getManager();
     $user=$session->get('user');
-    $user = $this->getDoctrine()->getRepository(User::class)->find($user->getIdUser());
+    $user = $this->getDoctrine()->getRepository(User::class)->find($user->getId());
 
 $form = $formBuilder->getForm();
-
-
 $form->handleRequest($request);
 
 if ($form->isSubmitted() && $form->isValid()) {
     
     $pass1 = $form->getData()['pass1'];
     $pass2 = $form->getData()['pass2'];
-
     if($pass1!=$pass2){
 
-
         $this->addFlash('error', 'Les 2 mots de passe doivent être identiques');
-        return $this->redirectToRoute('PassUpdate');
+        return $this->redirectToRoute('user/PassUpdate');
     }
-
 
     else {
         
 
 $user->setMdp($pass1);
-
+/*$repo->save($user,true);*/
 $entityManager->flush();
-
 $session->set('user', $user);
-
-return $this->redirectToRoute('app_home');
-
-
-
+return $this->redirectToRoute('home');
     }
-
-
-   
-
     
 }
-
 
 return $this->render('user/PassUpdate.html.twig', [
     'form' => $form->createView(),
@@ -244,31 +204,6 @@ return $this->render('user/PassUpdate.html.twig', [
 
 
 
-
-
-
-
-
-
-#[Route('/test', name: 'test')]
-public function sendEmail(): Response
-    {
-        // Replace these values with your actual recipient email, subject, and body
-        $to = 'yassine.essid@esprit.tn';
-        $subject = 'Test Email';
-        $body = 'This is a test email sent from Symfony using Google Mailer.';
-
-        try {
-            $this->mailerService->sendEmail($to, $subject, $body);
-            $message = 'Email sent successfully!';
-        } catch (\Exception $e) {
-            $message = 'Failed to send email: ' . $e->getMessage();
-        }
-
-        return $this->render('user/send.html.twig', [
-            'message' => $message,
-        ]);
-    }
 
 
 

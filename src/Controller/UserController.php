@@ -22,6 +22,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 
+
+
+
 #[Route('/admin')]
 class UserController extends AbstractController
 {
@@ -32,13 +35,13 @@ class UserController extends AbstractController
     private $twilioClient;
 
     public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager, SluggerInterface $slugger , LoggerInterface $logger, Client $twilioClient)
-    {
-        $this->managerRegistry = $managerRegistry;
-        $this->entityManager = $entityManager;
-        $this->slugger = $slugger;
-        $this->logger = $logger;
-        $this->twilioClient = $twilioClient;
-    }
+{
+    $this->managerRegistry = $managerRegistry;
+    $this->entityManager = $entityManager;
+    $this->slugger = $slugger;
+    $this->logger = $logger;
+    $this->twilioClient = $twilioClient; // Injected Client instance
+}
 
 
 
@@ -81,6 +84,8 @@ public function register(
 
         
 
+        
+      
         // Persist the user to the database
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
@@ -91,8 +96,14 @@ public function register(
             $prenom =  $form->get('prenom')->getData();
             $email = $form->get('email')->getData();
             $mdp =  $form->get('mdp')->getData();
-           
-         
+            $roles = $form->get('roles')->getData();
+            $user->setRoles($roles);
+
+            
+
+            
+
+          
 
 
            // Get telephone number from the form
@@ -104,7 +115,7 @@ public function register(
                 $toNumber = $user->getTel();
                 $fromNumber = '+18588793064';
         
-                $message = $twilioClient->messages->create(
+                $message = $this->twilioClient->messages->create(
                     $toNumber,
                     [
                         'from' => $fromNumber,
@@ -275,22 +286,7 @@ public function register(
 
 
 
-    #[Route('/user/{id}/reactivate', name: 'reactivate_user', methods: ['POST'])]
-    public function reactivateUser(int $id, Request $request): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $user = $entityManager->getRepository(User::class)->find($id);
-
-        if (!$user) {
-            throw $this->createNotFoundException('User not found');
-        }
-
-        
-        $entityManager->flush();
-
-        // Redirect back to the user list
-        return $this->redirectToRoute('userss');
-    }
+    
 
 
 
@@ -355,7 +351,7 @@ public function updateUser(Request $request, int $id): Response
         return $this->redirectToRoute('UserDashboard', ['id' => $user->getId()]);
     }
 
-    return $this->render('user/user_Card.html.twig', [
+    return $this->render('user/profil.html.twig', [
         'user' => $user,
         'registration_form' => $form->createView(),
     ]);
@@ -365,23 +361,8 @@ public function updateUser(Request $request, int $id): Response
 
 
 
-// Ban User
-    #[Route('/user/{id}/Ban', name: 'ban_user', methods: ['POST'])]
-    public function banUser(int $id, Request $request): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $user = $entityManager->getRepository(User::class)->find($id);
-
-        if (!$user) {
-            throw $this->createNotFoundException('User not found');
-        }
 
     
-        $entityManager->flush();
-
-        // Redirect back to the user list
-        return $this->redirectToRoute('login');
-    }
 
 
 
@@ -408,6 +389,7 @@ public function updateUser(Request $request, int $id): Response
         return $this->render('/user/usertest.html.twig', ['users' => $users]);
     }
 
+   
 
 
 

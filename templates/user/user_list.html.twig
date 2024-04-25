@@ -1,6 +1,5 @@
-{# templates/User/user_list.html.twig #}
+{% extends 'artiste-dash.html.twig' %}
 
-{% extends 'admin-dash.html.twig' %}
 
 {% block title %}User List{% endblock %}
 
@@ -8,61 +7,65 @@
     <h1>User List</h1>
 
     {# Search Form #}
-    <form id="search-form">
-        <input type="text" id="search-input" name="search" placeholder="Search by Email">
+    <form id="search-form" style="margin-bottom: 20px;">
+        <input type="text" id="search-input" name="search" class="form-control" placeholder="Search by Email">
     </form>
 
     {# Sort Button #}
-    <form id="sort-form" action="{{ path('user_list') }}" method="get">
-        <button type="submit" name="sort" value="email">Sort by Email</button>
+    <form id="sort-form" action="{{ path('user_list') }}" method="get" style="margin-bottom: 20px;">
+        <button type="submit" name="sort" value="email" class="btn btn-primary">Sort by Email</button>
+    </form>
+
+    {# Download Button #}
+    <form action="{{ path('downloadUserListPdf') }}" method="get" style="margin-bottom: 20px;">
+        <button type="submit" class="btn btn-success">Download User List as PDF</button>
     </form>
 
     {% if users is empty %}
         <p>No users found.</p>
     {% else %}
-        <table style="border-collapse: collapse; width: 100%;">
-            <thead>
-                <tr>
-                    <th style="border: 1px solid black; padding: 8px;">Nom</th>
-                    <th style="border: 1px solid black; padding: 8px;">Prenom</th>
-                    <th style="border: 1px solid black; padding: 8px;">Email</th>
-                    <th style="border: 1px solid black; padding: 8px;">Role</th>
-                    <th style="border: 1px solid black; padding: 8px;">Telephone</th>
-                    <th style="border: 1px solid black; padding: 8px;">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="user-list">
-                {% for user in users %}
-                    <tr>
-                        <td style="border: 1px solid black; padding: 8px;">{{ user.nom }}</td>
-                        <td style="border: 1px solid black; padding: 8px;">{{ user.prenom }}</td>
-                        <td style="border: 1px solid black; padding: 8px;">{{ user.email }}</td>
-                        <td style="border: 1px solid black; padding: 8px;">{{ user.role }}</td>
-                        <td style="border: 1px solid black; padding: 8px;">{{ user.tel }}</td>
-                        <td style="border: 1px solid black; padding: 8px;">
-                            <a href="{{ path('update_user', {'id': user.id}) }}">Update</a>
-                            <a href="{{ path('delete_user', {'id': user.id}) }}">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <ul class="list-group">
+            {% for user in users|reverse %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-2">
+                            {% if user.image is not null %}
+                                <img src="{{ asset('uploads/images/' ~ user.image) }}" alt="User Image" class="img-thumbnail">
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-10">
+                            <strong>Nom:</strong> {{ user.nom }}<br>
+                            <strong>Prénom:</strong> {{ user.prenom }}<br>
+                            
+                            <strong>Email:</strong> {{ user.email }}<br>
+                            
+                            <div class="btn-group">
+                                <a href="{{ path('delete_user', {'id': user.id}) }}" onclick="return confirm('Are you sure you want to delete this user?');" class="btn btn-danger">Delete</a>
+                                <a href="{{ path('User_Upda', {'id': user.id}) }}" class="btn btn-info">Show</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            
+        </ul>
     {% endif %}
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('search-input');
-            const userList = document.getElementById('user-list');
 
             searchInput.addEventListener('input', function(event) {
                 const searchTerm = event.target.value.trim().toLowerCase();
-                const users = Array.from(userList.getElementsByTagName('tr'));
+                const users = document.querySelectorAll('.list-group-item');
 
                 users.forEach(function(user) {
-                    const userEmail = user.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
+                    const userEmail = user.querySelector('strong:nth-child(8)').textContent.trim().toLowerCase();
 
                     if (userEmail.includes(searchTerm)) {
-                        user.style.display = 'table-row';
+                        user.style.display = 'block';
                     } else {
                         user.style.display = 'none';
                     }
@@ -70,4 +73,6 @@
             });
         });
     </script>
+
+    
 {% endblock %}
