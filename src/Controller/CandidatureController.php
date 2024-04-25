@@ -27,6 +27,7 @@ class CandidatureController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $currentDate = new DateTime();
+        $aslematest = new DateTime();
         $candidature = new Candidature($currentDate);
         $form = $this->createForm(CandidatureType::class, $candidature);
         $form->handleRequest($request);
