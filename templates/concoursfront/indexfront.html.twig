@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Concours index{% endblock %}
+
+{% block body %}
+    <h1>Concours index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Refrence</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Prix</th>
+                <th>Lien</th>
+                <th>Nom</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        {% for concour in concours %}
+            <tr>
+                <td>{{ concour.refrence }}</td>
+                <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
+                <td>{{ concour.type }}</td>
+                <td>{{ concour.prix }}</td>
+                <td>{{ concour.lien }}</td>
+                <td>{{ concour.nom }}</td>
+
+
+
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

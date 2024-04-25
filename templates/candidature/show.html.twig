@@ -15,6 +15,14 @@
                 <th>Date</th>
                 <td>{{ candidature.date ? candidature.date|date('Y-m-d') : '' }}</td>
             </tr>
+            <tr>
+                <th>ID_concours</th>
+                <td>{{ candidature.idConcours.refrence}}</td>
+            </tr>
+            <tr>
+                <th>ID_User</th>
+                <td>{{ candidature.idUser.getIdUser()}}</td>
+            </tr>
         </tbody>
     </table>
 

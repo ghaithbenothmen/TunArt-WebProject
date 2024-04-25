@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Repository\CandidatureRepository;
 use App\Entity\Candidature;
 use App\Form\CandidatureType;
@@ -17,7 +18,7 @@ class CandidatureController extends AbstractController
     #[Route('/', name: 'app_candidature_index', methods: ['GET'])]
     public function index(CandidatureRepository $candidatureRepository): Response
     {
-        return $this->render('candidature/indexfront.html.twig', [
+        return $this->render('candidature/index.html.twig', [
             'candidatures' => $candidatureRepository->findAll(),
         ]);
     }
@@ -25,7 +26,8 @@ class CandidatureController extends AbstractController
     #[Route('/new', name: 'app_candidature_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $candidature = new Candidature();
+        $currentDate = new DateTime();
+        $candidature = new Candidature($currentDate);
         $form = $this->createForm(CandidatureType::class, $candidature);
         $form->handleRequest($request);
 

@@ -2,40 +2,41 @@
 
 namespace App\Entity;
 
+use App\Entity\Concours;
+use App\Entity\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
+use App\Repository\CandidatureRepository;
 
-#[ORM\Table(name: 'candidature')]
-#[ORM\Entity(repositoryClass: App\Repository\CandidatureRepository::class)]
-#[ORM\Index(name: 'FK_CONCOURS_ID', columns: ['ID_concours'])]
-#[ORM\Index(name: 'FK_USER_ID', columns: ['ID_user'])]
+#[ORM\Entity(repositoryClass: CandidatureRepository::class)]
+
+
 class Candidature
 {
-    #[ORM\Column(name: 'ID_candidature', type: 'integer', nullable: false)]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $idCandidature;
-    
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $idCandidature = null;
 
-    #[ORM\Column(name: 'Date', type: 'date', nullable: false)]
-    private \DateTime $date;
-    
+    #[ORM\Column(type: 'date', length: 50)]
+    private ?DateTime $date = null ;
 
-    #[ORM\ManyToOne(targetEntity: Concours::class)]
-    #[ORM\JoinColumn(name: 'ID_concours', referencedColumnName: 'Refrence')]
-    private Concours $idConcours;
-    
+    #[ORM\ManyToOne(targetEntity: Concours::class , inversedBy: 'Candidature')]
+    #[ORM\JoinColumn(name: "idConcours",referencedColumnName: "refrence")]
+    private ?Concours $Concours = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'ID_user', referencedColumnName: 'ID_user')]
-    private User $idUser;
     
-
+    #[ORM\ManyToOne(targetEntity: User::class ,inversedBy: 'Candidature')]
+    #[ORM\JoinColumn(name: "idUser",referencedColumnName: "user")]
+    private ?User $user = null;
+    
+    
     public function getIdCandidature(): ?int
     {
         return $this->idCandidature;
     }
-
+    
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
@@ -50,27 +51,31 @@ class Candidature
 
     public function getIdConcours(): ?Concours
     {
-        return $this->idConcours;
+        return $this->Concours;
     }
 
-    public function setIdConcours(?Concours $idConcours): static
+    public function setIdConcours(?Concours $Concours): static
     {
-        $this->idConcours = $idConcours;
+        $this->idConcours = $Concours;
 
         return $this;
     }
 
     public function getIdUser(): ?User
     {
-        return $this->idUser;
+        return $this->user;
     }
 
-    public function setIdUser(?User $idUser): static
+    public function setIdUser(?User $user): static
     {
-        $this->idUser = $idUser;
+        $this->idUser = $user;
 
         return $this;
     }
 
-
+    public function __construct(DateTime $currentDate)
+    {
+        $this->date = $currentDate;
+    }
+    
 }

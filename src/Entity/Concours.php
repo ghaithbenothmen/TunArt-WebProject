@@ -4,48 +4,51 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
-/**
- * Concours
- *
- * @ORM\Table(name="concours")
- * @ORM\Entity(repositoryClass=App\Repository\ConcoursRepository::class)
- */
-
-#[ORM\Table(name: 'concours')]
+use DateTime;
+use App\Repository\ConcoursRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ConcoursRepository::class)]
 class Concours
 {
-    #[ORM\Column]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $refrence = null;
 
-    private ?int $Refrence  = null;
+
+    #[ORM\Column(type: 'date', length: 50)]
+    #[Assert\NotBlank(message:'date obligatoire' )]
+    #[Assert\GreaterThanOrEqual("today", message: 'date invalide')]
+    private ?DateTime $date = null ;
 
 
-    #[ORM\Column(name: 'Date', type: 'date', nullable: false)]
-    private ?\DateTime $date = null;
-    
-
-    #[ORM\Column(name: 'Type', type: 'string', length: 20, nullable: false)]
+    #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message:'type obligatoire' )]
     private ?string $type = null;
     
 
-    #[ORM\Column(name: 'Prix', type: 'integer', nullable: false)]
+    #[ORM\Column]
+    #[Assert\NotBlank(message:'prix obligatoire' )]
+    #[Assert\Regex(
+        pattern: '/^-?\d+$/',
+        message: 'Le contenu peut etre uniquement des chiffres'
+    )]
     private ?int $prix = null;
-    
-
-    #[ORM\Column(name: 'Lien', type: 'string', length: 255, nullable: false)]
-    private ?string $lien= null;
-    
-
-    #[ORM\Column(name: 'nom', type: 'string', length: 25, nullable: false)]
-    private ?string $nom = null;
 
     
-    public function getRfrence(): ?int
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:'lien obligatoire' )]
+    private ?string $lien;
+
+
+    #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message:'nom obligatoire' )]
+    private ?string $nom;
+    
+
+    public function getRefrence(): ?int
     {
-        return $this->Refrence;
+        return $this->refrence;
     }
 
     public function getDate(): ?\DateTimeInterface
@@ -108,5 +111,8 @@ class Concours
         return $this;
     }
 
-
+    public function __construct(DateTime $currentDate)
+    {
+        $this->date = $currentDate;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Repository\ConcoursRepository;
 use App\Entity\Concours;
 use App\Form\ConcoursType;
@@ -25,7 +26,8 @@ class ConcoursController extends AbstractController
     #[Route('/new', name: 'app_concours_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $concour = new Concours();
+        $currentDate = new DateTime();
+        $concour = new Concours($currentDate);
         $form = $this->createForm(ConcoursType::class, $concour);
         $form->handleRequest($request);
 

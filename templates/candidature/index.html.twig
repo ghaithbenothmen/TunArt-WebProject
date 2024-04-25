@@ -8,8 +8,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>IdCandidature</th>
+                <th>ID_Candidature</th>
                 <th>Date</th>
+                <th>ID_Concours</th>
+                <th>ID_User</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -18,6 +20,9 @@
             <tr>
                 <td>{{ candidature.idCandidature }}</td>
                 <td>{{ candidature.date ? candidature.date|date('Y-m-d') : '' }}</td>
+                <td>{{ candidature.idConcours.refrence }}</td>
+                <td>{{ candidature.idUser.getIdUser }}</td>              
+                
                 <td>
                     <a href="{{ path('app_candidature_show', {'idCandidature': candidature.idCandidature}) }}">show</a>
                     <a href="{{ path('app_candidature_edit', {'idCandidature': candidature.idCandidature}) }}">edit</a>
@@ -31,5 +36,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_candidature_new') }}">Create new</a>
 {% endblock %}

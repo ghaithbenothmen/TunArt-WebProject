@@ -8,9 +8,31 @@
 {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
 <div class="form-error" style="color: red;">{{ form_errors(form.date) }}</div>
 
+{# 
+{% set choices = {
+    'MUSIC' : 'Music',
+    'PAINTING' : 'Painting',
+    'PHOTOGRAPHY' : 'Photography',
+    'LITERATURE' : 'Literature',
+    'CINEMA' : 'Cinema',
+    'GRAFFITI' : 'Graffiti',
+    'DJING' : 'DJing',
+    'DESIGN' : 'Design',
+    'VIDEO_EDITING' : 'Video Editing'
+} %}
+
+<label for="interest">Choose your area(s) of interest:</label>
+<form>
+  <select name="interest" id="interest" multiple>  {% for key, value in choices %}
+      <option value="{{ key }}">{{ value }}</option>
+    {% endfor %}
+  </select>
+</form>
+#}
 {{ form_label(form.type, 'type') }}
 {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
 <div class="form-error" style="color: red;">{{ form_errors(form.type) }}</div>
+
 
 {{ form_label(form.prix, 'prix') }}
 {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
@@ -23,4 +45,3 @@
 <div class="form-error" style="color: red;">{{ form_errors(form.nom) }}</div>
 <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
-
