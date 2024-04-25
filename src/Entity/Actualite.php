@@ -27,12 +27,17 @@ class Actualite
     #[ORM\Column(length: 100)]
     private ?string $text = null;
 
+
+    #[Assert\GreaterThanOrEqual("today", message: 'date invalide')]
     #[Assert\NotBlank(message: "Veuillez Remplir Date")]
     #[ORM\Column(type:"date", length: 50)]
     private ?DateTime $date = null;
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
+
+    #[ORM\Column(type: "integer")]
+    private ?int $liked = 0;
 
     public function getId(): ?int
     {
@@ -63,6 +68,7 @@ class Actualite
         return $this;
     }
 
+
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
@@ -87,5 +93,20 @@ class Actualite
         return $this;
     }
 
+    public function __construct(DateTime $cdate)
+    {
+        $this->date = $cdate;
+    }
 
+    public function getLiked(): ?int
+    {
+        return $this->liked;
+    }
+
+    public function setLiked(?int $liked): self
+    {
+        $this->liked = $liked;
+
+        return $this;
+    }
 }

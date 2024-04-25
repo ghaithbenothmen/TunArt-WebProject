@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-
+use DateTime;
 use App\Entity\Commentaire;
 use App\Form\CommentaireType;
 use App\Entity\Actualite;
@@ -36,7 +36,8 @@ class ActualiteController extends AbstractController
     #[Route('/actualite/new', name: 'app_actualite_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $actualite = new Actualite();
+        $currentDate = new DateTime();
+        $actualite = new Actualite($currentDate);
         $form = $this->createForm(ActualiteType::class, $actualite);
         $form->handleRequest($request);
 
@@ -174,5 +175,28 @@ class ActualiteController extends AbstractController
         ]);
     }
 
+
+    #[Route('/actualite/{id}/like', name: 'app_actualite_like_actualite', methods: ['GET'])]
+    public function likeActualite(Request $request, ActualiteRepository $actualiteRepository, EntityManagerInterface $entityManager, $id): Response
+    {
+        $actualite = $actualiteRepository->find($id);
+        $actualite->setLiked(1);
+        $entityManager->persist($actualite);
+        $entityManager->flush();
+        // Après avoir liké, restez sur la même page
+        return $this->redirectToRoute('app_actualite_index');
+    }
+    
+    //dislike actualite
+    #[Route('/actualite/{id}/dislike', name: 'app_actualite_dislike_actualite', methods: ['GET'])]
+    public function dislikeActualite(Request $request, ActualiteRepository $actualiteRepository,EntityManagerInterface $entityManager, $id): Response
+    {
+        $actualite = $actualiteRepository->find($id);
+        $actualite->setLiked(-1);
+        $entityManager->persist($actualite);
+        $entityManager->flush();
+        // After dislike, stay on the same page
+        return $this->redirectToRoute('app_actualite_index');
+    }
 
 }

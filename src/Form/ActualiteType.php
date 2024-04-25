@@ -8,6 +8,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+
 
 
 class ActualiteType extends AbstractType
@@ -16,7 +18,7 @@ class ActualiteType extends AbstractType
     {
         $builder
             ->add('titre')
-            ->add('text')
+            ->add('text', TextareaType::class)
             ->add('date')
             ->add('image', FileType::class, [
                 'required' => false,
