@@ -12,6 +12,10 @@
                 <td>{{ concour.refrence }}</td>
             </tr>
             <tr>
+                <th>Nom</th>
+                <td>{{ concour.nom }}</td>
+            </tr>
+            <tr>
                 <th>Date</th>
                 <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
             </tr>
@@ -26,10 +30,6 @@
             <tr>
                 <th>Lien</th>
                 <td>{{ concour.lien }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ concour.nom }}</td>
             </tr>
             <tr>
                 <th>Nombre des participants</th>
