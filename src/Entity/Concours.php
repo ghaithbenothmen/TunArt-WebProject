@@ -49,6 +49,15 @@ class Concours
 
     #[ORM\Column]
     private ?int $Nvote = 0;
+
+    #[ORM\Column]
+    #[Assert\NotBlank(message:'prix obligatoire' )]
+    #[Assert\Regex(
+        pattern: '/^-?\d+$/',
+        message: 'Le contenu peut etre uniquement des chiffres'
+    )]
+    private ?int $Maxparticipant = null;
+    
     
 
     public function getRefrence(): ?int
@@ -136,6 +145,18 @@ class Concours
     public function setNvote(int $Nvote): static
     {
         $this->Nvote = $Nvote;
+
+        return $this;
+    }
+
+    public function getMaxparticipant(): ?int
+    {
+        return $this->Maxparticipant;
+    }
+
+    public function setMaxparticipant(int $Maxparticipant): static
+    {
+        $this->Maxparticipant = $Maxparticipant;
 
         return $this;
     }

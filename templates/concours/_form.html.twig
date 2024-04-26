@@ -2,7 +2,9 @@
 
 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-
+{{ form_label(form.nom, 'nom') }}
+{{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+<div class="form-error" style="color: red;">{{ form_errors(form.nom) }}</div>
 
 {{ form_label(form.date, 'date') }}
 {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
@@ -37,11 +39,14 @@
 {{ form_label(form.prix, 'prix') }}
 {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
 <div class="form-error" style="color: red;">{{ form_errors(form.prix) }}</div>
+
 {{ form_label(form.lien, 'lien') }}
 {{ form_widget(form.lien, {'attr': {'class': 'form-control'}}) }}
 <div class="form-error" style="color: red;">{{ form_errors(form.lien) }}</div>
-{{ form_label(form.nom, 'nom') }}
-{{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-<div class="form-error" style="color: red;">{{ form_errors(form.nom) }}</div>
+
+{{ form_label(form.Maxparticipant, 'Maxparticipant') }}
+{{ form_widget(form.Maxparticipant, {'attr': {'class': 'form-control'}}) }}
+<div class="form-error" style="color: red;">{{ form_errors(form.Maxparticipant) }}</div>
+
 <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
