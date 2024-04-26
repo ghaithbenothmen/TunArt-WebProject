@@ -26,7 +26,7 @@ class Candidature
     #[ORM\JoinColumn(name: "idConcours",referencedColumnName: "refrence")]
     private ?Concours $Concours = null;
 
-    
+
     #[ORM\ManyToOne(targetEntity: User::class ,inversedBy: 'Candidature')]
     #[ORM\JoinColumn(name: "idUser",referencedColumnName: "user")]
     private ?User $user = null;
