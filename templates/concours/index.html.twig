@@ -15,6 +15,7 @@
                 <th>Lien</th>
                 <th>Nom</th>
                 <th>Nombre des participants</th>
+                <th>Nombre Max des participants</th>
                 <th>Nombre des votes</th>
                 <th>actions</th>
             </tr>
@@ -29,6 +30,7 @@
                 <td>{{ concour.lien }}</td>
                 <td>{{ concour.nom }}</td>
                 <td>{{ concour.Nparticipant }}</td>
+                <td>{{ concour.Maxparticipant }}</td>
                 <td>{{ concour.Nvote }}</td>
                 <td>
                     <a href="{{ path('app_concours_show', {'refrence': concour.refrence}) }}">show</a>
