@@ -40,7 +40,6 @@ class Concours
     #[Assert\NotBlank(message:'lien obligatoire' )]
     private ?string $lien;
 
-
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank(message:'nom obligatoire' )]
     private ?string $nom;

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Candidature index{% endblock %}
+
+{% block body %}
+    <h1>Candidature index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Code de votre inscription</th>
+                <th>Nom du concour</th>
+                <th>Date de l'inscription</th>
+                <th>Date du concour</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for candidature in candidature %}
+            <tr>
+                <td>{{ candidature.idCandidature }}</td>
+                <td>{{ candidature.idConcours.nom }}</td>
+                <td>{{ candidature.date ? candidature.date|date('Y-m-d') : '' }}</td>
+                <td>{{ candidature.idConcours.date ? candidature.idConcours.date|date('Y-m-d') : '' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

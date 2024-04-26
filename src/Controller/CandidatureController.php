@@ -30,7 +30,6 @@ class CandidatureController extends AbstractController
         $candidature = new Candidature($currentDate);
         $form = $this->createForm(CandidatureType::class, $candidature);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($candidature);
             $entityManager->flush();
