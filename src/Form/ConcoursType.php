@@ -17,6 +17,7 @@ class ConcoursType extends AbstractType
             ->add('prix')
             ->add('lien')
             ->add('nom')
+            ->add('Maxparticipant')
         ;
     }
 

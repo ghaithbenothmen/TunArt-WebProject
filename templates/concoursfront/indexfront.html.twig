@@ -9,26 +9,30 @@
         <thead>
             <tr>
                 <th>Refrence</th>
+                <th>Nom</th>
                 <th>Date</th>
                 <th>Type</th>
                 <th>Prix</th>
                 <th>Lien</th>
-                <th>Nom</th>
-
+                <th>Places Disponibles</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for concour in concours %}
             <tr>
                 <td>{{ concour.refrence }}</td>
+                <td>{{ concour.nom }}</td>
                 <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
                 <td>{{ concour.type }}</td>
                 <td>{{ concour.prix }}</td>
                 <td>{{ concour.lien }}</td>
-                <td>{{ concour.nom }}</td>
-
-
-
+                <td class="participant-count {{ concour.Nparticipant <= concour.Maxparticipant ? 'full' : '' }}">
+                {{ concour.Maxparticipant - concour.Nparticipant }} / {{ concour.Maxparticipant }}
+                </td>
+                <td>
+                    <a href="#">Participate</a>
+                </td>
             </tr>
         {% else %}
             <tr>
