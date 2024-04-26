@@ -9,11 +9,11 @@
         <thead>
             <tr>
                 <th>Refrence</th>
+                <th>Nom</th>
                 <th>Date</th>
                 <th>Type</th>
                 <th>Prix</th>
                 <th>Lien</th>
-                <th>Nom</th>
                 <th>Nombre des participants</th>
                 <th>Nombre Max des participants</th>
                 <th>Nombre des votes</th>
@@ -24,11 +24,11 @@
         {% for concour in concours %}
             <tr>
                 <td>{{ concour.refrence }}</td>
+                <td>{{ concour.nom }}</td>
                 <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
                 <td>{{ concour.type }}</td>
                 <td>{{ concour.prix }}</td>
                 <td>{{ concour.lien }}</td>
-                <td>{{ concour.nom }}</td>
                 <td>{{ concour.Nparticipant }}</td>
                 <td>{{ concour.Maxparticipant }}</td>
                 <td>{{ concour.Nvote }}</td>
