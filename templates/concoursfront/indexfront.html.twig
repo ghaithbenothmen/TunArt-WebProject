@@ -14,6 +14,7 @@
                 <th>Type</th>
                 <th>Prix</th>
                 <th>Lien</th>
+                <th>Places Disponibles</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -26,6 +27,9 @@
                 <td>{{ concour.type }}</td>
                 <td>{{ concour.prix }}</td>
                 <td>{{ concour.lien }}</td>
+                <td class="participant-count {{ concour.Nparticipant <= concour.Maxparticipant ? 'full' : '' }}">
+                {{ concour.Maxparticipant - concour.Nparticipant }} / {{ concour.Maxparticipant }}
+                </td>
                 <td>
                     <a href="#">Participate</a>
                 </td>
