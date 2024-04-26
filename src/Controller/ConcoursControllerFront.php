@@ -22,5 +22,5 @@ class ConcoursControllerFront extends AbstractController
         ]);
     }
 
-    
+
 }
