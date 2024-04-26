@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 
 
-#[Route('/admin')]
+
 class UserController extends AbstractController
 {
 
@@ -145,11 +145,13 @@ public function register(
 
 
 
-    #[Route('/users', name: 'user_list')]
+    #[Route('/ADMIN/users', name: 'user_list')]
     public function userList(Request $request, UserRepository $userRepository): Response
     {
         // Get the sort option from the request query parameters
         $sortBy = $request->query->get('sort');
+
+        $searchTerm = $request->query->get('search');
         
         // If sorting by email is requested, fetch users sorted by email
         if ($sortBy === 'email') {
@@ -157,6 +159,10 @@ public function register(
         } else {
             // Otherwise, fetch all users
             $users = $userRepository->findAll();
+        }
+
+        if ($searchTerm) {
+            $users = $userRepository->searchByEmail($searchTerm);
         }
         
         // Render the template and pass the users to it
@@ -175,22 +181,6 @@ public function register(
     
 
 
-
-
-/*
-    #[Route('/users', name: 'user_list')]
-    public function userList(): Response
-    {
-        // Fetch all users from the database
-        $userRepository = $this->managerRegistry->getRepository(User::class);
-        $users = $userRepository->findAll();
-
-        // Render the template and pass the users to it
-        return $this->render('user/user_list.html.twig', [
-            'users' => $users,
-        ]);
-    }
-*/
 
 
 
@@ -280,7 +270,7 @@ public function register(
                 $this->addFlash('success', 'User deleted successfully.');
            
     
-        return $this->redirectToRoute('userss');
+        return $this->redirectToRoute('UserDashboard');
     }
 
 

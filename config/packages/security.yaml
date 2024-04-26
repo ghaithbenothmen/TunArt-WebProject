@@ -29,9 +29,10 @@ security:
             # other firewall configurations
     access_control:
         # Allow anonymous users to access the login page
-        - { path: ^/admin/adminDashboard, roles: ADMIN  }
-        - { path: '^/user/UserDashboard', roles: CLIENT }
-        - { path: '^/artiste/artisteDashboard', roles: ARTISTE }
+        - { path: ^/admin, roles: ADMIN  }
+        - { path: ^/user, roles: CLIENT }
+        - { path: ^/artiste, roles: ARTISTE }     
+
         
       
 

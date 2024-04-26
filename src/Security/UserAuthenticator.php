@@ -60,7 +60,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         $roles = $user->getRoles();
 
         if (in_array("ADMIN", $roles, true)) {
-            return new RedirectResponse($this->urlGenerator->generate('adminDashboard'));
+            return new RedirectResponse($this->urlGenerator->generate('user_list'));
         } elseif (in_array("CLIENT", $roles, true)) {
             return new RedirectResponse($this->urlGenerator->generate('UserDashboard', ['id' => $user->getId()]));
         } elseif (in_array("ARTISTE", $roles, true)) {

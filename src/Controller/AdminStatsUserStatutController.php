@@ -33,7 +33,7 @@ class AdminStatsUserStatutController extends AbstractController
       
 
       // Passer les données au template pour affichage
-      return $this->render('admin_stats_user_statut/stats.html.twig', [
+      return $this->render('user/stat.html.twig', [
           'totalUsers' => $totalUsers,
       ]);
     }

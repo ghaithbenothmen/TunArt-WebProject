@@ -4,7 +4,7 @@
 # config/routes.yaml
 
 registration_success:
-    path: '/users'
+    path: '/admin/users'
     controller: App\Controller\UserController
 
 

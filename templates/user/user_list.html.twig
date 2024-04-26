@@ -1,4 +1,4 @@
-{% extends 'artiste-dash.html.twig' %}
+{% extends 'admin-dash.html.twig' %}
 
 
 {% block title %}User List{% endblock %}
@@ -7,8 +7,8 @@
     <h1>User List</h1>
 
     {# Search Form #}
-    <form id="search-form" style="margin-bottom: 20px;">
-        <input type="text" id="search-input" name="search" class="form-control" placeholder="Search by Email">
+    <form id="search-form">
+        <input type="text" id="search-input" name="search" placeholder="Search by Email">
     </form>
 
     {# Sort Button #}
@@ -56,16 +56,17 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('search-input');
+            const userList = document.getElementById('user-list');
 
             searchInput.addEventListener('input', function(event) {
                 const searchTerm = event.target.value.trim().toLowerCase();
-                const users = document.querySelectorAll('.list-group-item');
+                const users = Array.from(userList.getElementsByTagName('tr'));
 
                 users.forEach(function(user) {
-                    const userEmail = user.querySelector('strong:nth-child(8)').textContent.trim().toLowerCase();
+                    const userEmail = user.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
 
                     if (userEmail.includes(searchTerm)) {
-                        user.style.display = 'block';
+                        user.style.display = 'table-row';
                     } else {
                         user.style.display = 'none';
                     }

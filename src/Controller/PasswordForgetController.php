@@ -182,7 +182,7 @@ $user->setMdp($pass1);
 /*$repo->save($user,true);*/
 $entityManager->flush();
 $session->set('user', $user);
-return $this->redirectToRoute('home');
+return $this->redirectToRoute('app_login');
     }
     
 }
