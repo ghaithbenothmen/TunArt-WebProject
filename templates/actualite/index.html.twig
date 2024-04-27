@@ -4,6 +4,27 @@
 
 {% block body %}
     <h1>Actualite index</h1>
+ <form action="{{ path('app_actualite_search') }}" method="GET">
+        <input type="text" id="query" name="query">
+        <button type="submit">Search</button>
+    </form>
+    </form>
+      <form action="{{ path('app_actualitesback_tri') }}" method="GET">
+        <label for="order">Ordre :</label>
+        <select name="order" id="order">
+            <option value="asc">Croissant</option>
+            <option value="desc">Décroissant</option>
+        </select>
+
+        <label for="field">Champ de tri :</label>
+        <select name="field" id="field">
+            <option value="titre">Titre</option>
+            <option value="date">Date</option>
+            <!-- Ajoutez d'autres options pour les champs de tri si nécessaire -->
+        </select>
+
+        <button type="submit" class="btn btn-primary">Trier</button>
+    </form>
 
     <table class="table">
         <thead>
@@ -18,7 +39,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for actualite in actualites %}
+        {% for actualite in pagination %}
             <tr>
                 <td>{{ actualite.id }}</td>
                 <td>{{ actualite.titre }}</td>
@@ -42,7 +63,7 @@
         {% endfor %}
         </tbody>
     </table>
-                                        <ul class="pagination float-right">
+                                       {# <ul class="pagination float-right">
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#" tabindex="-1">Previous</a>
                                         </li>
@@ -54,7 +75,10 @@
                                         <li class="page-item">
                                             <a class="page-link" href="#">Next</a>
                                         </li>
-                                    </ul>
+                                    </ul>#}
+                                    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
     <a href="{{ path('app_actualite_new') }}"class="btn btn-info">Create new</a>
 {% endblock %}
