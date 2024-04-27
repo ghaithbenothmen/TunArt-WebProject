@@ -14,7 +14,7 @@
                 <th>Type</th>
                 <th>Prix</th>
                 <th>Lien</th>
-                <th>Places Disponibles</th>
+                <th>Nombre des participants</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -28,7 +28,7 @@
                 <td>{{ concour.prix }}</td>
                 <td>{{ concour.lien }}</td>
                 <td class="participant-count {{ concour.Nparticipant <= concour.Maxparticipant ? 'full' : '' }}">
-                {{ concour.Maxparticipant - concour.Nparticipant }} / {{ concour.Maxparticipant }}
+                {{ concour.Nparticipant }} / {{ concour.Maxparticipant }}
                 </td>
                 <td>
                     <a href="{{ path('app_concoursfront_participate', {'refrence': concour.refrence})}}">Participate</a>

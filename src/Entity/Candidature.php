@@ -56,7 +56,7 @@ class Candidature
 
     public function setIdConcours(?Concours $Concours): static
     {
-        $this->idConcours = $Concours;
+        $this->Concours = $Concours;
 
         return $this;
     }
@@ -68,14 +68,16 @@ class Candidature
 
     public function setIdUser(?User $user): static
     {
-        $this->idUser = $user;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function __construct(DateTime $currentDate)
+    public function __construct(DateTime $currentDate,User $user,Concours $Concours)
     {
         $this->date = $currentDate;
+        $this->user = $user;
+        $this->Concours = $Concours;
     }
     
 }

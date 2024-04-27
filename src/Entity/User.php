@@ -16,10 +16,15 @@ class User
     #[ORM\Column]
     private ?int $user = null;
 
+    
+
+
     public function getIdUser(): ?int
     {
         return $this->user;
     }
+
+
 
 
 }
