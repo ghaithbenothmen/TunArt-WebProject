@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Repository\ConcoursRepository;
 use App\Entity\Concours;
+use App\Entity\User;
+use App\Entity\Candidature;
+use DateTime;
 use App\Form\ConcoursType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -24,9 +27,12 @@ class ConcoursControllerFront extends AbstractController
         ]);
     }
 
-    #[Route('/a', name: 'app_concoursfront_participate', methods: ['GET'])]
-    public function participate(ConcoursRepository $concoursRepository,MailerInterface $mailer): Response
+    #[Route('/{refrence}', name: 'app_concoursfront_participate', methods: ['GET'])]
+    public function participate(Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer): Response
     {
+        $currentDate = new DateTime();
+        $candidature = new Candidature($currentDate);
+        echo $concour->getRefrence();
         $message = (new Email())
         ->from('culturnaskapere@gmail.com')
         ->to('aziz.rihani2002@gmail.com')
@@ -34,7 +40,7 @@ class ConcoursControllerFront extends AbstractController
         ->html('<p>Vous avez effectuer une inscription dans un concour sur le platform de Tunart</p>')
         ->text('Hello');
 
-    $mailer->send($message);
+    //$mailer->send($message);
 
     return $this->render('concoursfront/indexfront.html.twig', [
         'concours' => $concoursRepository->findAll(),

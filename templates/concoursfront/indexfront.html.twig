@@ -31,7 +31,7 @@
                 {{ concour.Maxparticipant - concour.Nparticipant }} / {{ concour.Maxparticipant }}
                 </td>
                 <td>
-                    <a href="{{ path('app_concoursfront_participate')}}">Participate</a>
+                    <a href="{{ path('app_concoursfront_participate', {'refrence': concour.refrence})}}">Participate</a>
                 </td>
             </tr>
         {% else %}
