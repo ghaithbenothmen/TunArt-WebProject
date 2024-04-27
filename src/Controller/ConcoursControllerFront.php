@@ -40,7 +40,11 @@ class ConcoursControllerFront extends AbstractController
         {
             echo "<script>alert('Maximum participants reached!');</script>";
         }
-        else
+        else if($concour->getDate()<$candidature->getDate())
+            {
+            echo "<script>alert('Date depasse!');</script>";
+            }
+            else
         {
             $concour->setNparticipant($concour->getNparticipant()+1);
             echo $concour->getRefrence();
