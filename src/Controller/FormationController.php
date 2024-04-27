@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Entity\Formation;
 use App\Form\FormationType;
+use App\Repository\CategorieRepository;
 use App\Repository\FormationRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,11 +21,45 @@ class FormationController extends AbstractController
 {
 
     #[Route('/listeFor', name: 'app_artiste_formation')]
-    public function listeFor(FormationRepository $repo): Response
+    public function listeFor(PaginatorInterface $paginator, Request $request, FormationRepository $repo, CategorieRepository $categorieRepo): Response
     {
-        $formations = $repo->findAll();        
-        return $this->render('formation/formation.html.twig', ['formations' => $formations]);
+        $term = $request->query->get('q');
+        $categorieId = $request->query->get('categorie');
+        
+        $queryBuilder = $repo->createQueryBuilder('f');
+    
+        if ($term) {
+            $queryBuilder->andWhere('f.nom LIKE :term')
+                       ->setParameter('term', '%'.$term.'%');
+        }
+    
+        if ($categorieId) {
+            $categorie = $categorieRepo->find($categorieId);
+            if ($categorie) {
+                $queryBuilder->andWhere('f.cat = :categorie')
+                           ->setParameter('categorie', $categorie);
+            }
+        }
+    
+        $query = $queryBuilder->getQuery();
+    
+        $formations = $paginator->paginate(
+            $query, // Requête contenant les données à paginer
+            $request->query->getInt('page', 1), // Numéro de page par défaut
+            4 // Nombre d'éléments par page
+        );
+    
+        $categories = $categorieRepo->findAll();
+       // $formations = $query->getResult();
+        
+        return $this->render('formation/formation.html.twig', [
+            
+            
+            'categories' => $categories,'formations' => $formations
+        ]);
     }
+    
+    
 
 
     #[Route('/addFormation', name: 'app_add_formation')]
@@ -99,4 +135,5 @@ class FormationController extends AbstractController
     }
     
  
+    
 }

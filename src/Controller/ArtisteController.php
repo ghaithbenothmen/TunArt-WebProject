@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,14 +24,27 @@ class ArtisteController extends AbstractController
             'controller_name' => 'ArtisteController',
         ]);
     }
+
     #[Route('/listeCat', name: 'app_artiste_listeCat')]
-    public function listeCat(CategorieRepository $repo): Response
-    {
-        $categories = $repo->findAll();
-        $cat = new Categorie();
-        $form = $this->createForm(CategorieFormType::class, $cat);
-        return $this->render('artiste/categorie.html.twig', ['categories' => $categories, 'f' => $form->createView()]);
+public function listeCat(CategorieRepository $repo, Request $request, PaginatorInterface $paginator): Response
+{
+    $searchTerm = $request->query->get('search');
+    $query = $repo->createQueryBuilder('c');
+
+    if ($searchTerm) {
+        $query->where('c.nom LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
     }
+
+    $categories = $paginator->paginate(
+        $query->getQuery(), // Requête contenant les données à paginer
+        $request->query->getInt('page', 1), // Numéro de page par défaut
+        3 // Nombre d'éléments par page
+    );
+
+    return $this->render('artiste/categorie.html.twig', ['categories' => $categories]);
+}
+
 
 
     private function getErrorsFromForm(FormInterface $form): array
@@ -55,61 +69,61 @@ class ArtisteController extends AbstractController
         $cat = new Categorie();
         $form = $this->createForm(CategorieFormType::class, $cat);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $manager->getManager()->persist($cat);
                 $manager->getManager()->flush();
-    
+
                 return new JsonResponse(['success' => true]);
             } catch (\Exception $e) {
                 return new JsonResponse(['success' => false, 'message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-    
+
         // Get errors from the form
         $errors = $this->getFormErrors($form);
-    
+
         return new JsonResponse(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
-    
+
     private function getFormErrors(FormInterface $form): array
     {
         $errors = [];
         foreach ($form->getErrors(true, false) as $error) {
             $errors[] = $error->getMessage();
         }
-    
+
         foreach ($form->all() as $childForm) {
             if ($childErrors = $this->getFormErrors($childForm)) {
                 $errors[$childForm->getName()] = $childErrors;
             }
         }
-    
+
         return $errors;
     }
-    
+
     #[Route('/addCategorie', name: 'app_add_categorie')]
-public function addCategorie(Request $request): Response
-{
-    $cat = new Categorie();
-    $form = $this->createForm(CategorieFormType::class, $cat);
-    $form->handleRequest($request);
+    public function addCategorie(Request $request): Response
+    {
+        $cat = new Categorie();
+        $form = $this->createForm(CategorieFormType::class, $cat);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($cat);
-        $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($cat);
+            $entityManager->flush();
 
-        // Redirect to a success page or return a success response
-        return $this->redirectToRoute('app_artiste_listeCat');
+            // Redirect to a success page or return a success response
+            return $this->redirectToRoute('app_artiste_listeCat');
+        }
+
+        // Render the form template with validation errors
+        return $this->render('artiste/addcategorie.html.twig', [
+            'f' => $form->createView(),
+        ]);
     }
-
-    // Render the form template with validation errors
-    return $this->render('artiste/addcategorie.html.twig', [
-        'f' => $form->createView(),
-    ]);
-}
 
     #[Route('/categorie/delete/{id}', name: 'app_categorie_delete')]
     public function deleteCat($id, ManagerRegistry $manager, CategorieRepository $repo)
@@ -137,9 +151,9 @@ public function addCategorie(Request $request): Response
         ]);
     }
 
-  
-    
-    
+
+
+
     #[Route('/updateCat/{id}', name: 'app_update_cat')]
     public function updateCat(Request $request, int $id): Response
     {
@@ -150,16 +164,21 @@ public function addCategorie(Request $request): Response
             throw $this->createNotFoundException('Category not found');
         }
 
-        $category->setNom($request->request->get('nom')); 
+        $category->setNom($request->request->get('nom'));
 
         $entityManager->flush();
 
         return $this->redirectToRoute('app_artiste_listeCat');
     }
-    
 
+   
+    #[Route('/calendar', name: 'calendar')]
+   public function calender()
+   {
+       $calendar = $this->get('tattali_calendar.factory')->createCalendar();
 
-
-
-
+       return $this->render('artiste/calendar.html.twig', [
+           'calendar' => $calendar,
+       ]);
+   }
 }

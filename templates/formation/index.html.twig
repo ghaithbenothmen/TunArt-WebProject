@@ -4,6 +4,12 @@
 {% endblock %}
 
 {% block body %}
+	<style>
+		.fa-star.disabled {
+			color: lightgray; /* Or any other disabled style you prefer */
+			pointer-events: none; /* Prevents clicks on the stars */
+		}
+	</style>
 	<!-- Navbar Start -->
 	<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
 		<a href="index.html" class="navbar-brand d-flex align-items-center">
@@ -110,79 +116,139 @@
 
 
 				</div>
+				<hr><br>
+				<div class="row gy-3">
+					<div class="col-lg-6 wow fadeInUp" data-wow-delay="0.6s">
+						<div class="d-flex align-items-center mb-3">
+							<i class="fa fa-star fa-2x text-primary flex-shrink-0 me-3"></i>
+							<h6 class="mb-0">Votre avis :</h6>
+							<div class="d-flex align-items-center" id="ratingStars">
+								{% if existingRating is not null %}
+									{% for i in 1..5 %}
+										{% if i <= existingRating.ratingValue %}
+											<i class="fa fa-star text-warning  {% if ratingDisabled %}disabled{% endif %}" data-value="{{ i }}"></i>
+										{% else %}
+											<i class="fa fa-star {% if ratingDisabled %}disabled{% endif %}" data-value="{{ i }}"></i>
+										{% endif %}
+									{% endfor %}
+								{% else %}
+									{% for i in 1..5 %}
+										<i class="fa fa-star" data-value="{{ i }}"></i>
+									{% endfor %}
+								{% endif %}
+							</div>
+
+							{% if not existingRating %}
+								<span id="ratingValue" class="ms-3">0</span>
+							{% endif %}
+						</div>
+						{% if existingRating %}
+							<h6 class="mb-0">Merci pour votre avis !</h6>
+						{% endif %}
+					</div>
+
+				</div>
 
 			</div>
-			
-		</div>
-	</div>
-</div></div></div><!-- Features End --><!-- Testimonial Start --><div class="container-xxl py-5"><div class="container">
-<div class="row g-5">
-	<div class="col-lg-5 wow fadeInUp" data-wow-delay="0.1s">
-		<div class="border-start border-5 border-primary ps-4 mb-5">
 
-			   <a href="#" id="registerButton" type="button" class="btn btn-primary btn-lg py-2 top-0 end-0 mt-2 me-2" data-bs-toggle="modal" >
-                            S'inscrire
-                        </a>
 		</div>
 
 	</div>
-</div></div></div>
+</div></div><!-- Features End --><!-- Testimonial Start --><div class="container-xxl py-5">
+<div class="container">
+	<div class="row g-5">
+		<div class="col-lg-5 wow fadeInUp" data-wow-delay="0.1s">
+			<div class="border-start border-5 border-primary ps-4 mb-5">
 
-    <!-- Error Modal -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    You are already registered for this formation.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
- <!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Etes-vous sûr de vouloir vous inscrire à cette formation ?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a href="{{ path('app_inscription', {'id': formation.id}) }}" class="btn btn-primary">Register</a>
-                </div>
-            </div>
-        </div>
-    </div>
+				<a href="#" id="registerButton" type="button" class="btn btn-primary btn-lg py-2 top-0 end-0 mt-2 me-2" data-bs-toggle="modal">
+					S'inscrire
+				</a>
+			</div>
 
-	
-<script>
-  
-    var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
-        keyboard: false
-    });
+		</div>
 
-    var errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {
-        keyboard: false
-    });
+	</div>
+</div></div><!-- Error Modal --><div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="errorModalLabel">Error</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			You are already registered for this formation.
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+		</div>
 
-    document.getElementById('registerButton').addEventListener('click', function (event) {
-        event.preventDefault();
-       
-        {% if user_already_registered %}
-        errorModal.show();
-        {% else %}
-        confirmModal.show();
-        {% endif %}
-    });
-</script>
-{% endblock %}
+	</div>
+</div></div><!-- Modal --><div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			Etes-vous sûr de vouloir vous inscrire à cette formation ?
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			<a href="{{ path('app_inscription', {'id': formation.id}) }}" class="btn btn-primary">Register</a>
+		</div>
+	</div>
+</div></div><!-- Modal Rating succes--><div class="modal fade" id="ratingSuccessModal" tabindex="-1" aria-labelledby="ratingSuccessModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="ratingSuccessModalLabel">Rating Success</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			Rating saved successfully!
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="window.location.reload();">OK</button>
+		</div>
+	</div>
+</div></div><script>
+var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {keyboard: false});
+
+var errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {keyboard: false});
+
+document.getElementById('registerButton').addEventListener('click', function (event) {
+event.preventDefault();{% if user_already_registered %}errorModal.show();
+{% else %}confirmModal.show();{% endif %}
+});
+document.querySelectorAll('#ratingStars .fa-star').forEach(function (star) {
+star.addEventListener('click', function () {
+const ratingValue = this.getAttribute('data-value');
+
+document.querySelectorAll('#ratingStars .fa-star').forEach(function (star) {
+if (star.getAttribute('data-value') <= ratingValue) {
+star.classList.add('text-warning');
+} else {
+star.classList.remove('text-warning');
+}
+});
+document.getElementById('ratingValue').textContent = ratingValue;
+console.log(ratingValue);
+const formationId = window.location.pathname.split('/').pop();
+// Envoi de la note au backend
+fetch(`/rating/${formationId}?ratingValue=${ratingValue}`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+}
+}).then(response => {
+if (!response.ok) {
+throw new Error('Failed to submit rating');
+}
+console.log('Rating submitted successfully');
+$('#ratingSuccessModal').modal('show'); // Show the success modal
+}).catch(error => {
+console.error('Error submitting rating:', error.message);
+});
+});
+});</script>{% endblock %}

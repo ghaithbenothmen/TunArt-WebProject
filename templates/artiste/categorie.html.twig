@@ -4,7 +4,42 @@
 {% endblock %}
 
 {% block body %}
+<style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.pagination a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination span.current {
+    background-color: #5f76e8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.pagination a.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+
+</style>
 	<!-- ============================================================== -->
 	<!-- Bread crumb and right sidebar toggle -->
 	<!-- ============================================================== -->
@@ -27,8 +62,8 @@
 				<div
 					class="customize-input float-right">
 					{# <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-											Ajouter Categorie
-										</button> #}
+																Ajouter Categorie
+															</button> #}
 					<a href="{{ path('app_add_categorie') }}" class="btn btn-primary">
 						Ajouter Categorie
 					</a>
@@ -44,6 +79,16 @@
 	<!-- ============================================================== -->
 		<div
 		class="container-fluid"> <!-- ============================================================== -->
+
+
+	<div class="row mb-4">
+    <div class="col">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <input type="text" name="search" id="search" class="form-control" placeholder="Nom de catégorie">
+        </div>
+    </div>
+</div>
 
 		<div class="row">
 			<div class="col-12">
@@ -83,7 +128,7 @@
 								</tbody>
 
 							</table>
-							<ul class="pagination float-right">
+							{# <ul class="pagination float-right">
 								<li class="page-item disabled">
 									<a class="page-link" href="#" tabindex="-1">Previous</a>
 								</li>
@@ -101,7 +146,12 @@
 								<li class="page-item">
 									<a class="page-link" href="#">Next</a>
 								</li>
-							</ul>
+							</ul> #}
+							<div class="d-flex justify-content-center">
+    <div class="pagination">
+        {{ knp_pagination_render(categories) }}
+    </div>
+</div>
 						</div>
 					</div>
 				</div>
@@ -160,96 +210,50 @@
 	{% endfor %}
 
 	<!-- Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ajouter Catégorie</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div
-					class="modal-body">
-					<!-- Form for adding the entity -->
-					{{ form_start(f) }}
-					<div class="mb-3">
-						{{ form_label(f.nom, "Nom catégorie:", {'label_attr': {'class': 'form-label'}}) }}
-						{{ form_widget(f.nom, {'attr': {'class': 'form-control','placeholder': 'Entré nom de la catégorie'}}) }}
-						{% if errors.nom is defined %}
-							<div class="alert alert-danger">{{ errors.nom | join('<br>') }}</div>
-						{% endif %}
+	{# <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Ajouter Catégorie</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
+					<div
+						class="modal-body">
+						<!-- Form for adding the entity -->
+						{{ form_start(f) }}
+						<div class="mb-3">
+							{{ form_label(f.nom, "Nom catégorie:", {'label_attr': {'class': 'form-label'}}) }}
+							{{ form_widget(f.nom, {'attr': {'class': 'form-control','placeholder': 'Entré nom de la catégorie'}}) }}
+							{% if errors.nom is defined %}
+								<div class="alert alert-danger">{{ errors.nom | join('<br>') }}</div>
+							{% endif %}
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						{{ form_widget(f.Ajouter, {'attr': {'class': 'btn btn-primary'}}) }}
+					</div>
+					{{ form_end(f) }}
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					{{ form_widget(f.Ajouter, {'attr': {'class': 'btn btn-primary'}}) }}
-				</div>
-				{{ form_end(f) }}
 			</div>
 		</div>
-	</div>
-
+	 #}
 
 	<script>
 		$(document).ready(function () {
-$('#exampleModal form').submit(function (e) {
-e.preventDefault();
+$('#search').keyup(function () {
+var query = $(this).val().toLowerCase().trim();
 
-$.ajax({
-type: 'POST',
-url: '{{ path('app_add_cat') }}',
-data: $(this).serialize(),
-success: function (response) {
-if (response.success) {
-$('#exampleModal').modal('hide');
-location.reload();
-} else { // Handle error response
-if (response.errors) { // Display errors in the form
-displayErrors(response.errors);
-} else { // Handle other errors
-console.error('Unknown error occurred.');
-}
-}
-},
-error: function (error) {
-console.error(error);
-}
-});
-});
-
-function displayErrors(errors) { // Clear existing error messages
-$('#exampleModal .alert-danger').remove();
-
-// Display new error messages
-for (let fieldName in errors) {
-let errorMessages = errors[fieldName];
-let fieldSelector = '#exampleModal [name="' + fieldName + '"]';
-let field = $(fieldSelector);
-
-if (field.length > 0) {
-let errorHtml = '<div class="alert alert-danger">' + errorMessages.join('<br>') + '</div>';
-field.closest('.form-group').append(errorHtml);
-}
-}
-}
-});
-function updateCategory(categoryId) {
-var form = document.getElementById('updateForm' + categoryId);
-var formData = new FormData(form);
-
-fetch(form.action, {
-method: 'POST',
-body: formData
-}).then(response => response.json()).then(data => {
-if (data.success) { // Reload  page
-location.reload();
+// Filtre le tableau des catégories en fonction de la requête de recherche
+$('#zero_config tbody tr').each(function () {
+var currentText = $(this).find('td:nth-child(2)').text().toLowerCase().trim();
+if (currentText.includes(query)) {
+$(this).show();
 } else {
-
-console.error(data.message);
+$(this).hide();
 }
-}).catch(error => {
-
-console.error(error);
 });
-}
+});
+});
 	</script>
 {% endblock %}
