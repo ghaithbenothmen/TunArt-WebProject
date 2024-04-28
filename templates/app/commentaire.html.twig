@@ -99,17 +99,81 @@
             <p class="mb-4">
                 <td>{{ actualite.text }}</td>
             </p>
-            <form method="post" action="{{ path('addCommentaire', {'id': actualite.id}) }}">
-    <div class="mb-3">
-        <label for="commentaire" class="form-label">Votre commentaire</label>
-        <textarea class="form-control" id="commentaire" name="commentaire"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Envoyer le commentaire</button>
-</form>
+            <form  id="comment-form" method="post" action="{{ path('addCommentaire', {'id': actualite.id}) }}">
+                  <div class="mb-3">
+                    <label for="commentaire" class="form-label">Votre commentaire</label>
+                    <textarea class="form-control" id="commentaire" name="commentaire"></textarea>
+                    <span type="text" class="form-control" id="comment-error-message"></span>
+                    <style>
+									.error-message {
+										position: relative;
+										color: red; /* Set the text color to red or any color you prefer */
+										margin-top: 5px; /* Add margin to create space between the input field and the error message */
+										font-size: 14px; /* Set the font size for the error message */
+									}
+								</style>
+                  </div>
+                <button type="submit" class="btn btn-primary">Envoyer le commentaire</button>
+            </form>
+<script>
+
+
+								document.addEventListener('DOMContentLoaded', function () {
+                                        const commentForm = document.querySelector('#comment-form');
+
+                                        if (commentForm) {
+                                        commentForm.addEventListener('submit', function (event) {
+                                        event.preventDefault(); // Prevent the default form submission behavior
+
+                                        const formData = new FormData(this);
+                                        const commentInput = formData.get('commentaire');
+                                        const commentInputField = document.querySelector('input[name="commentaire"]');
+                                        const errorMessageContainer = document.querySelector('#comment-error-message');
+
+
+// Check if the comment is blank
+                                        if (commentInput.trim() === '') {
+                                        errorMessageContainer.classList.add('error-message'); // Add the error-message class
+                                        errorMessageContainer.textContent = 'Comment cannot be blank';
+                                        return; // Do not proceed if the comment is blank
+                                        }
+
+
+// Send AJAX request to add the comment
+                                        fetch(this.action, {
+                                        method: 'POST',
+                                        body: formData,
+                                        headers: {
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                        }
+                                        }).then(response => {
+                                        if (response.ok) {
+                                        console.log('Comment added successfully');
+                                        return response.text();
+                                        }
+                                        if (response.status == 403) {
+                                        errorMessageContainer.classList.add('error-message'); // Add the error-message class
+                                        errorMessageContainer.textContent = 'Inappropriate content';
+
+                                        console.error('Failed to add comment');
+                                        throw new Error('Failed to add comment');
+                                        } else {
+                                        console.error('Failed to add comment');
+                                        throw new Error('Failed to add comment');
+                                        }
+
+                                        }).then(html => {
+                                        location.reload()
+
+                                        });
+</script>
+
           </div>
         </div>
       </div>
     </div>
     <!-- Contact End -->
+
+        
 
 {% endblock %}

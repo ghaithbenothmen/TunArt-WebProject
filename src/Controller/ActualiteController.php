@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Service\SmsGeneratorAct;
+
 
 #[Route('/admin')]
 class ActualiteController extends AbstractController
@@ -104,7 +106,7 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
 }
 
     #[Route('/actualite/new', name: 'app_actualite_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(SmsGeneratorAct $smsGeneratorAct,Request $request, EntityManagerInterface $entityManager): Response
     {
         $currentDate = new DateTime();
         $actualite = new Actualite($currentDate);
@@ -136,6 +138,9 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
 
             $entityManager->persist($actualite);
             $entityManager->flush();
+            $name = 'TunArt';
+            $text = 'Un nouveau actualité a été ajouté : ' . $actualite->getTitre();
+            $smsGeneratorAct->SendSms('+21699975050',$name, $text);
 
             return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
         }
