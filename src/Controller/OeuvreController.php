@@ -4,7 +4,13 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Entity\Oeuvre;
-
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Writer\PngWriter;
 use App\Form\OeuvreType;
 use App\Repository\OeuvreRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,6 +21,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+
 
 
 #[Route('/oeuvre')]
@@ -112,6 +121,75 @@ class OeuvreController extends AbstractController
         $manager->getManager()->flush();
         return $this->redirectToRoute('app_artiste_oeuvre');
     }
+
+    #[Route('/search/oeuvre', name: 'app_search_oeuvre')]
+    public function searchOeuvre(Request $request, OeuvreRepository $repo): JsonResponse
+    {
+        $searchText = $request->query->get('q');
+        $oeuvres = $repo->findBySearchText($searchText); // Implement a custom method in your repository to fetch oeuvres based on search query
     
- 
+        // Serialize the oeuvres to JSON and return as response
+        $serializedOeuvres = $this->serializeOeuvres($oeuvres); // Implement serialization logic
+        return new JsonResponse($serializedOeuvres);
+    }
+    
+    // Implement serialization logic to convert oeuvres to JSON format
+    private function serializeOeuvres($oeuvres): array
+    {
+        // Implement your serialization logic here
+        // Example: Convert oeuvres array to associative array or JSON string
+        return $oeuvres; // Return serialized oeuvres
+    }
+    #[Route('/oeuvre/qrcode/{id}', name: 'oeuvre_qrcode')]
+public function generateOeuvreQrCode(int $id): Response
+{
+    $oeuvre = $this->getDoctrine()->getRepository(Oeuvre::class)->find($id);
+    
+    if (!$oeuvre) {
+        throw $this->createNotFoundException('Oeuvre introuvable');
+    }
+    
+    $qrCodeContent = sprintf(
+        "Nom de l'oeuvre : %s\nType de l'oeuvre : %s\nDescription : %s\nDate de publication : %s\nNote : %d\nArtiste : %s\nImage : %s",
+        $oeuvre->getNomOeuvre(),
+        $oeuvre->getTypeOeuvre(),
+        $oeuvre->getDescription(),
+        $oeuvre->getDatePublication()->format('Y-m-d'), // Format the date as needed
+        $oeuvre->getNote(),
+        $oeuvre->getArtisteId()->getNom(),
+        $this->getParameter('kernel.project_dir') . '/public/uploads/' . $oeuvre->getImg(),
+        // Adjust the path to match the location of your images
+    );
+    
+    // Create the QR code with the content
+    $qrCode = QrCode::create($qrCodeContent)
+        ->setEncoding(new Encoding('UTF-8'))
+        ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
+        ->setSize(300) // Taille du QR code
+        ->setMargin(10) // Marge autour du QR code
+        ->setForegroundColor(new Color(0, 0, 0)) // Couleur du QR code
+        ->setBackgroundColor(new Color(255, 255, 255)); // Couleur de fond du QR code
+
+    // Optionally, you can add a logo to the QR code
+    // $logo = Logo::create('path_to_your_logo.png')->setResizeToWidth(60);
+
+    // Create a label for the QR code
+    $label = Label::create('')
+        ->setFont(new NotoSans(12)); // Police de caractères de l'étiquette
+
+    // Generate the QR code image with the logo and label
+    $writer = new PngWriter();
+    $qrCodeImage = $writer->write(
+        $qrCode,
+        null,
+        $label->setText('Scanner ici!!') // Texte de l'étiquette
+    )->getDataUri(); // Obtenir les données de l'image au format URI
+
+    // Pass the QR code image data to the Twig template for display
+    return $this->render('oeuvre/qrcode.html.twig', [
+        'qrCodeImage' => $qrCodeImage,
+    ]);
+}
+
+
 }
