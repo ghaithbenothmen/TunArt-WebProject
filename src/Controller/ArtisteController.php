@@ -17,6 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArtisteController extends AbstractController
 {
+
+    
     #[Route('/artiste', name: 'app_artiste')]
     public function index(): Response
     {
@@ -172,13 +174,9 @@ public function listeCat(CategorieRepository $repo, Request $request, PaginatorI
     }
 
    
-    #[Route('/calendar', name: 'calendar')]
-   public function calender()
-   {
-       $calendar = $this->get('tattali_calendar.factory')->createCalendar();
-
-       return $this->render('artiste/calendar.html.twig', [
-           'calendar' => $calendar,
-       ]);
-   }
+    #[Route(path: '/calendar', name: "app_calendar", methods: ['GET'])]
+    public function calendar(): Response
+    {
+        return $this->render('artiste/calendar.html.twig');
+    }
 }

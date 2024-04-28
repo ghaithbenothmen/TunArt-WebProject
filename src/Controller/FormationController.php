@@ -20,6 +20,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class FormationController extends AbstractController
 {
 
+    
+#[Route('/get-formations-as-events', name: 'app_get_formations_as_events')]
+public function getFormationsAsEvents(FormationRepository $formationRepository): JsonResponse
+{
+    $formations = $formationRepository->findAll();
+
+    $events = [];
+    foreach ($formations as $formation) {
+        $events[] = [
+            'title' => $formation->getNom(),
+            'start' => $formation->getDatedebut()->format('Y-m-d'),
+            'end' => $formation->getDatefin()->format('Y-m-d'),
+        ];
+    }
+
+    return new JsonResponse($events);
+}
+
     #[Route('/listeFor', name: 'app_artiste_formation')]
     public function listeFor(PaginatorInterface $paginator, Request $request, FormationRepository $repo, CategorieRepository $categorieRepo): Response
     {

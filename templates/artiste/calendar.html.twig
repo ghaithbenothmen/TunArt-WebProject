@@ -6,5 +6,61 @@
 
 
 {% block body %}
-    {{ tattali_calendar_render(calendar) }}
+	<div class="page-breadcrumb"> <div class="row">
+		<div class="col-7 align-self-center">
+			<h4 class="page-title text-trunforme text-dark font-weight-medium mb-1">Calendrier</h4>
+			<div class="d-flex align-items-center">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb m-0 p-0">
+						<li class="breadcrumb-item">
+							<a href="index.html" class="text-muted">Artiste</a>
+						</li>
+						<li class="breadcrumb-item text-muted active" aria-current="page">Calendrier</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+
+
+		<div class="col-5 align-self-center">
+			<div
+				class="customize-input float-right">
+				{# <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+																									Ajouter Formation
+																								</button> #}
+				<a href="{{ path('app_add_formation') }}" class="btn btn-primary">
+					Ajouter Formation
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+     
+	<div class="container-fluid"> <!-- ============================================================== -->
+	    <div class="row mb-4">
+		    <div class="col">
+                <div id="calendar-holder"></div>
+            </div>
+        </div>
+    </div>
+     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js" integrity="sha256-dHUNnePy81fXq4D/wfu7cPsEIP7zl6MvLb84jtZf+UY=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            var calendarEl = document.getElementById('calendar-holder');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                defaultView: 'dayGridMonth',
+                editable: true,
+                events: "{{ path('app_get_formations_as_events') }}",
+                headerToolbar: {
+                    start: 'prev,next today',
+                    center: 'title',
+                    end: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                timeZone: 'UTC',
+            });
+            calendar.render();
+        });
+    </script>
 {% endblock %}
