@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Concours;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use DateTime;
 
 /**
  * @extends ServiceEntityRepository<Concours>
@@ -19,6 +20,17 @@ class ConcoursRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Concours::class);
+    }
+
+    public function findNonOutdated(): array
+    {
+        $today = new DateTime('now');
+
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.date >= :today')
+            ->setParameter('today', $today)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

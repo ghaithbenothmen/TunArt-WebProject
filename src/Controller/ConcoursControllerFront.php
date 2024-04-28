@@ -7,6 +7,7 @@ use App\Entity\Concours;
 use App\Entity\User;
 use App\Entity\Candidature;
 use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
 use App\Form\ConcoursType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -22,10 +23,24 @@ class ConcoursControllerFront extends AbstractController
     #[Route('/', name: 'app_concoursfront_index', methods: ['GET'])]
     public function index(ConcoursRepository $concoursRepository): Response
     {
+        //all concours
+
+        
         return $this->render('concoursfront/indexfront.html.twig', [
             'concours' => $concoursRepository->findAll(),
         ]);
+
+        //Concours not outdated
+
+        /*
+        $concours = $concoursRepository->findNonOutdated();
+
+        return $this->render('concoursfront/indexfront.html.twig', [
+            'concours' => $concours,
+        ]);
+        */
     }
+
 
     
     #[Route('/{refrence}', name: 'app_concoursfront_participate', methods: ['GET'])]
@@ -62,10 +77,9 @@ class ConcoursControllerFront extends AbstractController
             ->from('culturnaskapere@gmail.com')
             ->to('aziz.rihani2002@gmail.com')
             ->subject('Iscription concour Tunart')
-            ->html('<p>Vous avez effectuer une inscription dans un concour sur le platform de Tunart</p>')
+            ->html('<p>Vous avez effectuer une inscription dans un concour sur la platform de Tunart</p>')
             ->text('Hello');
-    
-        //$mailer->send($message);
+            $mailer->send($message);
         }
 
     return $this->render('concoursfront/indexfront.html.twig', [
