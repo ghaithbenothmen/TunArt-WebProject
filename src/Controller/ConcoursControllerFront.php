@@ -27,11 +27,14 @@ class ConcoursControllerFront extends AbstractController
         ]);
     }
 
+    
     #[Route('/{refrence}', name: 'app_concoursfront_participate', methods: ['GET'])]
     public function participate(Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $entityManager->persist($user);
+        $user->setIIdUser(25);
+        echo $user->getIdUser();
         $currentDate = new DateTime();
         $candidature = new Candidature($currentDate,$user,$concour);
         $candidature->setIdConcours($concour);
@@ -42,7 +45,12 @@ class ConcoursControllerFront extends AbstractController
         }
         else if($concour->getDate()<$candidature->getDate())
             {
-            echo "<script>alert('Date depasse!');</script>";
+                echo "<script>alert('Date depasse!');</script>";
+            }
+            else if($this->checkCandidature($candidature->getIdConcours()->getRefrence(),
+            $candidature->getIdUser()->getIdUser()))
+            {
+                echo "<script>alert('Vous etes deja inscrit!');</script>";
             }
             else
         {
@@ -63,7 +71,22 @@ class ConcoursControllerFront extends AbstractController
     return $this->render('concoursfront/indexfront.html.twig', [
         'concours' => $concoursRepository->findAll(),
     ]);
-    
+
+    }
+
+    private function checkCandidature(int $idConcours, int $idUser): bool
+    {
+        // Get the Doctrine EntityManager
+        $entityManager = $this->getDoctrine()->getManager();
+
+        // Get the Candidature repository
+        $candidatureRepository = $entityManager->getRepository(Candidature::class);
+
+        // Find the candidature by concours and user IDs
+        $candidature = $candidatureRepository->findOneBy(['Concours' => $idConcours, 'user' => $idUser]);
+
+        // Check if candidature exists
+        return ($candidature !== null);
     }
 
 }

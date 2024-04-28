@@ -24,7 +24,12 @@ class User
         return $this->user;
     }
 
+    public function setIIdUser(?int $id): static
+    {
+        $this->user = $id;
 
+        return $this;
+    }
 
 
 }
