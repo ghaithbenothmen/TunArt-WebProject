@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ConcoursRepository;
+use App\Repository\UserRepository;
 use App\Entity\Concours;
 use App\Entity\User;
 use App\Entity\Candidature;
@@ -21,34 +22,38 @@ use Symfony\Component\Routing\Annotation\Route;
 class ConcoursControllerFront extends AbstractController
 {
     #[Route('/', name: 'app_concoursfront_index', methods: ['GET'])]
-    public function index(ConcoursRepository $concoursRepository): Response
+    public function index(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
         //all concours
+        /*
+        $pagination = $paginator->paginate(
+            $concoursRepository->findAll(), 
+            $request->query->getInt('page', 1), 
+            5
+        );
 
-        
         return $this->render('concoursfront/indexfront.html.twig', [
-            'concours' => $concoursRepository->findAll(),
+            'pagination' => $pagination,
         ]);
-
+        */
+        
         //Concours not outdated
 
-        /*
         $concours = $concoursRepository->findNonOutdated();
 
         return $this->render('concoursfront/indexfront.html.twig', [
             'concours' => $concours,
         ]);
-        */
     }
 
 
     
     #[Route('/{refrence}', name: 'app_concoursfront_participate', methods: ['GET'])]
-    public function participate(Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager): Response
+    public function participate(Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager,UserRepository $userRepository): Response
     {
         $user = new User();
         $entityManager->persist($user);
-        $user->setIIdUser(25);
+        //$user = $userRepository->findOneBySomeField(25);
         echo $user->getIdUser();
         $currentDate = new DateTime();
         $candidature = new Candidature($currentDate,$user,$concour);
