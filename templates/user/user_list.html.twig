@@ -4,6 +4,98 @@
 {% block title %}User List{% endblock %}
 
 {% block body %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Symfony Project</title>
+
+<style>
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+}
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination span.current {
+    background-color: #5f76e8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.pagination a.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .card .card-body {
+        padding: 20px;
+    }
+
+    .card h5 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 14px;
+        color: #666;
+    }
+    </style>    
     <h1>User List</h1>
 
     {# Search Form #}
@@ -26,54 +118,62 @@
     {% else %}
         <ul class="list-group">
             {% for user in users|reverse %}
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-md-2">
-                            {% if user.image is not null %}
-                                <img src="{{ asset('uploads/images/' ~ user.image) }}" alt="User Image" class="img-thumbnail">
-                            {% else %}
-                                <p>No image available</p>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-10">
-                            <strong>Nom:</strong> {{ user.nom }}<br>
-                            <strong>Prénom:</strong> {{ user.prenom }}<br>
-                            
-                            <strong>Email:</strong> {{ user.email }}<br>
-                            
-                            <div class="btn-group">
-                                <a href="{{ path('delete_user', {'id': user.id}) }}" onclick="return confirm('Are you sure you want to delete this user?');" class="btn btn-danger">Delete</a>
-                                <a href="{{ path('User_Upda', {'id': user.id}) }}" class="btn btn-info">Show</a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
+<li class="list-group-item">
+    <div class="row">
+        <div class="col-md-2">
+            {% if user.image is not null %}
+                <img src="{{ asset('uploads/images/' ~ user.image) }}" alt="User Image" class="img-thumbnail">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+        </div>
+        <div class="col-md-10">
+            <strong>Nom:</strong> {{ user.nom }}
+<br>
+            <strong>Prénom:</strong> {{ user.prenom }}
+<br>
+            <strong>Email:</strong> {{ user.email }}
+<br>
+            <!-- Replace the deletion link with a form -->
+            <div class="btn-group">
+                <form action="{{ path('delete_user', {'id': user.id}) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-user' ~ user.id) }}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <a href="{{ path('User_Upda', {'id': user.id}) }}" class="btn btn-info">Show</a>
+            </div>
+        </div>
+    </div>
+</li>
+{% endfor %}
             
         </ul>
     {% endif %}
+    <div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="pagination">
+            {{ knp_pagination_render(users) }}
+        </div>
+    </div>
+</div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('search-input');
-            const userList = document.getElementById('user-list');
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const userList = document.querySelector('.list-group'); // Adjusted to select the correct list container
 
-            searchInput.addEventListener('input', function(event) {
-                const searchTerm = event.target.value.trim().toLowerCase();
-                const users = Array.from(userList.getElementsByTagName('tr'));
+    searchInput.addEventListener('input', function(event) {
+        const searchTerm = event.target.value.trim().toLowerCase();
+        const users = Array.from(userList.getElementsByTagName('li')); // Adjusted to select 'li' elements
 
-                users.forEach(function(user) {
-                    const userEmail = user.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
-
-                    if (userEmail.includes(searchTerm)) {
-                        user.style.display = 'table-row';
-                    } else {
-                        user.style.display = 'none';
-                    }
-                });
-            });
+        users.forEach(function(user) {
+            const userEmail = user.querySelector('.col-md-10').textContent.trim().toLowerCase(); // Adjusted to select correct content
+            // Show or hide the list item based on search
+            user.style.display = userEmail.includes(searchTerm) ? '' : 'none';
         });
-    </script>
+    });
+});
+</script>
 
     
 {% endblock %}

@@ -28,10 +28,10 @@ security:
                 always_remember_me: true
             # other firewall configurations
     access_control:
-        # Allow anonymous users to access the login page
-        - { path: ^/admin, roles: ADMIN  }
-        - { path: ^/user, roles: CLIENT }
-        - { path: ^/artiste, roles: ARTISTE }     
+         #Allow anonymous users to access the login page
+        - { path: ^/admin, roles: ROLE_ADMIN  }
+        - { path: ^/user, roles: ROLE_CLIENT }
+        - { path: ^/artiste, roles: ROLE_ARTISTE }     
 
         
       

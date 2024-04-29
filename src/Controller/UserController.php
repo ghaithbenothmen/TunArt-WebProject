@@ -20,7 +20,9 @@ use App\Controller\TwiliosmsController;
 use Dompdf\Dompdf;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Core\Security;
+use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 
 
 
@@ -58,6 +60,7 @@ public function register(
     $form = $this->createForm(RegisterUserType::class, $user);
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()) {
+        
         // Check if a user with the submitted email already exists
         $existingUser = $userRepository->searchByEmail($user->getEmail());
         if ($existingUser) {
@@ -138,15 +141,36 @@ public function register(
     }
 
 
+    private function isRecaptchaValid($recaptchaResponse)
+    {
+        $secretKey = '6LeaOMopAAAAAL3alMLRaCV4lWf6XltgwfJGiE-d'; // Replace with your actual secret key
+        $recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
+        $postData = http_build_query([
+            'secret' => $secretKey, // Include the secret key in the request
+            'response' => $recaptchaResponse
+        ]);
+    
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'POST',
+                'header' => 'Content-Type: application/x-www-form-urlencoded',
+                'content' => $postData
+            ]
+        ]);
+    
+        $response = file_get_contents($recaptchaUrl, false, $context);
+        $result = json_decode($response);
+    
+        return $result->success;
+    }
 
 
 
 
 
 
-
-    #[Route('/ADMIN/users', name: 'user_list')]
-    public function userList(Request $request, UserRepository $userRepository): Response
+    #[Route('/admin/users', name: 'user_list')]
+    public function userList(Request $request,PaginatorInterface $paginator, UserRepository $userRepository): Response
     {
         // Get the sort option from the request query parameters
         $sortBy = $request->query->get('sort');
@@ -164,6 +188,13 @@ public function register(
         if ($searchTerm) {
             $users = $userRepository->searchByEmail($searchTerm);
         }
+        $query = $userRepository->createQueryBuilder('o')
+        ->getQuery();
+        $users = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+            7 // Number of items per page
+        );
         
         // Render the template and pass the users to it
         return $this->render('user/user_list.html.twig', [
@@ -205,10 +236,10 @@ public function register(
 
             $this->addFlash('success', 'User updated successfully.');
 
-            return $this->redirectToRoute('userss');
+            return $this->redirectToRoute('UserDashboard', ['id' => $user->getId()]);
         }
 
-        return $this->render('user/update.html.twig', [
+        return $this->render('user/user_Card.html.twig', [
             'user' => $user,
             'registration_form' => $form->createView(),
         ]);
@@ -255,9 +286,31 @@ public function register(
     private $logger;
 
   
+    #[Route('/user/{id}/delete', name: 'delete_userByUser', methods: ['POST'])]
+    public function delete(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, Security $security): Response
+    {
+        $user = $userRepository->find($id);
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
 
-    #[Route('/user/{id}/delete', name: 'delete_user', methods: ['POST'])]
-    public function delete(Request $request, int $id): Response
+        // Assuming you can get the currently logged in user's ID like this
+        $currentUserId = $security->getUser()->getId();
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'User deleted successfully.');
+
+        // Redirect to 'UserDashboard' with the current user's ID
+        return $this->redirectToRoute('UserDashboard', ['id' => $currentUserId]);
+    }
+
+
+    
+
+    #[Route('/admin/user/{id}/delete', name: 'delete_user', methods: ['POST'])]
+    public function deleteUser(Request $request, int $id): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
         $userRepository = $this->getDoctrine()->getRepository(User::class);
@@ -270,9 +323,8 @@ public function register(
                 $this->addFlash('success', 'User deleted successfully.');
            
     
-        return $this->redirectToRoute('UserDashboard');
+        return $this->redirectToRoute('user_list');
     }
-
 
 
 
@@ -300,7 +352,7 @@ public function sortByEmail(UserRepository $userRepository): Response
 
 
 // User Interface Update have ban button
-#[Route('/user/{id}/updateUser', name: 'User_Upda')]
+#[Route('/admin/user/{id}/updateUser', name: 'User_Upda')]
 public function updateUser(Request $request, int $id): Response
 {
     $entityManager = $this->getDoctrine()->getManager();

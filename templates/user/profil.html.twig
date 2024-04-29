@@ -29,7 +29,7 @@
                                 <li class="list-group-item"><strong>Prénom:</strong> {{ user.prenom }}</li>
                                 <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
                                 <li class="list-group-item"><strong>Téléphone:</strong> {{ user.tel }}</li>
-                                <li class="list-group-item"><strong>Role:</strong> {{ user.role }}</li>
+                                <li class="list-group-item"><strong>Role:</strong> {{ user.roles | join(', ') }}</li>
                             </ul>
                         </div>
                     </div>

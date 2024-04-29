@@ -35,19 +35,31 @@ class HomeController extends AbstractController
         ]);
     }
 
-    
+
+    #[Route('/', name: 'dash')]
+    public function dash(): Response
+    {
+        // Simply render the template without passing the user entity
+        return $this->render('base.html.twig');
+    }
+
+
     #[Route('/user/UserDashboard/{id}', name: 'UserDashboard')]
-    public function userDashboard(UserRepository $userRepository, $id): Response
+    public function userDashboard(UserRepository $userRepository, int $id): Response
     {
         // Retrieve the user entity based on $id
         $user = $userRepository->find($id);
 
+        if (!$user) {
+            // If no user is found, throw a 404 Not Found exception
+            throw new NotFoundHttpException('No user found for id ' . $id);
+        }
+
         // Render the template, passing the user entity
-        return $this->render('base.html.twig', [
+        return $this->render('baseClient.html.twig', [
             'user' => $user,
         ]);
     }
-    
 
 
 }
