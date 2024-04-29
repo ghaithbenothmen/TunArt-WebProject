@@ -25,7 +25,7 @@ class ConcoursControllerFront extends AbstractController
     public function index(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
         //all concours
-        /*
+
         $pagination = $paginator->paginate(
             $concoursRepository->findAll(), 
             $request->query->getInt('page', 1), 
@@ -35,25 +35,24 @@ class ConcoursControllerFront extends AbstractController
         return $this->render('concoursfront/indexfront.html.twig', [
             'pagination' => $pagination,
         ]);
-        */
         
         //Concours not outdated
-
+        /*
         $concours = $concoursRepository->findNonOutdated();
 
         return $this->render('concoursfront/indexfront.html.twig', [
             'concours' => $concours,
-        ]);
+        ]);*
+        */
     }
 
 
-    
+
     #[Route('/{refrence}', name: 'app_concoursfront_participate', methods: ['GET'])]
     public function participate(Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager,UserRepository $userRepository): Response
     {
         $user = new User();
         $entityManager->persist($user);
-        //$user->setIIdUser(11);
         $user = $userRepository->findOneBySomeField(32);
         echo $user->getIdUser();
         $currentDate = new DateTime();
