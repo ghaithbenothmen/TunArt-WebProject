@@ -99,10 +99,11 @@
     <div class="col-md-6">
         <input type="text" id="searchInput" class="form-control" placeholder="Chercher oeuvre...">
     </div>
-</div>
-<div class="row justify-content-center mb-4 no-cards-message" style="display: none;">
-    <div class="col-md-6 text-center">
-        <p>No cards to show</p>
+    <div class="col-md-6 d-flex align-items-center">
+        <button id="sortButton" class="btn btn-primary">Trier par nom</button>
+        <div class="customize-input float-right ml-3">
+            <a href="{{ path('app_add_oeuvre') }}" class="btn btn-primary">Ajouter Oeuvre</a>
+        </div>
     </div>
 </div>
 
@@ -125,6 +126,7 @@
                 </nav>
             </div>
         </div>
+		
 
 
         <div class="col-5 align-self-center">
@@ -174,6 +176,7 @@
                 <p><strong>Nom de l'artiste:</strong> {{ oeuvre.artisteId.nom }}</p>
                 <p><strong>Type de l'oeuvre:</strong> {{ oeuvre.typeoeuvre }}</p>
                 <p><strong>Description:</strong> {{ oeuvre.description }}</p>
+				
 
 				
             </div>
@@ -226,12 +229,62 @@
 
 <!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 <script>
 $(document).ready(function() {
     $('#searchInput').on('keyup', function() {
         var searchText = $(this).val().toLowerCase().trim();
         filterCards(searchText);
     });
+
+    $('#sortButton').on('click', function() {
+        toggleSortOrder();
+    });
+});
+
+var ascendingOrder = true;
+var originalCardsOrder = null;
+
+function toggleSortOrder() {
+    ascendingOrder = !ascendingOrder; // Toggle the sorting order
+
+    if (ascendingOrder) {
+        sortCardsAlphabetically();
+    } else {
+        restoreOriginalOrder();
+    }
+}
+
+function sortCardsAlphabetically() {
+    var cardsContainer = $('.row.g-4.justify-content-center');
+    var cards = cardsContainer.find('.card').toArray();
+
+    cards.sort(function(a, b) {
+        var nameA = $(a).find('.card-title').text().toLowerCase();
+        var nameB = $(b).find('.card-title').text().toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
+
+    cardsContainer.empty();
+    cards.forEach(function(card) {
+        cardsContainer.append(card);
+    });
+}
+
+function restoreOriginalOrder() {
+    if (originalCardsOrder !== null) {
+        $('.row.g-4.justify-content-center').empty().append(originalCardsOrder);
+    }
+}
+
+// Call this function when the page is loaded to store the original order of cards
+function storeOriginalOrder() {
+    originalCardsOrder = $('.row.g-4.justify-content-center').html();
+}
+
+// Store the original order when the page is loaded
+$(window).on('load', function() {
+    storeOriginalOrder();
 });
 
 function filterCards(searchText) {

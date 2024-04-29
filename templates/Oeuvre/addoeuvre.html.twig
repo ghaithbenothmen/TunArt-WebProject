@@ -29,6 +29,13 @@
 			</div>
 		</div>
 	</div>
+	 {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">

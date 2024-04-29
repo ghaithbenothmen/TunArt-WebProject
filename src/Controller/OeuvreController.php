@@ -21,7 +21,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Notifier\NotifierInterface;
+use App\Entity\OeuvreNotification;
+
 
 
 
@@ -49,10 +52,10 @@ class OeuvreController extends AbstractController
 
 
     #[Route('/addOeuvre', name: 'app_add_oeuvre')]
-    public function addOeuvre(Request $request, ManagerRegistry $manager): Response
+    public function addOeuvre(Request $request, ManagerRegistry $manager,NotifierInterface $notifier): Response
     {
         $oeuvre = new Oeuvre();
-        dump($oeuvre);
+       
         $form = $this->createForm(OeuvreType::class, $oeuvre);
         $form->handleRequest($request);
    
@@ -70,12 +73,19 @@ class OeuvreController extends AbstractController
              
                 $oeuvre->setImg($fileName);
             }
+
             try {
                 $entityManager = $manager->getManager();
-                dump($oeuvre);
-                $entityManager->persist($oeuvre);
+                
+                $notification = new OeuvreNotification();
+                $notification->setMessage('New oeuvre added: ' . $oeuvre->getNomOeuvre());
+                $entityManager->persist($notification);
+                
+                $entityManager->persist($oeuvre); // Ensure this line is after persisting the notification
                 $entityManager->flush();
-
+            
+                
+            
                 return $this->redirectToRoute('app_artiste_oeuvre');
             } catch (\Exception $e) {
                 $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement.');
@@ -190,6 +200,7 @@ public function generateOeuvreQrCode(int $id): Response
         'qrCodeImage' => $qrCodeImage,
     ]);
 }
+
 
 
 }

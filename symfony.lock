@@ -44,6 +44,24 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v5.9.0"
     },
+    "lexik/translation-bundle": {
+        "version": "v6.0"
+    },
+    "php-translation/symfony-bundle": {
+        "version": "0.14",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "0.10",
+            "ref": "f3ca4e4da63897d177e58da78626c20648c0e102"
+        },
+        "files": [
+            "./config/packages/dev/php_translation.yaml",
+            "./config/packages/php_translation.yaml",
+            "./config/routes/dev/php_translation.yaml",
+            "./config/routes/php_translation.yaml"
+        ]
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -68,6 +86,18 @@
         },
         "files": [
             "./config/packages/sensio_framework_extra.yaml"
+        ]
+    },
+    "stof/doctrine-extensions-bundle": {
+        "version": "1.11",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.2",
+            "ref": "e805aba9eff5372e2d149a9ff56566769e22819d"
+        },
+        "files": [
+            "./config/packages/stof_doctrine_extensions.yaml"
         ]
     },
     "symfony/console": {
