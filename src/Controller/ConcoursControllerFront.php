@@ -53,7 +53,8 @@ class ConcoursControllerFront extends AbstractController
     {
         $user = new User();
         $entityManager->persist($user);
-        //$user = $userRepository->findOneBySomeField(25);
+        //$user->setIIdUser(11);
+        $user = $userRepository->findOneBySomeField(32);
         echo $user->getIdUser();
         $currentDate = new DateTime();
         $candidature = new Candidature($currentDate,$user,$concour);
