@@ -63,15 +63,22 @@
 
 <!-- ****-->
             <div class="row g-4">
-        		{% for actualite in actualites %}
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+			<form action="{{ path('actualite') }}" method="get">
+    			<select name="lang">
+        			<option value="en">English</option>
+        			<option value="fr">Français</option>
+  				 </select>
+   				 <input type="submit" value="Choisir la langue">
+			</form>
+        		{% for actualite in translated %}
+         <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
             <div class=" team-item position-relative">
 						{% if actualite.image %}
-                    <img class="img-fluid w-100" src="{{ asset('imgAct/' ~ actualite.image) }}" alt="Image du actualite" >
+                    <img class="img-fluid w-100" src="{{ asset('imageAct/' ~ actualite.image) }}" alt="Image du actualite" >
 						{% else %}
 							<span>Aucune image disponible</span>
 						{% endif %}
-              <div class="facts-overlay ">
+              		<div class="facts-overlay ">
 							<h5 style="color:white;" class="mb-3">{{ actualite.titre}}</h5>
 							<span>
 								{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}
@@ -81,16 +88,15 @@
 							</p>
 							<a class="small" href="{{ path('app_actualite_commentaire', {'id': actualite.id}) }}">Commentaire<i class="fa fa-arrow-right ms-3"></i>
 							</a>
-
 						</a>
+						</br>
 						<div class="vertical-align">
-                            <a href="{{ path('app_actualite_like_actualite', {'id': actualite.id}) }}">Liker</a>
-                     </div>
-                      <div class="vertical-align">
-                            <a href="{{ path('app_actualite_dislike_actualite', {'id': actualite.id}) }}">Disliker</a>
-                     </div>
+                            <a href="{{ path('app_actualite_like_actualite', {'id': actualite.id}) }}"><i class="bi bi-hand-thumbs-up-fill">Like</i></i></a>
+							&nbsp;&nbsp;
+							<a href="{{ path('app_actualite_dislike_actualite', {'id': actualite.id}) }}"><i class="bi bi-hand-thumbs-down-fill">Dislike</i></a>
+                       </div>
               </div>
-            </div>
+            </div>	
           </div>
 {% endfor %}
 	</div>

@@ -47,7 +47,7 @@
                 <td>{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}</td>
                 <td>{{ actualite.liked }}</td>
                 <td> {% if actualite.image %}
-                    <img src="{{ asset('imgAct/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 100px; max-height: 100px;">
+                    <img src="{{ asset('imageAct/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 100px; max-height: 100px;">
                         {% else %}
                             Pas d'image
                         {% endif %}</td>
@@ -77,7 +77,38 @@
                                         </li>
                                     </ul>#}
                                     <div class="pagination">
-        {{ knp_pagination_render(pagination) }}
+        {% if pagination.currentPageNumber > 1 %}
+            <a href="{{ path('app_actualite_index', {'page': pagination.currentPageNumber - 1}) }}">Précédent</a>&nbsp;
+        {% else %}
+            <span class="disabled">Précédent</span>&nbsp;
+        {% endif %}
+
+        {% for page in 1..pagination.pageCount %}
+            {% if page <= 2 %}
+                {% if pagination.currentPageNumber == page %}
+                    <span class="current">{{ page }}</span>
+                {% else %}
+                    <a href="{{ path('app_actualite_index', {'page': page}) }}">{{ page }}</a>
+                {% endif %}
+                &nbsp; {# Ajouter un espace après chaque numéro de page #}
+            {% elseif page == 3 %}
+                {% if pagination.currentPageNumber == page - 1 %}
+                    <a href="{{ path('app_actualite_index', {'page': pagination.currentPageNumber + 1}) }}">{{ pagination.currentPageNumber + 1 }}</a>&nbsp;
+                {% else %}
+                    <span>...</span>&nbsp;
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination.pageCount > 2 %}
+            <a href="{{ path('app_actualite_index', {'page': pagination.pageCount}) }}">{{ pagination.pageCount }}</a>&nbsp;
+        {% endif %}
+
+        &nbsp;{% if pagination.currentPageNumber < pagination.pageCount %}
+        <a href="{{ path('app_actualite_index', {'page': pagination.currentPageNumber + 1}) }}">Suivant</a>
+    {% else %}
+        <span class="disabled">Suivant</span>
+        {% endif %}
     </div>
 
     <a href="{{ path('app_actualite_new') }}"class="btn btn-info">Create new</a>

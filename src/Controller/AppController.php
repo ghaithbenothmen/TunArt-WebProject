@@ -7,7 +7,11 @@ use App\Form\ActualiteType;
 use App\Repository\ActualiteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
+
 
 class AppController extends AbstractController
 {
@@ -34,14 +38,14 @@ class AppController extends AbstractController
             'controller_name' => 'AppController',
         ]);
     }
-
+/*
     #[Route('/actualite', name: 'actualite', methods: ['GET'])]
     public function actualite(ActualiteRepository $actualiteRepository): Response
     {
         return $this->render('app/actualite.html.twig', [
             'actualites' => $actualiteRepository->findAll(),
         ]);
-    }
+    } */
 
     #[Route('/services', name: 'services')]
     public function services(): Response
@@ -92,4 +96,28 @@ class AppController extends AbstractController
             'controller_name' => 'AppController',
         ]);
     }
+
+    #[Route('/actualite', name: 'actualite')]
+    public function translate(TranslatorInterface $translator, Request $request, ActualiteRepository $actualiteRepository): Response
+    {
+    $lang = $request->query->get('lang', 'fr');
+
+    $actualite = $actualiteRepository->findAll();
+
+    $translated = [];
+
+    foreach ($actualite as $unActualite) {
+        $translated[] = [
+            'titre' => $translator->trans($unActualite->getTitre(), [], null, $lang),
+            'text' => $unActualite->getText(),
+            'image' => $unActualite->getImage(),
+            'date' => $unActualite->getDate(),
+            'id' => $unActualite->getId(),
+        ];
+    }
+
+    return $this->render('app/actualite.html.twig', [
+        'translated' => $translated,
+    ]);
+}
 }

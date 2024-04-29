@@ -7,10 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use App\Repository\ActualiteRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+
 
 
 #[ORM\Entity(repositoryClass: ActualiteRepository::class)]
-
+#[Vich\Uploadable] 
 class Actualite
 {
 
@@ -35,6 +38,9 @@ class Actualite
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
+    
+    #[Vich\UploadableField(mapping: 'app.path.actualite_images', fileNameProperty: 'image')]
+    private ?File $imageFile = null;
 
     #[ORM\Column(type: "integer")]
     private ?int $liked = 0;
@@ -96,6 +102,17 @@ class Actualite
     public function __construct(DateTime $cdate)
     {
         $this->date = $cdate;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): self
+    {
+        $this->imageFile = $imageFile;
+        return $this;
     }
 
     public function getLiked(): ?int

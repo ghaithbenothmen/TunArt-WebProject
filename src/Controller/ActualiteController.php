@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Service\SmsGeneratorAct;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
 
 
 #[Route('/admin')]
@@ -92,18 +96,18 @@ class ActualiteController extends AbstractController
         ]);
     }*/
     #[Route('/actualite', name: 'app_actualite_index', methods: ['GET'])]
-public function actualite (Request $request, ActualiteRepository $actualiteRepository, PaginatorInterface $paginator): Response
-{
+    public function actualite (Request $request, ActualiteRepository $actualiteRepository, PaginatorInterface $paginator): Response
+    {
     $pagination = $paginator->paginate(
         $actualiteRepository->findAll(), 
         $request->query->getInt('page', 1), 
-        2
+        3
     );
 
     return $this->render('actualite/index.html.twig', [
         'pagination' => $pagination,
     ]);
-}
+    }
 
     #[Route('/actualite/new', name: 'app_actualite_new', methods: ['GET', 'POST'])]
     public function new(SmsGeneratorAct $smsGeneratorAct,Request $request, EntityManagerInterface $entityManager): Response
@@ -113,42 +117,40 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
         $form = $this->createForm(ActualiteType::class, $actualite);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Handle the image upload
-            /** @var UploadedFile $imageFile */
-            $imageFile = $form->get('image')->getData();
-            if ($imageFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // This ensures that the filename is unique
-                $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-    
-                // Move the file to the directory where images are stored
-                try {
-                    $imageFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // Handle exception if something happens during file upload
-                }
-    
+         if ($form->isSubmitted() && $form->isValid()) {
+        // Handle the image upload
+        /** @var UploadedFile $imageFile */
+        $imageFile = $form->get('imageFile')->getData();
+        if ($imageFile) {
+            // This ensures that the filename is unique
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+            // Move the file to the directory where images are stored
+            try {
+                $imageFile->move(
+                    $this->getParameter('app.path.actualite_images'), // Utilisation du paramètre actualite_images
+                    $newFilename
+                );
                 // Update the image path in the actualite entity
                 $actualite->setImage($newFilename);
+            } catch (FileException $e) {
+                // Handle exception if something happens during file upload
+                // You might want to add some error handling here
             }
-
-            $entityManager->persist($actualite);
-            $entityManager->flush();
-            $name = 'TunArt';
-            $text = 'Un nouveau actualité a été ajouté : ' . $actualite->getTitre();
-            $smsGeneratorAct->SendSms('+21699975050',$name, $text);
-
-            return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
         }
+        $entityManager->persist($actualite);
+        $entityManager->flush();
+        $name = 'TunArt';
+        $text = 'Un nouveau actualité a été ajouté : ' . $actualite->getTitre();
+        $smsGeneratorAct->SendSms('+21693973533',$name, $text);
 
-        return $this->renderForm('actualite/new.html.twig', [
-            'actualite' => $actualite,
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->renderForm('actualite/new.html.twig', [
+        'actualite' => $actualite,
+        'form' => $form,
+    ]);
     }
 
     #[Route('/actualite/{id}', name: 'app_actualite_show', methods: ['GET'])]
@@ -168,7 +170,7 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
         if ($form->isSubmitted() && $form->isValid()) {
             // Handle the image upload
             /** @var UploadedFile $imageFile */
-            $imageFile = $form->get('image')->getData();
+            $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // This ensures that the filename is unique
@@ -177,7 +179,7 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
                 // Move the file to the directory where images are stored
                 try {
                     $imageFile->move(
-                        $this->getParameter('images_directory'),
+                        $this->getParameter('app.path.actualite_images'),
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -219,7 +221,7 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
         if ($form->isSubmitted() && $form->isValid()) {
             // Handle the image upload
             /** @var UploadedFile $imageFile */
-            $imageFile = $form->get('image')->getData();
+            $imageFile = $form->get('imageFile')->getData();
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // This ensures that the filename is unique
@@ -228,7 +230,7 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
                 // Move the file to the directory where images are stored
                 try {
                     $imageFile->move(
-                        $this->getParameter('images_directory'),
+                        $this->getParameter('app.path.actualite_images'),
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -273,6 +275,58 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
         // After dislike, stay on the same page
         return $this->redirectToRoute('app_actualite_index');
     }
+
+}
+
+
+
+/*
+    #[Route('/actualite/new', name: 'app_actualite_new', methods: ['GET', 'POST'])]
+    public function new(SmsGeneratorAct $smsGeneratorAct,Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $currentDate = new DateTime();
+        $actualite = new Actualite($currentDate);
+        $form = $this->createForm(ActualiteType::class, $actualite);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Handle the image upload
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // This ensures that the filename is unique
+                $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+    
+                // Move the file to the directory where images are stored
+                try {
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Handle exception if something happens during file upload
+                }
+    
+                // Update the image path in the actualite entity
+                $actualite->setImage($newFilename);
+            }
+
+            $entityManager->persist($actualite);
+            $entityManager->flush();
+            $name = 'TunArt';
+            $text = 'Un nouveau actualité a été ajouté : ' . $actualite->getTitre();
+            $smsGeneratorAct->SendSms('+21699975050',$name, $text);
+
+            return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('actualite/new.html.twig', [
+            'actualite' => $actualite,
+            'form' => $form,
+        ]);
+    }
+*/
+
 /*
 
     #[Route('/actualite/{id}', name: 'app_actualite_show', methods: ['GET', 'POST'])]
@@ -339,4 +393,4 @@ public function actualite (Request $request, ActualiteRepository $actualiteRepos
     */
 
 
-}
+
