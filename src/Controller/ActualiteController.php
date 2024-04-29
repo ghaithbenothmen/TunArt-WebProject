@@ -142,7 +142,7 @@ class ActualiteController extends AbstractController
         $entityManager->flush();
         $name = 'TunArt';
         $text = 'Un nouveau actualité a été ajouté : ' . $actualite->getTitre();
-        $smsGeneratorAct->SendSms('+21693973533',$name, $text);
+        $smsGeneratorAct->SendSms('+21699975050',$name, $text);
 
         return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
     }

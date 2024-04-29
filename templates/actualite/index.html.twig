@@ -4,6 +4,60 @@
 
 {% block body %}
     <h1>Actualite index</h1>
+    <style>
+    .modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+}
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination span.current {
+    background-color: #5f76e8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.pagination a.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+    </style>
  <form action="{{ path('app_actualite_search') }}" method="GET">
         <input type="text" id="query" name="query">
         <button type="submit">Search</button>
