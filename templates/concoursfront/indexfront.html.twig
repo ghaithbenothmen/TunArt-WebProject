@@ -3,7 +3,13 @@
 {% block title %}Concours index{% endblock %}
 
 {% block body %}
+
     <h1>Concours index</h1>
+    
+     <form action="{{ path('app_concoursfront_index') }}" method="GET">
+        <input type="text" id="query" name="query">
+        <button type="submit">Search</button>
+    </form>
 
     <table class="table">
         <thead>
@@ -20,7 +26,7 @@
         </thead>
         <tbody>
         {#pagination , concours#}
-        {% for concour in concours  %}
+        {% for concour in pagination  %}
             <tr>
                 <td>{{ concour.refrence }}</td>
                 <td>{{ concour.nom }}</td>

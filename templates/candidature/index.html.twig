@@ -8,11 +8,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>ID_Candidature</th>
+                <th>ID Candidature</th>
                 <th>Date</th>
-                <th>ID_Concours</th>
-                <th>ID_User</th>
-                <th>actions</th>
+                <th>ID Concours</th>
+                <th>ID User</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -24,13 +24,13 @@
                 <td>{{ candidature.idUser.getIdUser }}</td>              
                 
                 <td>
-                    <a href="{{ path('app_candidature_show', {'idCandidature': candidature.idCandidature}) }}">show</a>
-                    <a href="{{ path('app_candidature_edit', {'idCandidature': candidature.idCandidature}) }}">edit</a>
+                    <a href="{{ path('app_candidature_show', {'idCandidature': candidature.idCandidature}) }}" class="btn btn-primary">Show</a>
+                    <a href="{{ path('app_candidature_edit', {'idCandidature': candidature.idCandidature}) }}" class="btn btn-secondary">Edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="5">No records found</td>
             </tr>
         {% endfor %}
         </tbody>

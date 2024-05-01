@@ -8,6 +8,7 @@ use App\Entity\Concours;
 use App\Form\ConcoursType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,11 +17,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class ConcoursController extends AbstractController
 {
     #[Route('/', name: 'app_concours_index', methods: ['GET'])]
-    public function index(ConcoursRepository $concoursRepository): Response
+    public function index(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
+
+        $pagination = $paginator->paginate(
+            $concoursRepository->findAll(), 
+            $request->query->getInt('page', 1), 
+            5
+        );
+
         return $this->render('concours/index.html.twig', [
-            'concours' => $concoursRepository->findAll(),
+            'pagination' => $pagination,
         ]);
+
     }
 
     #[Route('/new', name: 'app_concours_new', methods: ['GET', 'POST'])]
@@ -79,5 +88,17 @@ class ConcoursController extends AbstractController
         }
 
         return $this->redirectToRoute('app_concours_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/stat', name: 'app_concours_stat')]
+    public function yourAction(ConcoursRepository $concoursRepository): Response
+    {
+        // Get concours statistics by type
+        $statisticsByType = $concoursRepository->getConcoursStatisticsByType();
+
+        // Pass the statistics to your Twig template
+        return $this->render('statistics.html.twig', [
+            'statisticsByType' => $statisticsByType,
+        ]);
     }
 }

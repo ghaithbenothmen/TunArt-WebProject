@@ -57,4 +57,13 @@ class ConcoursRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function getConcoursStatisticsByType()
+{
+    return $this->createQueryBuilder('c')
+        ->select('c.type, COUNT(c) as count')
+        ->groupBy('c.type')
+        ->getQuery()
+        ->getResult();
+}
 }

@@ -27,7 +27,7 @@ class ConcoursControllerFront extends AbstractController
         //all concours
 
         $pagination = $paginator->paginate(
-            $concoursRepository->findAll(), 
+            $concoursRepository->findNonOutdated(), 
             $request->query->getInt('page', 1), 
             5
         );
@@ -35,15 +35,22 @@ class ConcoursControllerFront extends AbstractController
         return $this->render('concoursfront/indexfront.html.twig', [
             'pagination' => $pagination,
         ]);
-        
-        //Concours not outdated
-        /*
-        $concours = $concoursRepository->findNonOutdated();
 
+        //Concours not outdated
+
+        $query = $request->query->get('query');
+        
+        $queryBuilder = $concoursRepository->createQueryBuilder('a');
+        if ($query) {
+            $queryBuilder->andWhere('a.nom LIKE :query')
+                ->setParameter('query', '%'.$query.'%');
+               
+        }
+        $concours = $queryBuilder->getQuery()->getResult();
         return $this->render('concoursfront/indexfront.html.twig', [
             'concours' => $concours,
-        ]);*
-        */
+        ]);
+
     }
 
 
@@ -53,7 +60,7 @@ class ConcoursControllerFront extends AbstractController
     {
         $user = new User();
         $entityManager->persist($user);
-        $user = $userRepository->findOneBySomeField(32);
+        $user = $userRepository->findOneBySomeField(11);
         echo $user->getIdUser();
         $currentDate = new DateTime();
         $candidature = new Candidature($currentDate,$user,$concour);
@@ -108,4 +115,19 @@ class ConcoursControllerFront extends AbstractController
         return ($candidature !== null);
     }
 
+    #[Route('/search', name: 'app_concoursfront_search', methods: ['GET'])]
+    public function search(Request $request, ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
+    {
+        $query = $request->query->get('query');
+        if ($query) {
+            $concours = $concoursRepository->createQueryBuilder('a')
+                ->where('a.nom LIKE :query')
+                ->setParameter('query', '%' . $query . '%')
+                ->getQuery();
+        }
+
+        return $this->render('concoursfront/indexfront.html.twig', [
+            'concours' => $concours,
+        ]);
+    }
 }
