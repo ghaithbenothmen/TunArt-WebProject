@@ -34,23 +34,35 @@ class OeuvreController extends AbstractController
 {
 
     #[Route('/listeOeuvre', name: 'app_artiste_oeuvre')]
-    public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginator, Request $request): Response
-    {
-        // Get all oeuvres query
-        $query = $repo->createQueryBuilder('o')
-            ->getQuery();
+public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginator, Request $request): Response
+{
+    // Get the type parameter from the request
+    $type = $request->query->get('typeoeuvre');
 
-        // Paginate the query results
-        $oeuvres = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1), // Get the page number from the request, default to 1
-            6 // Number of items per page
-        );
+    // Get all oeuvres query
+    $query = $repo->createQueryBuilder('o');
 
-        return $this->render('oeuvre/oeuvre.html.twig', ['oeuvres' => $oeuvres]);
+    // Filter by type if the type parameter is provided
+    if ($type && $type !== 'all') {
+        $query->andWhere('o.typeoeuvre = :type')
+              ->setParameter('type', $type);
     }
 
+    $query = $query->getQuery();
 
+    // Paginate the query results
+    $oeuvres = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+        6 // Number of items per page
+    );
+
+    return $this->render('oeuvre/oeuvre.html.twig', ['oeuvres' => $oeuvres]);
+}
+
+
+
+    
     #[Route('/addOeuvre', name: 'app_add_oeuvre')]
     public function addOeuvre(Request $request, ManagerRegistry $manager,NotifierInterface $notifier): Response
     {
@@ -77,9 +89,7 @@ class OeuvreController extends AbstractController
             try {
                 $entityManager = $manager->getManager();
                 
-                $notification = new OeuvreNotification();
-                $notification->setMessage('New oeuvre added: ' . $oeuvre->getNomOeuvre());
-                $entityManager->persist($notification);
+                
                 
                 $entityManager->persist($oeuvre); // Ensure this line is after persisting the notification
                 $entityManager->flush();
@@ -200,7 +210,16 @@ public function generateOeuvreQrCode(int $id): Response
         'qrCodeImage' => $qrCodeImage,
     ]);
 }
+#[Route('/filterByType', name: 'app_filter_oeuvre_by_type')]
+public function filterOeuvreByType(Request $request, OeuvreRepository $repo): Response
+{
+    $type = $request->query->get('type');
+    $oeuvres = $repo->findByType($type); // Implement this method in your repository
 
+    // Serialize the filtered oeuvres to JSON and return as response
+    $serializedOeuvres = $this->serializeOeuvres($oeuvres);
+    return new JsonResponse($serializedOeuvres);
+}
 
 
 }

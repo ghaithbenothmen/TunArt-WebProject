@@ -20,6 +20,14 @@ class OeuvreRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Oeuvre::class);
     }
+    public function findByType(string $type): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.typeoeuvre = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getResult();
+    }
 
     
     

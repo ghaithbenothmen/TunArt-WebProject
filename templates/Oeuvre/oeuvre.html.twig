@@ -106,6 +106,15 @@
         </div>
     </div>
 </div>
+<div class="col-md-4">
+    <select id="typeOeuvreSelect" class="form-control">
+        <option value="all">Tous les types d'oeuvres</option>		
+        <option value="FILM">Film</option>
+        <option value="CHANSON">Chanson</option>
+        <option value="PIECETHEATRE">Pièce de théâtre</option>
+    </select>
+</div>
+
 
 
 
@@ -240,7 +249,31 @@ $(document).ready(function() {
     $('#sortButton').on('click', function() {
         toggleSortOrder();
     });
+	$('#typeOeuvreSelect').on('change', function() {
+    var type = $(this).val();
+    if (type === 'all') {
+            // Reload the page to show all oeuvres
+            window.location.href = "{{ path('app_artiste_oeuvre') }}";
+        } else {
+            filterOeuvreByType(type);
+        }
+    window.location.href = '{{ path('app_artiste_oeuvre') }}?typeoeuvre=' + type;
 });
+});
+function filterOeuvreByType(type) {
+    $.ajax({
+        url: '{{ path('app_filter_oeuvre_by_type') }}',
+        method: 'GET',
+        data: { type: type },
+        success: function(response) {
+            // Replace the HTML content of the container with the filtered oeuvres
+            $('#cardsContainer').html(response);
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
 
 var ascendingOrder = true;
 var originalCardsOrder = null;
@@ -325,6 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
 
 
 
