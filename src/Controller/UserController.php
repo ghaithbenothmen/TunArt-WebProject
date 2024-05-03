@@ -22,7 +22,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Core\Security;
-use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 
 
 
@@ -141,66 +142,47 @@ public function register(
     }
 
 
-    private function isRecaptchaValid($recaptchaResponse)
-    {
-        $secretKey = '6LeaOMopAAAAAL3alMLRaCV4lWf6XltgwfJGiE-d'; // Replace with your actual secret key
-        $recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
-        $postData = http_build_query([
-            'secret' => $secretKey, // Include the secret key in the request
-            'response' => $recaptchaResponse
-        ]);
-    
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => 'Content-Type: application/x-www-form-urlencoded',
-                'content' => $postData
-            ]
-        ]);
-    
-        $response = file_get_contents($recaptchaUrl, false, $context);
-        $result = json_decode($response);
-    
-        return $result->success;
-    }
-
 
 
 
 
 
     #[Route('/admin/users', name: 'user_list')]
-    public function userList(Request $request,PaginatorInterface $paginator, UserRepository $userRepository): Response
-    {
-        // Get the sort option from the request query parameters
-        $sortBy = $request->query->get('sort');
+public function userList(Request $request, PaginatorInterface $paginator, UserRepository $userRepository): Response
+{
+    // Get the sort option from the request query parameters
+    $sortBy = $request->query->get('sort');
 
-        $searchTerm = $request->query->get('search');
-        
-        // If sorting by email is requested, fetch users sorted by email
-        if ($sortBy === 'email') {
-            $users = $userRepository->findAllSortedByEmail();
-        } else {
-            // Otherwise, fetch all users
-            $users = $userRepository->findAll();
-        }
+    // Get the search term from the request query parameters
+    $searchTerm = $request->query->get('search');
+    
+    // Initialize $users variable
+    $users = [];
 
-        if ($searchTerm) {
-            $users = $userRepository->searchByEmail($searchTerm);
-        }
-        $query = $userRepository->createQueryBuilder('o')
-        ->getQuery();
-        $users = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1), // Get the page number from the request, default to 1
-            7 // Number of items per page
-        );
-        
-        // Render the template and pass the users to it
-        return $this->render('user/user_list.html.twig', [
-            'users' => $users,
-        ]);
+    // If sorting by email is requested, fetch users sorted by email
+    if ($sortBy === 'email') {
+        $users = $userRepository->findAllSortedByEmail();
+    } elseif ($searchTerm) {
+        // If search term is provided, fetch users by email search
+        $users = $userRepository->searchByEmail($searchTerm);
+    } else {
+        // Otherwise, fetch all users
+        $users = $userRepository->findAll();
     }
+
+    // Paginate the results
+    $users = $paginator->paginate(
+        $users,
+        $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+        6 // Number of items per page
+    );
+
+    // Render the template and pass the users to it
+    return $this->render('user/user_list.html.twig', [
+        'users' => $users,
+    ]);
+}
+
 
     #[Route('/', name: 'app_admin')]
     public function index(): Response
@@ -217,13 +199,14 @@ public function register(
 
 
 
-    #[Route('/user/{id}/update', name: 'update_user')]
     public function update(Request $request, int $id): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
         $userRepository = $this->getDoctrine()->getRepository(User::class);
 
         $user = $userRepository->find($id);
+        $this->logger->info('User found: ' . $user->getId());
+
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
@@ -232,12 +215,54 @@ public function register(
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->logger->info('Form submitted and valid');
+            
+            // Mettre à jour l'entité User
             $entityManager->flush();
+            $this->logger->info('User updated successfully.');
 
             $this->addFlash('success', 'User updated successfully.');
 
             return $this->redirectToRoute('UserDashboard', ['id' => $user->getId()]);
         }
+
+        $this->logger->info('Form not submitted or invalid');
+
+        return $this->render('user/user_Card.html.twig', [
+            'user' => $user,
+            'registration_form' => $form->createView(),
+        ]);
+    }
+
+
+    public function updateArtiste(Request $request, int $id): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+
+        $user = $userRepository->find($id);
+        $this->logger->info('Artiste found: ' . $user->getId());
+
+        if (!$user) {
+            throw $this->createNotFoundException('Artiste not found');
+        }
+
+        $form = $this->createForm(RegisterUserType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->logger->info('Form submitted and valid');
+            
+            // Mettre à jour l'entité User
+            $entityManager->flush();
+            $this->logger->info('Artiste updated successfully.');
+
+            $this->addFlash('success', 'Artiste updated successfully.');
+
+            return $this->redirectToRoute('artisteDashboard', ['id' => $user->getId()]);
+        }
+
+        $this->logger->info('Form not submitted or invalid');
 
         return $this->render('user/user_Card.html.twig', [
             'user' => $user,
@@ -286,26 +311,31 @@ public function register(
     private $logger;
 
   
-    #[Route('/user/{id}/delete', name: 'delete_userByUser', methods: ['POST'])]
-    public function delete(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, Security $security): Response
+    public function delete(Request $request, int $id, TokenStorageInterface $tokenStorage): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+    
         $user = $userRepository->find($id);
+    
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-
-        // Assuming you can get the currently logged in user's ID like this
-        $currentUserId = $security->getUser()->getId();
-
+    
         $entityManager->remove($user);
         $entityManager->flush();
-
+    
+        // Supprime l'utilisateur de la session s'il est actuellement authentifié
+        $token = $tokenStorage->getToken();
+        if ($token && $token->getUser() === $user) {
+            $tokenStorage->setToken(null);
+            $request->getSession()->invalidate();
+        }
+    
         $this->addFlash('success', 'User deleted successfully.');
-
-        // Redirect to 'UserDashboard' with the current user's ID
-        return $this->redirectToRoute('UserDashboard', ['id' => $currentUserId]);
+    
+        return $this->redirectToRoute('app_login');
     }
-
 
     
 

@@ -16,14 +16,19 @@ update_user:
     controller: App\Controller\UserController::update
     methods: ['GET', 'POST']
 
+update_artiste:
+    path: '/artiste/{id}/update'
+    controller: App\Controller\UserController::updateArtiste
+    methods: ['GET', 'POST']
+
 
 
 # routes.yaml
 
 delete_user:
     path: '/admin/user/{id}/delete'
-    controller: App\Controller\UserController::delete
-    methods: ['POST']
+    controller: App\Controller\UserController::deleteUser
+    methods: ['GET', 'POST']
 
 delete_userByUser:
     path: '/user/{id}/delete'

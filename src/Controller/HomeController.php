@@ -9,6 +9,7 @@ use Twilio\Rest\Client;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 
+
 class HomeController extends AbstractController
 {
     #[Route('/admin/adminDashboard', name: 'adminDashboard')]
@@ -22,14 +23,15 @@ class HomeController extends AbstractController
     
 
     #[Route('/artiste/artisteDashboard/{id}', name: 'artisteDashboard')]
-    public function artisteDashboardd(UserRepository $userRepository): Response
+    public function artisteDashboardd(Request $request, UserRepository $userRepository): Response
     {
+        // Récupérer l'ID à partir de la route
+        $id = $request->attributes->get('id');
     
-
-        // Retrieve the user entity based on $id
+        // Récupérer l'utilisateur en fonction de $id
         $user = $userRepository->find($id);
-
-        // Render the template, passing the user entity
+    
+        // Rendre le template en passant l'entité utilisateur
         return $this->render('artiste-dash.html.twig', [
             'user' => $user,
         ]);
