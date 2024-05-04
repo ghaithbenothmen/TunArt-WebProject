@@ -99,6 +99,7 @@ dump($formation);
             'controller_name' => 'AppController',
         ]);
     }
+    
     #[Route('/features', name: 'features')]
     public function features(): Response
     {

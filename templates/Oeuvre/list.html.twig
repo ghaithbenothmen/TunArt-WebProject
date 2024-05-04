@@ -1,13 +1,13 @@
 {% extends 'artiste-dash.html.twig' %}
-
 {% block title %}Liste oeuvres{% endblock %}
 
 {% block body %}
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Symfony Project</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Symfony Project</title>
 
 <style>
+        
 .modal-header {
     background-color: #007bff;
     color: #fff;
@@ -94,76 +94,125 @@
         font-size: 14px;
         color: #666;
     }
+
 </style>
-<div class="row justify-content-center mb-4">
-    <div class="col-md-6 d-flex align-items-center">
-        <button id="sortButton" class="btn btn-primary">Trier par nom</button>
-        <div class="customize-input float-right ml-3">
-            <a href="{{ path('app_add_oeuvre') }}" class="btn btn-primary">Ajouter Oeuvre</a>
+
+    <div class="container">
+    <!-- Artist Information Section -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-3">
+            {% if artiste.image %}
+            <img src="{{ asset('uploads/' ~ artiste.image) }}" alt="Artist Image" class="img-fluid">
+            {% else %}
+            <span>No Image Available</span>
+            {% endif %}
+        </div>
+        <div class="col-md-9">
+            <h2>{{ artiste.nom }} {{ artiste.prenom }}</h2>
+            <p>Email: {{ artiste.email }}</p>
+            <p>Tel: {{ artiste.tel }}</p>
         </div>
     </div>
+    <!-- Divider -->
+    <hr class="my-4">
+    <hr class="my-4">
+    <!-- Profile, Likes, Autre Artistes Section -->
+    <div class="row mb-1">
+        <div class="col-md-3">
+            <!-- Profile Section -->
+            <div class="profile-section">
+    <!-- Profile Content -->
+    <h3><a href="{{ path('app_artiste_oeuvre') }}">Autre oeuvres</a></h3>
+    <!-- Add Profile Content Here -->
 </div>
-<div class="col-md-4">
-    <select id="typeOeuvreSelect" class="form-control">
-        <option value="all">Tous les types d'oeuvres</option>		
-        <option value="FILM">Film</option>
-        <option value="CHANSON">Chanson</option>
-        <option value="PIECETHEATRE">Pièce de théâtre</option>
-    </select>
+        </div>
+        <div class="col-md-3">
+            <!-- Likes Section -->
+            <div class="likes-section">
+                <!-- Likes Content -->
+                <h3>Likes</h3>
+                <!-- Add Likes Content Here -->
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Autre Artistes Section -->
+            <!-- Autre Artistes Section -->
+<div class="autre-artistes-section">
+    <!-- Autre Artistes Content -->
+    <h3><a href="{{ path('listeartiste') }}">Autre Artistes</a></h3>
+    <!-- Add Autre Artistes Content Here -->
 </div>
 
+        </div>
+    </div>
 
+    <hr class="my-4">
+    <hr class="my-4">
 
-
-
-
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-7 align-self-center">
-            <h4 class="page-title text-trunforme text-dark font-weight-medium mb-1">Liste des oeuvres</h4>
-            <div class="d-flex align-items-center">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb m-0 p-0">
-                        <li class="breadcrumb-item">
-                            <a href="index.html" class="text-muted">Artiste</a>
-                        </li>
-                        <li class="breadcrumb-item text-muted active" aria-current="page">Liste oeuvres</li>
-                    </ol>
-                </nav>
+    <!-- Search and Sort Section -->
+    <div class="row mb-4">
+        <div class="col-md-6 d-flex align-items-center">
+            <button id="sortButton" class="btn btn-primary">Trier par nom</button>
+            <div class="customize-input float-right ml-3">
+                <a href="{{ path('app_add_oeuvre') }}" class="btn btn-primary">Ajouter Oeuvre</a>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row g-4 justify-content-center">
-    {% for oeuvre in oeuvres %}
-    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-        <div class="card" data-type="{{ oeuvre.typeoeuvre|lower }}" data-toggle="modal" data-target="#popup{{ oeuvre.id }}">
-            <!-- Replace the ... placeholder with the contents of each card -->
-            {% if oeuvre.img %}
-                <img src="{{ asset('uploads/' ~ oeuvre.img) }}" alt="Image" class="card-img-top">
-            {% else %}
-                <span class="card-img-top">Aucune image disponible</span>
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title mb-3">Nom de l'oeuvre: {{ oeuvre.nomOeuvre }}</h5>
-                <p class="card-text mb-3">Nom de l'artiste: {{ oeuvre.artisteId.nom }}</p>
-                <p class="card-text mb-3">Type de l'oeuvre: {{ oeuvre.typeoeuvre }}</p>
-				
-			</div>
-            
+    <!-- Filter Section -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <select id="typeOeuvreSelect" class="form-control">
+                <option value="all">Tous les types d'oeuvres</option>
+                <option value="FILM">Film</option>
+                <option value="CHANSON">Chanson</option>
+                <option value="PIECETHEATRE">Pièce de théâtre</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="page-breadcrumb">
+        <div class="row">
+            <div class="col-7 align-self-center">
+                <h4 class="page-title text-trunforme text-dark font-weight-medium mb-1">Liste des oeuvres</h4>
+                <div class="d-flex align-items-center">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb m-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a href="index.html" class="text-muted">Artiste</a>
+                            </li>
+                            <li class="breadcrumb-item text-muted active" aria-current="page">Liste oeuvres</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
         </div>
     </div>
 
 
-	
-    <!-- Modal for each card -->
-    <div class="modal fade" id="popup{{ oeuvre.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="row g-4 justify-content-center">
+        {% for oeuvre in oeuvres %}
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="card" data-type="{{ oeuvre.typeoeuvre|lower }}" data-toggle="modal" data-target="#popup{{ oeuvre.id }}">
+                    {% if oeuvre.img %}
+                        <img src="{{ asset('uploads/' ~ oeuvre.img) }}" alt="Image" class="card-img-top">
+                    {% else %}
+                        <span class="card-img-top">Aucune image disponible</span>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Nom de l'oeuvre: {{ oeuvre.nomOeuvre }}</h5>
+                        <p class="card-text mb-3">Nom de l'artiste: {{ oeuvre.artisteId.nom }}</p>
+                        <p class="card-text mb-3">Type de l'oeuvre: {{ oeuvre.typeoeuvre }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="popup{{ oeuvre.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Détails de l'oeuvre</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
             </div>
         <div class="modal-body">
     <!-- Add the content of the popup -->
@@ -223,7 +272,6 @@
 
     {% endfor %}
 </div>
-
 <!-- Pagination Links -->
 <div class="container">
     <div class="d-flex justify-content-center">
@@ -232,9 +280,6 @@
         </div>
     </div>
 </div>
-
-
-<!-- Delete Modals -->
 {% for form in oeuvres %}
 		<div class="modal fade" id="deleteModal{{ form.id }}"aria-labelledby="deleteModalLabel{{ form.id }}" aria-hidden="true">
 			<div class="modal-dialog">

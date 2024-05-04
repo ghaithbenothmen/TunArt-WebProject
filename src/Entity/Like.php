@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Like
  *
- * @ORM\Table(name="like", indexes={@ORM\Index(name="fk_like", columns={"id_user"}), @ORM\Index(name="fk_oeuvre", columns={"id_oeuvre"})})
+ * @ORM\Table(name="user_like", indexes={@ORM\Index(name="fk_like", columns={"id_user"}), @ORM\Index(name="fk_oeuvre", columns={"id_oeuvre"})})
  * @ORM\Entity
  */
 class Like

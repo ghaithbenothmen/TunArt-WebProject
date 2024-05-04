@@ -117,7 +117,7 @@
                 <div class="navbar-collapse collapse" id="navbarSupportedContent">
                     <!-- ============================================================== -->
                     <!-- toggle and nav items -->
-                    <!-- ============================================================== -->
+                    
                     <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
                         <!-- Notification -->
                         <li class="nav-item dropdown">
@@ -195,7 +195,7 @@
                             </div>
                         </li>
                         <!-- End Notification -->
-                        <!-- ============================================================== -->
+                        
                         <!-- create new -->
                         <!-- ============================================================== -->
                         <li class="nav-item dropdown">
@@ -236,8 +236,10 @@
                                 <form>
                                     <div class="customize-input">
                                         <input class="form-control custom-shadow custom-radius border-0 bg-white"
-                                            type="search" placeholder="Search" aria-label="Search">
+                                            type="text" id="searchInput" class="form-control" placeholder="Chercher oeuvre...">
                                         <i class="form-control-icon" data-feather="search"></i>
+                                        
+        
                                     </div>
                                 </form>
                             </a>
@@ -313,9 +315,10 @@
                         <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="{{path('app_artiste_oeuvre')}}"
                                 aria-expanded="false"><i data-feather="grid" class="feather-icon"></i><span
                                     class="hide-menu">Liste des oeuvres</span></a></li>
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="app-calendar.html"
-                                aria-expanded="false"><i data-feather="calendar" class="feather-icon"></i><span
-                                    class="hide-menu">Calendar</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="{{path('listeartiste')}}"
+                                aria-expanded="false"><i data-feather="grid" class="feather-icon"></i><span
+                                    class="hide-menu">Liste des artistes</span></a></li>
+                        
 
                         <li class="list-divider"></li>
                         <li class="nav-small-cap"><span class="hide-menu">Components</span></li>

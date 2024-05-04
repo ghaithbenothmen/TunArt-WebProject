@@ -1,0 +1,105 @@
+{% extends 'artiste-dash.html.twig' %}
+{% block title %}Our Team{% endblock %}
+{% block body %}
+<style>
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+}
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination span.current {
+    background-color: #5f76e8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.pagination a.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+</style>
+
+
+<!-- Team Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5 align-items-end mb-5">
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="border-start border-5 border-primary ps-4">
+                    <h6 class="text-body text-uppercase mb-2">Nos Artistes</h6>
+                    <h1 class="display-6 mb-0">Vous trouvez ici la liste de nos artistes</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for user in users %}
+                {% if user.getRole() == 'ARTISTE' %}
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="card">
+                            {% if user.image %}
+                                <img src="{{ asset('uploads/' ~ user.image) }}" alt="Image" class="card-img-top">
+                            {% else %}
+                                <span class="card-img-top">Aucune image disponible</span>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ user.getNom() }} {{ user.getPrenom() }}</h5>
+                                <p class="card-text">Email: {{ user.getEmail() }}</p>
+                                <p class="card-text">Role: {{ user.getRole() }}</p>
+                                <!-- Add more user information here as needed -->
+                                <!-- Add link to view oeuvres by this artiste -->
+                                <a href="{{ path('oeuvre_by_artiste', {'artisteId': user.id}) }}" class="btn btn-primary">Voir les oeuvres</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="pagination">
+            {{ knp_pagination_render(users) }}
+        </div>
+    </div>
+</div>
+<!-- Team End -->
+
+{% endblock %}

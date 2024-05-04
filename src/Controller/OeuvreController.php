@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Entity\Oeuvre;
+use App\Entity\Like;
+use App\Entity\User;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Color\Color;
@@ -133,6 +135,8 @@ public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginato
         }
         return $this->render('oeuvre/UpdateOeuvre.html.twig', ['f' => $form->createView()]); //create vue bch ybadel form l html ou renderForm
     }
+
+    
     #[Route('/oeuvre/delete/{id}', name: 'app_oeuvre_delete')]
     public function deleteOeuvre($id, ManagerRegistry $manager, OeuvreRepository $repo)
     {
@@ -160,6 +164,9 @@ public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginato
         // Example: Convert oeuvres array to associative array or JSON string
         return $oeuvres; // Return serialized oeuvres
     }
+
+
+
     #[Route('/oeuvre/qrcode/{id}', name: 'oeuvre_qrcode')]
 public function generateOeuvreQrCode(int $id): Response
 {
@@ -210,6 +217,8 @@ public function generateOeuvreQrCode(int $id): Response
         'qrCodeImage' => $qrCodeImage,
     ]);
 }
+
+
 #[Route('/filterByType', name: 'app_filter_oeuvre_by_type')]
 public function filterOeuvreByType(Request $request, OeuvreRepository $repo): Response
 {
@@ -220,6 +229,60 @@ public function filterOeuvreByType(Request $request, OeuvreRepository $repo): Re
     $serializedOeuvres = $this->serializeOeuvres($oeuvres);
     return new JsonResponse($serializedOeuvres);
 }
+
+
+
+#[Route('/like-dislike', name: 'app_like_dislike_oeuvre')]
+public function likeDislikeOeuvre(Request $request, ManagerRegistry $manager): Response
+{
+    $oeuvreId = $request->request->get('oeuvreId');
+    $isLike = $request->request->get('isLike');
+
+    // Handle user ID generation randomly (replace with your logic)
+    $userId = mt_rand(1, 100); // Generate random user ID between 1 and 100
+
+    // Save like/dislike to the database
+    $like = new Like();
+    $like->setIdUser($userId);
+    $like->setIdOeuvre($oeuvreId);
+    $like->setEtat($isLike);
+    $like->setLikecount(1); // Assuming you want to count each like/dislike separately
+
+    $entityManager = $manager->getManager();
+    $entityManager->persist($like);
+    $entityManager->flush();
+
+    // Return a success response
+    return new Response('Success', Response::HTTP_OK);
+}
+
+#[Route('/artiste/{artisteId}', name: "oeuvre_by_artiste")]
+public function showOeuvresByArtiste($artisteId, PaginatorInterface $paginator, Request $request)
+{
+    // Fetch oeuvres by artiste ID
+    $oeuvres = $this->getDoctrine()
+        ->getRepository(Oeuvre::class)
+        ->findBy(['artiste' => $artisteId]);
+
+    // Fetch artiste information
+    $artiste = $this->getDoctrine()
+        ->getRepository(User::class)
+        ->find($artisteId);
+
+    // Paginate the query results
+    $oeuvres = $paginator->paginate(
+        $oeuvres,
+        $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+        3 // Number of items per page
+    );
+
+    // Render the template with the fetched oeuvres and artiste information
+    return $this->render('oeuvre/list.html.twig', [
+        'oeuvres' => $oeuvres,
+        'artiste' => $artiste, // Pass artiste information to the template
+    ]);
+}
+
 
 
 }

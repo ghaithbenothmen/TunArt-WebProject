@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Repository\UserRepository;
 use App\Entity\Categorie;
 use App\Form\CategorieFormType;
 use App\Repository\CategorieRepository;
@@ -13,6 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 class ArtisteController extends AbstractController
 {
@@ -156,8 +157,22 @@ public function addCategorie(Request $request): Response
 
         return $this->redirectToRoute('app_artiste_listeCat');
     }
-    
+    #[Route('/listeartiste', name: 'listeartiste')]
+public function test(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    // Get all users query
+    $query = $userRepository->createQueryBuilder('u')
+        ->getQuery();
 
+    // Paginate the query results
+    $users = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+        3 // Number of items per page
+    );
+
+    return $this->render('oeuvre/Artistecards.html.twig', ['users' => $users]);
+}
 
 
 
