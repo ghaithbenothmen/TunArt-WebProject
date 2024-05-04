@@ -115,65 +115,98 @@
                   </div>
                 <button type="submit" class="btn btn-primary">Envoyer le commentaire</button>
             </form>
-<script>
+                    </div>
+                    <script>
+                      document.addEventListener('DOMContentLoaded', function () {
+                      const commentForm = document.querySelector('#comment-form');
+
+                      if (commentForm) {
+                      commentForm.addEventListener('submit', function (event) {
+                      event.preventDefault(); // Prevent the default form submission behavior
+
+                      const formData = new FormData(this);
+                      const commentInput = formData.get('commentaire');
+                      const commentInputField = document.querySelector('input[name="commentaire"]');
+                      const errorMessageContainer = document.querySelector('#comment-error-message');
 
 
-								document.addEventListener('DOMContentLoaded', function () {
-                                        const commentForm = document.querySelector('#comment-form');
-
-                                        if (commentForm) {
-                                        commentForm.addEventListener('submit', function (event) {
-                                        event.preventDefault(); // Prevent the default form submission behavior
-
-                                        const formData = new FormData(this);
-                                        const commentInput = formData.get('commentaire');
-                                        const commentInputField = document.querySelector('input[name="commentaire"]');
-                                        const errorMessageContainer = document.querySelector('#comment-error-message');
+                      // Check if the comment is blank
+                      if (commentInput.trim() === '') {
+                      errorMessageContainer.classList.add('error-message'); // Add the error-message class
+                      errorMessageContainer.textContent = 'Comment cannot be blank';
+                      return; // Do not proceed if the comment is blank
+                      }
 
 
-// Check if the comment is blank
-                                        if (commentInput.trim() === '') {
-                                        errorMessageContainer.classList.add('error-message'); // Add the error-message class
-                                        errorMessageContainer.textContent = 'Comment cannot be blank';
-                                        return; // Do not proceed if the comment is blank
-                                        }
+                      // Send AJAX request to add the comment
+                      fetch(this.action, {
+                      method: 'POST',
+                      body: formData,
+                      headers: {
+                      'X-Requested-With': 'XMLHttpRequest'
+                      }
+                      }).then(response => {
+                      if (response.ok) {
+                      console.log('Comment added successfully');
+                      errorMessageContainer.textContent = 'Comment added successfully';
 
+                      return response.text();
+                      }
+                      if (response.status == 403) {
+                      errorMessageContainer.classList.add('error-message'); // Add the error-message class
+                      errorMessageContainer.textContent = 'Inappropriate content';
 
-// Send AJAX request to add the comment
-                                        fetch(this.action, {
-                                        method: 'POST',
-                                        body: formData,
-                                        headers: {
-                                        'X-Requested-With': 'XMLHttpRequest'
-                                        }
-                                        }).then(response => {
-                                        if (response.ok) {
-                                        console.log('Comment added successfully');
-                                        return response.text();
-                                        }
-                                        if (response.status == 403) {
-                                        errorMessageContainer.classList.add('error-message'); // Add the error-message class
-                                        errorMessageContainer.textContent = 'Inappropriate content';
+                      console.error('Failed to add comment');
+                      throw new Error('Failed to add comment');
+                      } else {
+                      console.error('Failed to add comment');
+                      throw new Error('Failed to add comment');
+                      }
 
-                                        console.error('Failed to add comment');
-                                        throw new Error('Failed to add comment');
-                                        } else {
-                                        console.error('Failed to add comment');
-                                        throw new Error('Failed to add comment');
-                                        }
+                      }).then(html => {
+                      errorMessageContainer.textContent = 'Comment added successfully';
 
-                                        }).then(html => {
-                                        location.reload()
+                      const tempDiv = document.createElement('div');
 
-                                        });
-</script>
+                      tempDiv.innerHTML = html.trim();
+                      const commentDivs = tempDiv.querySelectorAll('.comment-div');
+                      const lastCommentDiv = commentDivs[commentDivs.length - 1];
 
+                      if (lastCommentDiv) {
+                      const commentsContainer = document.querySelector('#comments-container');
+                      const commentCount = document.querySelector('#comment-count');
+                      const nbComments = tempDiv.querySelector('#comment-count');
+
+                      commentCount.innerHTML = nbComments.innerHTML;
+                      commentsContainer.appendChild(lastCommentDiv);
+
+                      const commentInput = document.querySelector('input[name="commentaire"]');
+                      commentInput.value = '';
+                      } else {
+                      console.error('No comment divs found');
+                      }
+                      }).catch(error => {
+                      console.error('Error adding comment:', error);
+                      });
+                      });
+                      } else {
+                      console.error('Comment form not found');
+                      }
+
+                      function displayErrorMessage(message) {
+                      errorMessageContainer.classList.add('error-message');
+                      errorMessageContainer.textContent = message;
+                      }
+
+                      function clearErrorMessage() {
+                      errorMessageContainer.textContent = '';
+                      }
+                      });
+                    </script>
           </div>
         </div>
       </div>
     </div>
     <!-- Contact End -->
-
-        
 
 {% endblock %}
