@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vote index{% endblock %}
+
+{% block body %}
+    <h1>Vote index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdVote</th>
+                <th>Date</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vote in votes %}
+            <tr>
+                <td>{{ vote.idVote }}</td>
+                <td>{{ vote.date ? vote.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_vote_show', {'idVote': vote.idVote}) }}">show</a>
+                    <a href="{{ path('app_vote_edit', {'idVote': vote.idVote}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_vote_new') }}">Create new</a>
+{% endblock %}
