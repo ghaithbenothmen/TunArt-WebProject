@@ -53,8 +53,8 @@
 									</div>
 								</div>
 								<div class="mb-3">
-									{{ form_label(f.datedebut, "Date de début:", {'label_attr': {'class': 'form-label'}}) }}
-									{{ form_widget(f.datedebut, {'attr': {'class': 'form-control datepicker', 'placeholder': 'Entrer la date'}}) }}
+									{{ form_label(f.datedebut, "Date de début:", {'label_attr': {'id': 'dateDebutInput','class': 'form-label'}}) }}
+									{{ form_widget(f.datedebut, {'attr': {'id': 'dateFinInput','class': 'form-control datepicker', 'placeholder': 'Entrer la date'}}) }}
 									
 								</div>
 								<div class="mb-3">
@@ -112,4 +112,16 @@
 			</div>
 		</div>
 	</div>
-</div>{% endblock %}
+</div>
+
+<script>
+
+select: function(info) {
+    // Set the values of hidden fields for start and end date
+    document.getElementById('formation_startDate').value = info.startStr;
+    document.getElementById('formation_endDate').value = info.endStr;
+    // Redirect to add formation page
+    window.location.href = "{{ path('app_add_formation') }}";
+}
+</script>
+{% endblock %}

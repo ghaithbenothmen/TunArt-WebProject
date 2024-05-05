@@ -50,9 +50,13 @@ class Formation
     #[ORM\OneToMany(mappedBy: 'formation_id', targetEntity: Inscription::class)]
     private Collection $inscriptions;
 
+    #[ORM\OneToMany(mappedBy: 'formation', targetEntity: Ratings::class)]
+    private Collection $ratings;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     /*
@@ -234,4 +238,21 @@ class Formation
 
         return $this;
     }
+
+    public function getRatingsAverage(): ?float
+{
+    $ratings = $this->ratings->toArray();
+    $total = 0;
+    $count = count($ratings);
+
+    if ($count === 0) {
+        return null;
+    }
+
+    foreach ($ratings as $rating) {
+        $total += $rating->getRatingValue();
+    }
+
+    return $total / $count;
+}
 }

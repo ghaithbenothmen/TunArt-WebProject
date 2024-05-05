@@ -52,6 +52,20 @@
 <!-- Features Start -->
 <div class="container-xxl py-5">
 	<div class="container">
+
+
+{% if app.request.query.get('payment_success') %}
+    <div class="alert alert-success">
+        Paiement réussi ! Merci pour votre achat.
+    </div>
+{% endif %}
+
+{% if app.request.query.get('payment_failure') %}
+    <div class="alert alert-danger">
+        Paiement échoué. Veuillez réessayer.
+    </div>
+{% endif %}
+
 		<div class="row g-5">
 			<div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
 				<div class="border-start border-5 border-primary ps-4 mb-5">
@@ -168,7 +182,11 @@
 		</div>
 
 	</div>
-</div></div><!-- Error Modal --><div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+	
+</div></div>
+
+
+<!-- Error Modal --><div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
 <div class="modal-dialog">
 	<div class="modal-content">
 		<div class="modal-header">
@@ -195,7 +213,7 @@
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-			<a href="{{ path('app_inscription', {'id': formation.id}) }}" class="btn btn-primary">Register</a>
+			<a href="{{ path('app_payment', { 'id': formation.id }) }}" class="btn btn-primary">Inscrire</a>
 		</div>
 	</div>
 </div></div><!-- Modal Rating succes--><div class="modal fade" id="ratingSuccessModal" tabindex="-1" aria-labelledby="ratingSuccessModalLabel" aria-hidden="true">
@@ -213,42 +231,43 @@
 		</div>
 	</div>
 </div></div><script>
-var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {keyboard: false});
+			var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {keyboard: false});
 
-var errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {keyboard: false});
+			var errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {keyboard: false});
 
-document.getElementById('registerButton').addEventListener('click', function (event) {
-event.preventDefault();{% if user_already_registered %}errorModal.show();
-{% else %}confirmModal.show();{% endif %}
-});
-document.querySelectorAll('#ratingStars .fa-star').forEach(function (star) {
-star.addEventListener('click', function () {
-const ratingValue = this.getAttribute('data-value');
+			document.getElementById('registerButton').addEventListener('click', function (event) {
+			event.preventDefault();{% if user_already_registered %}errorModal.show();
+			{% else %}confirmModal.show();{% endif %}
+			});
+			
+			document.querySelectorAll('#ratingStars .fa-star').forEach(function (star) {
+			star.addEventListener('click', function () {
+			const ratingValue = this.getAttribute('data-value');
 
-document.querySelectorAll('#ratingStars .fa-star').forEach(function (star) {
-if (star.getAttribute('data-value') <= ratingValue) {
-star.classList.add('text-warning');
-} else {
-star.classList.remove('text-warning');
-}
-});
-document.getElementById('ratingValue').textContent = ratingValue;
-console.log(ratingValue);
-const formationId = window.location.pathname.split('/').pop();
-// Envoi de la note au backend
-fetch(`/rating/${formationId}?ratingValue=${ratingValue}`, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json'
-}
-}).then(response => {
-if (!response.ok) {
-throw new Error('Failed to submit rating');
-}
-console.log('Rating submitted successfully');
-$('#ratingSuccessModal').modal('show'); // Show the success modal
-}).catch(error => {
-console.error('Error submitting rating:', error.message);
-});
-});
-});</script>{% endblock %}
+			document.querySelectorAll('#ratingStars .fa-star').forEach(function (star) {
+			if (star.getAttribute('data-value') <= ratingValue) {
+			star.classList.add('text-warning');
+			} else {
+			star.classList.remove('text-warning');
+			}
+			});
+			document.getElementById('ratingValue').textContent = ratingValue;
+			console.log(ratingValue);
+			const formationId = window.location.pathname.split('/').pop();
+			// Envoi de la note au backend
+			fetch(`/rating/${formationId}?ratingValue=${ratingValue}`, {
+			method: 'POST',
+			headers: {
+			'Content-Type': 'application/json'
+			}
+			}).then(response => {
+			if (!response.ok) {
+			throw new Error('Failed to submit rating');
+			}
+			console.log('Rating submitted successfully');
+			$('#ratingSuccessModal').modal('show'); // Show the success modal
+			}).catch(error => {
+			console.error('Error submitting rating:', error.message);
+			});
+			});
+			});</script>{% endblock %}

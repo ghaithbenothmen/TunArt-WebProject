@@ -48,19 +48,27 @@
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
             var calendarEl = document.getElementById('calendar-holder');
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                defaultView: 'dayGridMonth',
-                editable: true,
-                events: "{{ path('app_get_formations_as_events') }}",
-                headerToolbar: {
-                    start: 'prev,next today',
-                    center: 'title',
-                    end: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                timeZone: 'UTC',
-            });
+ var calendar = new FullCalendar.Calendar(calendarEl, {
+            defaultView: 'dayGridMonth',
+            editable: true,
+            events: "{{ path('app_get_formations_as_events') }}",
+            headerToolbar: {
+                start: 'prev,next today',
+                center: 'title',
+                end: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            timeZone: 'UTC',
+            selectable: true, // Enable date selection
+            select: function(info) {
+                // Redirect to add formation page with selected dates
+                var datedebut = info.startStr;
+                var datefin = info.endStr;
+                window.location.href = "{{ path('app_add_formation') }}" + "?datedebut=" + datedebut + "&datefin=" + datefin;
+            }
+        });
             calendar.render();
         });
+
+		
     </script>
 {% endblock %}

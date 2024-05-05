@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payment Form
+{% endblock %}
+
+{% block body %}
+	<style>
+		.fa-star.disabled {
+			color: lightgray; /* Or any other disabled style you prefer */
+			pointer-events: none; /* Prevents clicks on the stars */
+		}
+	</style>
+	<!-- Navbar Start -->
+	<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+		<a href="index.html" class="navbar-brand d-flex align-items-center">
+			<img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
+	</a>
+	<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarCollapse">
+		<div class="navbar-nav ms-auto py-3 py-lg-0">
+			<a href="{{path('main')}}" class="nav-item nav-link ">Home</a>
+			<a href="{{path('about')}}" class="nav-item nav-link">About Us</a>
+			<a href="{{path('services')}}" class="nav-item nav-link active">Nos formations</a>
+			<div class="nav-item dropdown">
+				<a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown">Pages</a>
+				<div class="dropdown-menu bg-light m-0">
+					<a href="{{path('features')}}" class="dropdown-item ">Features</a>
+					<a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
+					<a href="{{path('team')}}" class="dropdown-item">Our Team</a>
+					<a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
+					<a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
+				</div>
+			</div>
+			<a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
+		</div>
+	</div>
+</nav>
+<div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+	<div class="container text-center py-5">
+		<h1 class="display-4 text-white animated slideInDown mb-4">Paiement formation</h1>
+
+	</div>
+</div>
+<script src="https://js.stripe.com/v3/"></script>
+
+<div class="container-xxl py-5">
+	<div class="container">
+		<form action="{{ path('process_payment') }}" method="POST" id="payment-form">
+			<input type="hidden" name="formation_id" value="{{ formation.id }}">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 offset-md-3">
+						<div class="card">
+							<div class="card-header">
+								<h2 class="text-center">Paiement pour la formation "{{ formation.nom }}"</h2>
+							</div>
+							<div class="card-body">
+								<p>
+									<strong>Prix de la formation:</strong>
+									{{ formation.prix }}
+									€</p>
+								<!-- Include your payment form here -->
+								<div
+									id="card-element"><!-- A Stripe Element will be inserted here. -->
+								</div>
+								<div id="card-errors" role="alert"></div>
+							</div>
+							<div class="card-footer text-center">
+								<button class="btn btn-primary">Procéder au paiement</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+	var stripe = Stripe('pk_test_51OqD2zFwwP47unkPi7qTDmkiRBhSKtorduNEjDgm1sEHC4vIM9wb0f1FDkWMo8yg9VFRgfmhq0DW2XV13PF6fGje00twQjr4MN');
+var elements = stripe.elements();
+
+var cardElement = elements.create('card');
+cardElement.mount('#card-element');
+
+var form = document.getElementById('payment-form');
+
+form.addEventListener('submit', function (event) {
+event.preventDefault();
+
+stripe.createToken(cardElement, {
+name: 'Customer Name',
+address_line1: 'Address Line 1',
+address_city: 'City',
+address_state: 'State',
+address_zip: 'Postal Code',
+address_country: 'Country'
+}).then(function (result) {
+if (result.error) {
+var errorElement = document.getElementById('card-errors');
+errorElement.textContent = result.error.message;
+} else { // Token created, submit form with token ID
+var tokenInput = document.createElement('input');
+tokenInput.setAttribute('type', 'hidden');
+tokenInput.setAttribute('name', 'stripeToken');
+tokenInput.setAttribute('value', result.token.id);
+form.appendChild(tokenInput);
+
+form.submit();
+}
+});
+});
+</script>{% endblock %}
