@@ -14,7 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,7 +36,7 @@ class ConcoursControllerFront extends AbstractController
             'pagination' => $pagination,
         ]);
 
-        //Concours not outdateda
+        //Concours not outdated
 
         $query = $request->query->get('query');
         
@@ -45,7 +44,7 @@ class ConcoursControllerFront extends AbstractController
         if ($query) {
             $queryBuilder->andWhere('a.nom LIKE :query')
                 ->setParameter('query', '%'.$query.'%');
-               echo 11;
+               
         }
         $concours = $queryBuilder->getQuery()->getResult();
         return $this->render('concoursfront/indexfront.html.twig', [
@@ -57,11 +56,11 @@ class ConcoursControllerFront extends AbstractController
 
 
     #[Route('/{refrence}', name: 'app_concoursfront_participate', methods: ['GET'])]
-    public function participate(Request $request,Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager,UserRepository $userRepository, PaginatorInterface $paginator): Response
+    public function participate(Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager,UserRepository $userRepository): Response
     {
         $user = new User();
         $entityManager->persist($user);
-        $user = $userRepository->findOneBySomeField(20);
+        $user = $userRepository->findOneBySomeField(11);
         echo $user->getIdUser();
         $currentDate = new DateTime();
         $candidature = new Candidature($currentDate,$user,$concour);
@@ -78,7 +77,7 @@ class ConcoursControllerFront extends AbstractController
             else if($this->checkCandidature($candidature->getIdConcours()->getRefrence(),
             $candidature->getIdUser()->getIdUser()))
             {
-                echo "<script>alert('Vous étes deja inscrit!');</script>";
+                echo "<script>alert('Vous etes deja inscrit!');</script>";
             }
             else
         {
@@ -90,19 +89,14 @@ class ConcoursControllerFront extends AbstractController
             ->from('culturnaskapere@gmail.com')
             ->to('aziz.rihani2002@gmail.com')
             ->subject('Iscription concour Tunart')
-            ->html($this->renderView('concoursfront/email.html.twig', ['concour' => $concour]));
+            ->html('<p>Vous avez effectuer une inscription dans un concour sur la platform de Tunart</p>')
+            ->text('Hello');
             $mailer->send($message);
         }
-        
-        $pagination = $paginator->paginate(
-            $concoursRepository->findNonOutdated(), 
-            $request->query->getInt('page', 1), 
-            5
-        );
 
-        return $this->render('concoursfront/indexfront.html.twig', [
-            'pagination' => $pagination,
-        ]);
+    return $this->render('concoursfront/indexfront.html.twig', [
+        'concours' => $concoursRepository->findAll(),
+    ]);
 
     }
 
