@@ -1,0 +1,38 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}Candidature index{% endblock %}
+
+{% block body %}
+    <h1>Candidature index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Candidature</th>
+                <th>Date</th>
+                <th>ID Concours</th>
+                <th>ID User</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for candidature in candidatures %}
+            <tr>
+                <td>{{ candidature.idCandidature }}</td>
+                <td>{{ candidature.date ? candidature.date|date('Y-m-d') : '' }}</td>
+                <td>{{ candidature.idConcours.refrence }}</td>
+                <td>{{ candidature.idUser.getId }}</td>              
+                
+                <td>
+                    <a href="{{ path('app_candidature_show', {'idCandidature': candidature.idCandidature}) }}" class="btn btn-primary">Show</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

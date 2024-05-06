@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Concours Statistics{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Concours Statistics by Type</h1>
+        <canvas id="concoursChart" width="400" height="400"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Get the statistics data passed from Symfony controller
+        const statisticsByType = {{ statisticsByType|json_encode|raw }};
+        
+        // Extract labels and data for the chart
+        const labels = statisticsByType.map(stat => stat.type);
+        const data = statisticsByType.map(stat => stat.count);
+        
+        // Create the chart
+        var ctx = document.getElementById('concoursChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Concours Statistics by Type',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock %}

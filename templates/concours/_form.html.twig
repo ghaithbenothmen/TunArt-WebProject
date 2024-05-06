@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="{{ asset('public/css/form-styles.css') }}">
+
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+{{ form_label(form.nom, 'nom') }}
+{{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+<div class="form-error" style="color: red;">{{ form_errors(form.nom) }}</div>
+
+{{ form_label(form.date, 'date') }}
+{{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+<div class="form-error" style="color: red;">{{ form_errors(form.date) }}</div>
+
+{# 
+{% set choices = {
+    'MUSIC' : 'Music',
+    'PAINTING' : 'Painting',
+    'PHOTOGRAPHY' : 'Photography',
+    'LITERATURE' : 'Literature',
+    'CINEMA' : 'Cinema',
+    'GRAFFITI' : 'Graffiti',
+    'DJING' : 'DJing',
+    'DESIGN' : 'Design',
+    'VIDEO_EDITING' : 'Video Editing'
+} %}
+
+<label for="interest">Choose your area(s) of interest:</label>
+<form>
+  <select name="interest" id="interest" multiple>  {% for key, value in choices %}
+      <option value="{{ key }}">{{ value }}</option>
+    {% endfor %}
+  </select>
+</form>
+#}
+{{ form_label(form.type, 'type') }}
+{{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+<div class="form-error" style="color: red;">{{ form_errors(form.type) }}</div>
+
+
+{{ form_label(form.prix, 'prix') }}
+{{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+<div class="form-error" style="color: red;">{{ form_errors(form.prix) }}</div>
+
+{{ form_label(form.lien, 'lien') }}
+{{ form_widget(form.lien, {'attr': {'class': 'form-control'}}) }}
+<div class="form-error" style="color: red;">{{ form_errors(form.lien) }}</div>
+
+{{ form_label(form.Maxparticipant, 'Maxparticipant') }}
+{{ form_widget(form.Maxparticipant, {'attr': {'class': 'form-control'}}) }}
+<div class="form-error" style="color: red;">{{ form_errors(form.Maxparticipant) }}</div>
+
+<button class="btn btn-success">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

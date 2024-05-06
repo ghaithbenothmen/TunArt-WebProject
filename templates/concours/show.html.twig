@@ -1,0 +1,54 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}Concours{% endblock %}
+
+{% block body %}
+    <h1>Concours</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Refrence</th>
+                <td>{{ concour.refrence }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ concour.nom }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ concour.type }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ concour.prix }}</td>
+            </tr>
+            <tr>
+                <th>Lien</th>
+                <td>{{ concour.lien }}</td>
+            </tr>
+            <tr>
+                <th>Nombre des participants</th>
+                <td>{{ concour.Nparticipant }}</td>
+            </tr>
+            <tr>
+                <th>Nombre Max des participants</th>
+                <td>{{ concour.Maxparticipant }}</td>
+            </tr>
+            <tr>
+                <th>Nombre des votes</th>
+                <td>{{ concour.Nvote }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_concours_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    
+    <a href="{{ path('app_concours_edit', {'refrence': concour.refrence}) }}" class="btn btn-primary">Modifier</a>
+
+    {{ include('concours/_delete_form.html.twig') }}
+{% endblock %}

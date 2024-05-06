@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Concours index{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .fa-star.disabled {
+            color: lightgray; /* Or any other disabled style you prefer */
+            pointer-events: none; /* Prevents clicks on the stars */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+    <a href="index.html" class="navbar-brand d-flex align-items-center">
+        <img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}" alt="Logo"></img>
+    </a>
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-3 py-lg-0">
+            <a href="{{path('main')}}" class="nav-item nav-link">Home</a>
+            <a href="{{path('about')}}" class="nav-item nav-link">About Us</a>
+            <a href="{{path('app_concoursfront_vote_index')}}" class="nav-item nav-link active">Nos concours</a>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                <div class="dropdown-menu bg-light m-0">
+                    <a href="{{path('features')}}" class="dropdown-item">Features</a>
+                    <a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
+                    <a href="{{path('team')}}" class="dropdown-item">Our Team</a>
+                    <a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
+                    <a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
+                </div>
+            </div>
+            <a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+	<div class="container text-center py-5">
+		<h1 class="display-4 text-white animated slideInDown mb-4">Concours</h1>
+
+	</div>
+</div>
+
+    <form action="{{ path('app_concoursfront_vote_index') }}" method="GET">
+        <div class="mb-3">
+            <label for="query" class="form-label">Search:</label>
+            <input type="text" class="form-control bg-transparent w-100 py-3 ps-4 pe-5" id="query" name="query" placeholder="Rcherche..">
+        </div>
+        <button type="submit" class="btn btn-primary">Recherche</button>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Refrence</th>
+                <th>Nom</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Prix</th>
+                <th>Lien</th>
+                <th>Nombre des votes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for concour in pagination %}
+            <tr>
+                <td>{{ concour.refrence }}</td>
+                <td>{{ concour.nom }}</td>
+                <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
+                <td>{{ concour.type }}</td>
+                <td>{{ concour.prix }}</td>
+                <td>{{ concour.lien }}</td>
+                <td>{{ concour.Nvote }}</td>
+                <td>
+                    <a href="{{ path('app_concoursfront_vote', {'refrence': concour.refrence}) }}" class="btn btn-primary">Voter</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7">Pas de concour pour le moment</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {# Pagination (if needed) #}
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+{% endblock %}

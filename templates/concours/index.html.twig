@@ -1,0 +1,59 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}Concours index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Concours</h1>
+        <div class="customize-input">
+            <input class="form-control custom-shadow custom-radius border-0 bg-white"
+                type="text" placeholder="Recherche" aria-label="Search" id="query" name="query">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Refrence</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Prix</th>
+                    <th scope="col">Lien</th>
+                    <th scope="col">Nombre des participants</th>
+                    <th scope="col">Nombre Max des participants</th>
+                    <th scope="col">Nombre des votes</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for concour in pagination %}
+                    <tr>
+                        <td>{{ concour.refrence }}</td>
+                        <td>{{ concour.nom }}</td>
+                        <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
+                        <td>{{ concour.type }}</td>
+                        <td>{{ concour.prix }}</td>
+                        <td>{{ concour.lien }}</td>
+                        <td>{{ concour.Nparticipant }}</td>
+                        <td>{{ concour.Maxparticipant }}</td>
+                        <td>{{ concour.Nvote }}</td>
+                        <td>
+                            <a href="{{ path('app_concours_show', {'refrence': concour.refrence}) }}" class="btn btn-primary">Show</a>
+                            <a href="{{ path('app_concours_edit', {'refrence': concour.refrence}) }}" class="btn btn-secondary">Edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="10">No records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination" style="font-size: 25px;"> {# Set the desired font size here #}
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
+        <a href="{{ path('app_concours_new') }}" class="btn btn-success">Create New</a>
+    </div>
+{% endblock %}
