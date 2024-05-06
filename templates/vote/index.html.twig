@@ -1,0 +1,38 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}Vote index{% endblock %}
+
+{% block body %}
+    <h1>Vote index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Vote</th>
+                <th>Date</th>
+                <th>ID Concours</th>
+                <th>ID User</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vote in votes %}
+            <tr>
+                <td>{{ vote.idVote }}</td>
+                <td>{{ vote.date ? vote.date|date('Y-m-d') : '' }}</td>
+                <td>{{ vote.idConcours.refrence }}</td>
+                <td>{{ vote.idUser.getIdUser }}</td> 
+                <td>
+                    <a href="{{ path('app_vote_show', {'idVote': vote.idVote}) }}" class="btn btn-primary">Show</a>
+                    <a href="{{ path('app_vote_edit', {'idVote': vote.idVote}) }}" class="btn btn-secondary">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
