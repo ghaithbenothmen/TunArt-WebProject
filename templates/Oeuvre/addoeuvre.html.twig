@@ -1,0 +1,110 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}Dashboard artiste
+{% endblock %}
+
+{% block body %}
+	<div class="page-breadcrumb">
+		<div class="row">
+			<div class="col-7 align-self-center">
+				<h4 class="page-title text-truncate text-dark font-weight-medium mb-1">Liste des oeuvres</h4>
+				<div class="d-flex align-items-center">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb m-0 p-0">
+							<li class="breadcrumb-item">
+								<a href="index.html" class="text-muted">Artiste</a>
+							</li>
+							<li class="breadcrumb-item text-muted active" aria-current="page">Ajouter oeuvre</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+
+			<div class="col-5 align-self-center">
+				<div class="customize-input float-right">
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						Ajouter Oeuvre
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	 {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">Ajouter Oeuvre</h4>
+						
+							<div class="form-body">
+								{{ form_start(f, {'attr': {'enctype': 'multipart/form-data'}}) }}
+								<div class="mb-3">
+									{{ form_label(f.nomOeuvre, "Nom oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+									{{ form_widget(f.nomOeuvre, {'attr': {'class': 'form-control','placeholder': 'Entré nom de loeuvre'}}) }}
+									<div class="text-danger">
+										{{ form_errors(f.nomOeuvre) }}
+									</div>
+								</div>
+								<div class="mb-3">
+									{{ form_label(f.typeoeuvre, "Type oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+									{{ form_widget(f.typeoeuvre, {'attr': {'class': 'form-control','placeholder': 'Entré type de l`oeuvre'}}) }}
+									<div class="text-danger">
+										{{ form_errors(f.typeoeuvre) }}
+									</div>
+								</div>
+								<div class="mb-3">
+									{{ form_label(f.datePublication, "Date de publication:", {'label_attr': {'class': 'form-label'}}) }}
+									{{ form_widget(f.datePublication, {'attr': {'class': 'form-control datepicker', 'placeholder': 'Entrer la date'}}) }}
+									
+								</div>
+								
+								<div class="mb-3">
+									{{ form_label(f.img, "Image oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+									{{ form_widget(f.img) }}
+                                    <div class="text-danger">
+										{{ form_errors(f.img) }}
+									</div>
+								</div>
+								<div class="mb-3">
+									{{ form_label(f.description, "Description oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+									{{ form_widget(f.description, {'attr': {'class': 'form-control','placeholder': 'Entrer la description'}}) }}
+									<div class="text-danger">
+										{{ form_errors(f.description) }}
+									</div>
+								</div>
+								<div class="mb-3">
+									{{ form_label(f.note, "note oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+									{{ form_widget(f.note, {'attr': {'class': 'form-control','placeholder': 'Entrer la note'}}) }}
+									<div class="text-danger">
+										{{ form_errors(f.note) }}
+									</div>
+								</div>
+							
+								
+								<!-- Add more fields as needed -->
+
+
+							</div>
+							<div class="form-actions">
+								<div class="text-right">
+									{{ form_widget(f.Ajouter, {'attr': {'class': 'btn btn-primary'}}) }}
+									<button type="reset" class="btn btn-dark">Reset</button>
+								</div>
+							</div>
+
+
+						</div>
+						{{ form_end(f) }}
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}

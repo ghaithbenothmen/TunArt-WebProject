@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Repository\UserRepository;
 use App\Entity\Categorie;
 use App\Form\CategorieFormType;
 use App\Repository\CategorieRepository;
@@ -14,6 +14,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 #[Route('/artiste')]
 class ArtisteController extends AbstractController
@@ -173,6 +174,40 @@ public function listeCat(CategorieRepository $repo, Request $request, PaginatorI
 
         return $this->redirectToRoute('app_artiste_listeCat');
     }
+    #[Route('/team', name: 'team')]
+public function test(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    // Get all users query
+    $query = $userRepository->createQueryBuilder('u')
+        ->getQuery();
+
+    // Paginate the query results
+    $users = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+        3 // Number of items per page
+    );
+dump($users);
+    return $this->render('app/team.html.twig', ['users' => $users]);
+}
+#[Route('/liste', name: 'listeartiste')]
+public function artiste(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    // Get all users query
+    $query = $userRepository->createQueryBuilder('u')
+        ->getQuery();
+
+    // Paginate the query results
+    $users = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+        3 // Number of items per page
+    );
+dump($users);
+    return $this->render('oeuvre/Artistecards.html.twig', ['users' => $users]);
+}
+
+
 
    
     #[Route(path: '/calendar', name: "app_calendar", methods: ['GET'])]

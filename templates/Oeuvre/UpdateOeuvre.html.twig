@@ -1,0 +1,59 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}Update{% endblock %}
+
+{% block body %}
+<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ajouter Oeuvre</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div
+					class="modal-body">
+					<!-- Form for adding the entity -->
+
+					{{ form_start(f) }}
+					<div class="mb-3">
+						{{ form_label(f.nomOeuvre, "Nom Oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.nomOeuvre, {'attr': {'class': 'form-control','placeholder': 'Entré nom de l`Oeuvre'}}) }}
+							<div class="text-danger">
+										{{ form_errors(f.nomOeuvre) }}
+									</div>
+					</div>
+					<div class="mb-3">
+						{{ form_label(f.typeoeuvre, "Type Oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.typeoeuvre, {'attr': {'class': 'form-control','placeholder': 'Entré type de l`oeuvre'}}) }}
+						<div class="text-danger">
+										{{ form_errors(f.typeoeuvre) }}
+									</div>
+					</div>
+					<div class="mb-3">
+						{{ form_label(f.datePublication, "Date de publication:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.datePublication, {'attr': {'class': 'form-control datepicker', 'placeholder': 'Entrer la date'}}) }}
+					</div>
+                    <div class="mb-3">
+						{{ form_label(f.img, "Image oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_row(f.img) }}
+						 <div class="text-danger">
+										{{ form_errors(f.img) }}
+									</div>
+					</div>
+                    <div class="mb-3">
+						{{ form_label(f.description, "Description oeuvre:", {'label_attr': {'class': 'form-label'}}) }}
+						{{ form_widget(f.description, {'attr': {'class': 'form-control','placeholder': 'Entrer la description'}}) }}
+						<div class="text-danger">
+										{{ form_errors(f.description) }}
+									</div>
+					</div>
+                    
+					<!-- Add more fields as needed -->
+
+
+				</div>
+				<div class="modal-footer">
+					
+					{{ form_widget(f.Ajouter, {'label': 'Modifier', 'attr': {'class': 'btn btn-primary'}}) }}
+				</div>
+				{{ form_end(f) }}
+			</div>
+{% endblock %}

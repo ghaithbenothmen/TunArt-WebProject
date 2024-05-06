@@ -3,6 +3,65 @@
 {% block title %}Our Team{% endblock %}
 
 {% block body %}
+<style>
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+.size{
+  width:400px;
+  height:400px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+}
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination span.current {
+    background-color: #5f76e8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.pagination a.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+</style>
+
   <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
 				<a href="{{path('main')}}" class="navbar-brand d-flex align-items-center">
@@ -54,7 +113,7 @@
       data-wow-delay="0.1s"
     >
       <div class="container text-center py-5">
-        <h1 class="display-4 text-white animated slideInDown mb-4">Our Team</h1>
+        <h1 class="display-4 text-white animated slideInDown mb-4">Nos artistes</h1>
         <nav aria-label="breadcrumb animated slideInDown">
           <ol class="breadcrumb justify-content-center mb-0">
             <li class="breadcrumb-item">
@@ -64,7 +123,7 @@
               <a class="text-white" href="#">Pages</a>
             </li>
             <li class="breadcrumb-item text-primary active" aria-current="page">
-              Our Team
+              Nos Artistes
             </li>
           </ol>
         </nav>
@@ -74,81 +133,44 @@
 
     <!-- Team Start -->
     <div class="container-xxl py-5">
-      <div class="container">
-        <div class="row g-5 align-items-end mb-5">
-          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="border-start border-5 border-primary ps-4">
-              <h6 class="text-body text-uppercase mb-2">Our Team</h6>
-              <h1 class="display-6 mb-0">Our Expert Worker</h1>
-            </div>
-          </div>
-          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-            <p class="mb-0">
-              Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu
-              diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet
-              lorem sit clita duo justo magna dolore erat amet
-            </p>
-          </div>
-        </div>
-        <div class="row g-4">
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-1.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-2.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-3.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-2.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-3.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-1.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
+  <div class="container">
+    <div class="row g-5 align-items-end mb-5">
+      <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="border-start border-5 border-primary ps-4">
+          <h6 class="text-body text-uppercase mb-2">Our Team</h6>
+          <h1 class="display-6 mb-0">Our Expert Worker</h1>
         </div>
       </div>
     </div>
-    <!-- Team End -->
+    <div class="row g-4">
+      {% for user in users %}
+        {% if user.getRole() == 'ARTISTE' %}
+          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="team-item position-relative">
+              {% if user.image %}
+                <img class="size" src="{{ asset('uploads/' ~ user.image) }}" alt="Image" class="card-img-top">
+              {% else %}
+                <span class="card-img-top">Aucune image disponible</span>
+              {% endif %}
+              <div class="team-text bg-white p-4">
+                <h5 class="card-title">{{ user.getNom() }} {{ user.getPrenom() }}</h5>
+                <p class="card-text">Email: {{ user.getEmail() }}</p>
+                <a href="{{ path('oeuvre_by_artiste', {'artisteId': user.id}) }}" class="btn btn-primary">Voir les oeuvres</a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="pagination">
+            {{ knp_pagination_render(users) }}
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

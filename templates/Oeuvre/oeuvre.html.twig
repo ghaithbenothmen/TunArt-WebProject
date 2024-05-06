@@ -1,0 +1,410 @@
+{% extends 'artiste-dash.html.twig' %}
+
+{% block title %}Liste oeuvres{% endblock %}
+
+{% block body %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Symfony Project</title>
+
+<style>
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+}
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination span.current {
+    background-color: #5f76e8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.pagination a.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .card .card-body {
+        padding: 20px;
+    }
+
+    .card h5 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 14px;
+        color: #666;
+    }
+</style>
+<div class="row justify-content-center mb-4">
+    <div class="col-md-6 d-flex align-items-center">
+        <button id="sortButton" class="btn btn-primary">Trier par nom</button>
+        <div class="customize-input float-right ml-3">
+            <a href="{{ path('app_add_oeuvre') }}" class="btn btn-primary">Ajouter Oeuvre</a>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <select id="typeOeuvreSelect" class="form-control">
+        <option value="all">Tous les types d'oeuvres</option>		
+        <option value="FILM">Film</option>
+        <option value="CHANSON">Chanson</option>
+        <option value="PIECETHEATRE">Pièce de théâtre</option>
+    </select>
+</div>
+
+
+
+
+
+
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-7 align-self-center">
+            <h4 class="page-title text-trunforme text-dark font-weight-medium mb-1">Liste des oeuvres</h4>
+            <div class="d-flex align-items-center">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb m-0 p-0">
+                        <li class="breadcrumb-item">
+                            <a href="index.html" class="text-muted">Artiste</a>
+                        </li>
+                        <li class="breadcrumb-item text-muted active" aria-current="page">Liste oeuvres</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 justify-content-center">
+    {% for oeuvre in oeuvres %}
+    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+        <div class="card" data-type="{{ oeuvre.typeoeuvre|lower }}" data-toggle="modal" data-target="#popup{{ oeuvre.id }}">
+            <!-- Replace the ... placeholder with the contents of each card -->
+            {% if oeuvre.img %}
+                <img src="{{ asset('uploads/' ~ oeuvre.img) }}" alt="Image" class="card-img-top">
+            {% else %}
+                <span class="card-img-top">Aucune image disponible</span>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title mb-3">Nom de l'oeuvre: {{ oeuvre.nomOeuvre }}</h5>
+                <p class="card-text mb-3">Nom de l'artiste: {{ oeuvre.artisteId.nom }}</p>
+                <p class="card-text mb-3">Type de l'oeuvre: {{ oeuvre.typeoeuvre }}</p>
+				
+			</div>
+            
+        </div>
+    </div>
+
+
+	
+    <!-- Modal for each card -->
+    <div class="modal fade" id="popup{{ oeuvre.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Détails de l'oeuvre</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+        <div class="modal-body">
+    <!-- Add the content of the popup -->
+    		{% if oeuvre.img %}
+        		<img src="{{ asset('uploads/' ~ oeuvre.img) }}" alt="Image" class="card-img-top mb-3">
+    		{% else %}
+        		<span class="card-img-top">Aucune image disponible</span>
+    		{% endif %}
+    		<p><strong>Nom de l'oeuvre:</strong> {{ oeuvre.nomOeuvre }}</p>
+    		<p><strong>Nom de l'artiste:</strong> {{ oeuvre.artisteId.nom }}</p>
+    		<p><strong>Type de l'oeuvre:</strong> {{ oeuvre.typeoeuvre }}</p>
+    		<p><strong>Description:</strong> {{ oeuvre.description }}</p>
+    <!-- Add like and dislike buttons -->
+    		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<!-- Replace the like and dislike buttons with icons -->
+<div class="modal-body">
+    <!-- Add the content of the popup -->
+    <!-- Other content remains unchanged -->
+
+    <!-- Add icons for like and dislike buttons -->
+    <button class="btn btn-primary like-btn" id="like-btn" data-id="{{ oeuvre.id }}">
+        <i class="fas fa-thumbs-up"></i> <!-- Like icon -->
+    </button>
+    <button class="btn btn-danger dislike-btn" id="dislike-btn" data-id="{{ oeuvre.id }}">
+        <i class="fas fa-thumbs-down"></i> <!-- Dislike icon -->
+    </button>
+</div>
+
+
+		</div>
+		<div id="like-dislike-message"></div>
+
+            <div class="modal-footer">
+                <!-- Add the button to view the QR code -->
+                <a href="{{ path('oeuvre_qrcode', {'id': oeuvre.id}) }}" class="btn btn-primary">Voir le QR Code</a>
+                <a href="{{ path('app_oeuvre_update', {'Id': oeuvre.id}) }}" class="btn btn-warning">Modifier</a>
+                <a href="{{ path('app_oeuvre_delete', {'id': oeuvre.id}) }}" class="btn btn-danger">Supprimer</a>
+            </div>
+			
+        </div>
+		<div class="modal fade" id="likeDislikeModal" tabindex="-1" aria-labelledby="likeDislikeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="likeDislikeModalLabel">Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="likeDislikeMessage"></p>
+            </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+
+    {% endfor %}
+</div>
+
+<!-- Pagination Links -->
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="pagination">
+            {{ knp_pagination_render(oeuvres) }}
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete Modals -->
+{% for form in oeuvres %}
+		<div class="modal fade" id="deleteModal{{ form.id }}"aria-labelledby="deleteModalLabel{{ form.id }}" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deleteModalLabel{{ form.id }}">Confirmer Supprission</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						Etes-vous sûr que vous voulez supprimer "{{ form.nomOeuvre }}"?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+						<a href="{{ path('app_oeuvre_delete', {'id': form.id}) }}" class="btn btn-danger">Supprimer</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#searchInput').on('keyup', function() {
+        var searchText = $(this).val().toLowerCase().trim();
+        filterCards(searchText);
+    });
+
+    $('#sortButton').on('click', function() {
+        toggleSortOrder();
+    });
+	$('#typeOeuvreSelect').on('change', function() {
+    var type = $(this).val();
+    if (type === 'all') {
+            // Reload the page to show all oeuvres
+            window.location.href = "{{ path('app_artiste_oeuvre') }}";
+        } else {
+            filterOeuvreByType(type);
+        }
+    window.location.href = '{{ path('app_artiste_oeuvre') }}?typeoeuvre=' + type;
+});
+});
+function filterOeuvreByType(type) {
+    $.ajax({
+        url: '{{ path('app_filter_oeuvre_by_type') }}',
+        method: 'GET',
+        data: { type: type },
+        success: function(response) {
+            // Replace the HTML content of the container with the filtered oeuvres
+            $('#cardsContainer').html(response);
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+var ascendingOrder = true;
+var originalCardsOrder = null;
+
+function toggleSortOrder() {
+    ascendingOrder = !ascendingOrder; // Toggle the sorting order
+
+    if (ascendingOrder) {
+        sortCardsAlphabetically();
+    } else {
+        restoreOriginalOrder();
+    }
+}
+
+function sortCardsAlphabetically() {
+    var cardsContainer = $('.row.g-4.justify-content-center');
+    var cards = cardsContainer.find('.card').toArray();
+
+    cards.sort(function(a, b) {
+        var nameA = $(a).find('.card-title').text().toLowerCase();
+        var nameB = $(b).find('.card-title').text().toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
+
+    cardsContainer.empty();
+    cards.forEach(function(card) {
+        cardsContainer.append(card);
+    });
+}
+
+function restoreOriginalOrder() {
+    if (originalCardsOrder !== null) {
+        $('.row.g-4.justify-content-center').empty().append(originalCardsOrder);
+    }
+}
+
+// Call this function when the page is loaded to store the original order of cards
+function storeOriginalOrder() {
+    originalCardsOrder = $('.row.g-4.justify-content-center').html();
+}
+
+// Store the original order when the page is loaded
+$(window).on('load', function() {
+    storeOriginalOrder();
+});
+
+function filterCards(searchText) {
+    var cardsToShow = $('.card').filter(function() {
+        var cardText = $(this).text().toLowerCase();
+        return cardText.includes(searchText);
+    });
+
+    if (cardsToShow.length > 0) {
+        $('.no-cards-message').hide(); // Hide the message if there are cards to show
+        $('.card').hide(); // Hide all cards initially
+        cardsToShow.show(); // Show only the filtered cards
+    } else {
+        $('.card').hide(); // Hide all cards if no cards match the search criteria
+        $('.no-cards-message').show(); // Show the message
+    }
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const cardsContainer = document.getElementById('cardsContainer');
+
+    searchInput.addEventListener('input', function(event) {
+        const searchTerm = event.target.value.trim().toLowerCase();
+        const cards = Array.from(cardsContainer.getElementsByClassName('card'));
+
+        cards.forEach(function(card) {
+            const cardText = card.textContent.trim().toLowerCase();
+
+            if (cardText.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    // Other existing code...
+
+    // Event listener for like button click
+    $(document).on('click', '.like-btn', function() {
+        var oeuvreId = $(this).data('id');
+        // Here you can perform an AJAX request to handle liking the artwork
+        // For now, let's just display a message in a modal popup
+        $('#likeDislikeMessage').text('You liked the artwork.');
+        $('#likeDislikeModal').modal('show');
+    });
+
+    // Event listener for dislike button click
+    $(document).on('click', '.dislike-btn', function() {
+        var oeuvreId = $(this).data('id');
+        // Similar to the like button, handle disliking the artwork here
+        // For now, let's just display a message in a modal popup
+        $('#likeDislikeMessage').text('You disliked the artwork.');
+        $('#likeDislikeModal').modal('show');
+    });
+});
+</script>
+
+
+
+
+{% endblock %}

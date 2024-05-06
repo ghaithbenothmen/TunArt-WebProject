@@ -183,6 +183,7 @@ class AppController extends AbstractController
             'controller_name' => 'AppController',
         ]);
     }
+    
     #[Route('/features', name: 'features')]
     public function features(): Response
     {
@@ -197,13 +198,13 @@ class AppController extends AbstractController
             'controller_name' => 'AppController',
         ]);
     }
-    #[Route('/team', name: 'team')]
+  /*   #[Route('/team', name: 'team')]
     public function team(): Response
     {
         return $this->render('app/team.html.twig', [
             'controller_name' => 'AppController',
         ]);
-    }
+    } */
     #[Route('/testimonial', name: 'testimonial')]
     public function testimonial(): Response
     {

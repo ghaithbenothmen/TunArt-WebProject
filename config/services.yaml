@@ -6,8 +6,13 @@
 parameters:
     upload_directory: '%kernel.project_dir%/public/uploads'
     user_directory: '%kernel.project_dir%/public/uploads/users'
+    
+
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
 services:
+        
+    # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
