@@ -44,12 +44,6 @@ class User implements UserInterface
     private array $roles = [];
 
 
-    public function __construct()
-    {
-        $this->inscription = new ArrayCollection();
-        
-    }
-  
 
     public function getUserIdentifier(): ?int
     {
