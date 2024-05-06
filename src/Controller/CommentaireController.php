@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ForbiddenWordChecker;
+use Symfony\Component\Security\Core\Security;
 
 
 
@@ -100,8 +101,9 @@ class CommentaireController extends AbstractController
     }
 
     #[Route('/user/{id}/addCommentaire', name: 'addCommentaire', methods: ['GET', 'POST'])]
-    public function addcommentaire(Actualite $actualite,UserRepository $repoUser, Request $request ,EntityManagerInterface $entityManager)
+    public function addcommentaire(Actualite $actualite,UserRepository $repoUser, Request $request ,EntityManagerInterface $entityManager,Security $security)
     {
+
         $commentText  = $request->request->get('commentaire');
         if ($this->forbiddenWordChecker->containsForbiddenWord($commentText)) {
             return new Response('Inappropriate content', 403);
@@ -109,10 +111,15 @@ class CommentaireController extends AbstractController
         }
         else {
 
+        $user = $security->getUser();
+
+         if(!$user){
+                return $this->redirectToRoute('app_login');
+         }
         $commentaire = new Commentaire(); // Créez une nouvelle instance de votre entité Commentaire
         $commentaire->setActualite($actualite);
-        $user_id = 26; //static ba3ed twali b userLoggin
-        $user = $repoUser->find($user_id);
+        //$user_id = 26; //static ba3ed twali b userLoggin
+        //$user = $repoUser->find($user_id);
         //$user= $this->getUser(); //static ba3ed twali b userLoggin
         //$user = $repoUser->find($user);
         $commentaire->setUser($user);
