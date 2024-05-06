@@ -7,7 +7,6 @@ parameters:
     upload_directory: '%kernel.project_dir%/public/uploads'
 
 services:
-    # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
@@ -22,5 +21,15 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    app.twilio_client:
+        class: Twilio\Rest\Client
+        arguments:
+            - '%env(TWILIO_ACCOUNT_SID)%'
+            - '%env(TWILIO_AUTH_TOKEN)%'
+
+    Twilio\Rest\Client:
+        alias: app.twilio_client
+
+    doctrine.orm.metadata.annotation_reader:
+        class: Doctrine\Common\Annotations\AnnotationReader
+

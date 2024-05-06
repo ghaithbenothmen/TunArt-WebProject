@@ -148,28 +148,26 @@ class User
         return $this;
     }
 
-    /*** @return Collection<int, Formation>
+    /**
+     * @ORM\Column(type="json")
      */
- /*    public function getFormation(): Collection
+    private array $roles = [];
+
+    // ...
+
+    public function getRoles(): array
     {
-        return $this->formation;
+        return $this->roles;
     }
 
-    public function addFormation(Formation $formation): static
+    public function setRoles(array $roles): self
     {
-        if (!$this->formation->contains($formation)) {
-            $this->formation->add($formation);
-        }
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function removeFormation(Formation $formation): static
-    {
-        $this->formation->removeElement($formation);
-
-        return $this;
-    } */
+ 
 
     /**
      * @return Collection<int, Inscription>
@@ -200,5 +198,41 @@ class User
 
         return $this;
     }
+
+
+ /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+   
+
+    // Methods required by UserInterface
+
+    public function getUsername(): ?string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->mdp;
+    }
+
 
 }
