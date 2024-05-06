@@ -61,7 +61,7 @@ class ConcoursControllerFrontVote  extends AbstractController
     {
         $user = new User();
         $entityManager->persist($user);
-        $user = $userRepository->findOneBySomeField(20);
+        $user = $userRepository->findOneBySomeField(21);
         echo $user->getIdUser();
         $currentDate = new DateTime();
         $vote = new Vote($currentDate,$user,$concour);

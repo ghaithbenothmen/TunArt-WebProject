@@ -4688,16 +4688,16 @@
         },
         {
             "name": "symfony/mime",
-            "version": "v5.4.38",
+            "version": "v5.4.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "82fa6be8a0295a3932df871e88fc8c8d77aa71d4"
+                "reference": "a5364f016fd9e090f7b4f250a97ea6925a5ca985"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/82fa6be8a0295a3932df871e88fc8c8d77aa71d4",
-                "reference": "82fa6be8a0295a3932df871e88fc8c8d77aa71d4",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/a5364f016fd9e090f7b4f250a97ea6925a5ca985",
+                "reference": "a5364f016fd9e090f7b4f250a97ea6925a5ca985",
                 "shasum": ""
             },
             "require": {
@@ -4753,7 +4753,7 @@
                 "mime-type"
             ],
             "support": {
-                "source": "https://github.com/symfony/mime/tree/v5.4.38"
+                "source": "https://github.com/symfony/mime/tree/v5.4.39"
             },
             "funding": [
                 {
@@ -4769,7 +4769,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-21T07:25:32+00:00"
+            "time": "2024-04-18T08:26:06+00:00"
         },
         {
             "name": "symfony/monolog-bridge",
