@@ -1,0 +1,26 @@
+{# templates/user/code.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Code{% endblock %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification par e-mail</title>
+</head>
+<body>
+    <h1>Vérification par e-mail</h1>
+
+    <form method="post">
+        {{ form_start(form) }}
+        {{ form_row(form.email) }}
+        <button type="submit">Envoyer le code de vérification</button>
+        {{ form_end(form) }}
+    </form>
+</body>
+</html>
+{% endblock %}
+

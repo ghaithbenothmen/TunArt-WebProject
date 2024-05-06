@@ -7,10 +7,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use App\Repository\UserRepository;
-
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,31 +38,33 @@ class User
 
     #[ORM\Column(length: 30)]
     private ?string $image = null;
+
+
+    #[ORM\Column(type: "json")]
+    private array $roles = [];
+
+
+    public function __construct()
+    {
+        $this->inscription = new ArrayCollection();
+        
+    }
   
-/***
-    
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Formation", inversedBy="user")
-     * @ORM\JoinTable(name="inscription",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="ID")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="formation_id", referencedColumnName="id")
-     *   }
-     * )
-     
-    private $formation = array();
+
+    public function getUserIdentifier(): ?int
+    {
+        // Return the unique identifier for the user (e.g., username or email)
+        return $this->id;
+    }
+    //private $formation = array();
 
     /**
      * Constructor
-     
-    public function __construct()
+     */
+   /*  public function __construct()
     {
         $this->formation = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    } */
 
     public function getId(): ?int
     {
@@ -80,7 +82,7 @@ class User
 
         return $this;
     }
-*/
+
     public function getPrenom(): ?string
     {
         return $this->prenom;
@@ -152,30 +154,59 @@ class User
 
         return $this;
     }
-/*
+
+   
+
+
+    // ...
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+
+
+ /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
     /**
-     * @return Collection<int, Formation>
-    
-    public function getFormation(): Collection
+     * @see UserInterface
+     */
+    public function eraseCredentials()
     {
-        return $this->formation;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
-    public function addFormation(Formation $formation): static
-    {
-        if (!$this->formation->contains($formation)) {
-            $this->formation->add($formation);
-        }
+   
 
-        return $this;
+    // Methods required by UserInterface
+
+    public function getUsername(): ?string
+    {
+        return $this->email;
     }
 
-    public function removeFormation(Formation $formation): static
+    public function getPassword(): ?string
     {
-        $this->formation->removeElement($formation);
-
-        return $this;
+        return $this->mdp;
     }
-*/
+
 
 }

@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ForbiddenWordChecker;
 
 
-#[Route('/admin')]
+
 class CommentaireController extends AbstractController
 {
     private $forbiddenWordChecker;
@@ -26,7 +26,7 @@ class CommentaireController extends AbstractController
     {
         $this->forbiddenWordChecker = $forbiddenWordChecker;
     }
-    #[Route('/', name: 'app_admin')]
+    #[Route('/admin/adminDashboard', name: 'app_admin')]
     public function index(): Response
     {
         return $this->render('admin-dash.html.twig', [
@@ -34,7 +34,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    #[Route('/commentaire', name: 'app_commentaire_index', methods: ['GET'])]
+    #[Route('/admin/adminDashboard/commentaire', name: 'app_commentaire_index', methods: ['GET'])]
     public function commentaire(CommentaireRepository $commentaireRepository): Response
     {
         return $this->render('commentaire/index.html.twig', [
@@ -42,7 +42,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_commentaire_new', methods: ['GET', 'POST'])]
+    #[Route('/admin/adminDashboard/new', name: 'app_commentaire_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $commentaire = new Commentaire();
@@ -62,7 +62,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    #[Route('/{idC}', name: 'app_commentaire_show', methods: ['GET'])]
+    #[Route('/admin/adminDashboard/{idC}', name: 'app_commentaire_show', methods: ['GET'])]
     public function show(Commentaire $commentaire): Response
     {
         return $this->render('commentaire/show.html.twig', [
@@ -70,7 +70,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    #[Route('/{idC}/edit', name: 'app_commentaire_edit', methods: ['GET', 'POST'])]
+    #[Route('/admin/adminDashboard/{idC}/edit', name: 'app_commentaire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commentaire $commentaire, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CommentaireType::class, $commentaire);
@@ -88,7 +88,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    #[Route('/{idC}', name: 'app_commentaire_delete', methods: ['POST'])]
+    #[Route('/admin/{idC}', name: 'app_commentaire_delete', methods: ['POST'])]
     public function delete(Request $request, Commentaire $commentaire, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$commentaire->getIdC(), $request->request->get('_token'))) {
@@ -99,7 +99,7 @@ class CommentaireController extends AbstractController
         return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/addCommentaire', name: 'addCommentaire', methods: ['GET', 'POST'])]
+    #[Route('/user/{id}/addCommentaire', name: 'addCommentaire', methods: ['GET', 'POST'])]
     public function addcommentaire(Actualite $actualite,UserRepository $repoUser, Request $request ,EntityManagerInterface $entityManager)
     {
         $commentText  = $request->request->get('commentaire');
@@ -113,6 +113,8 @@ class CommentaireController extends AbstractController
         $commentaire->setActualite($actualite);
         $user_id = 26; //static ba3ed twali b userLoggin
         $user = $repoUser->find($user_id);
+        //$user= $this->getUser(); //static ba3ed twali b userLoggin
+        //$user = $repoUser->find($user);
         $commentaire->setUser($user);
         $commentaire->setContenuC($request->request->get('commentaire')); // Assurez-vous que 'contenuC' est le nom du champ dans votre formulaire
        
