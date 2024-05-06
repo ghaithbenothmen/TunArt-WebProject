@@ -6,7 +6,7 @@ use App\Repository\ConcoursRepository;
 use App\Repository\UserRepository;
 use App\Entity\Concours;
 use App\Entity\User;
-use App\Entity\Candidature;
+use App\Entity\Vote;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\ConcoursType;
@@ -19,10 +19,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/concoursfront')]
-class ConcoursControllerFront extends AbstractController
+#[Route('/concoursfrontvote')]
+class ConcoursControllerFrontVote extends AbstractController
 {
-    #[Route('/', name: 'app_concoursfront_index', methods: ['GET'])]
+    #[Route('/', name: 'app_concoursfront_vote_index', methods: ['GET'])]
     public function index(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
         //all concours
@@ -32,8 +32,7 @@ class ConcoursControllerFront extends AbstractController
             $request->query->getInt('page', 1), 
             5
         );
-
-        return $this->render('concoursfront/indexfront.html.twig', [
+        return $this->render('concoursfront/indexfrontvote.html.twig', [
             'pagination' => $pagination,
         ]);
 
@@ -48,7 +47,7 @@ class ConcoursControllerFront extends AbstractController
                echo 11;
         }
         $concours = $queryBuilder->getQuery()->getResult();
-        return $this->render('concoursfront/indexfront.html.twig', [
+        return $this->render('concoursfront/indexfrontvote.html.twig', [
             'concours' => $concours,
         ]);
 
@@ -56,7 +55,7 @@ class ConcoursControllerFront extends AbstractController
 
 
 
-    #[Route('/{refrence}', name: 'app_concoursfront_participate', methods: ['GET'])]
+    #[Route('/{refrence}', name: 'app_concoursfront_vote', methods: ['GET'])]
     public function participate(Request $request,Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager,UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
         $user = new User();
@@ -64,19 +63,11 @@ class ConcoursControllerFront extends AbstractController
         $user = $userRepository->findOneBySomeField(20);
         echo $user->getIdUser();
         $currentDate = new DateTime();
-        $candidature = new Candidature($currentDate,$user,$concour);
-        $candidature->setIdConcours($concour);
-        $candidature->setIdUser($user);
-        if($concour->getNparticipant()==$concour->getMaxparticipant())
-        {
-            echo "<script>alert('Maximum participants reached!');</script>";
-        }
-        else if($concour->getDate()<$candidature->getDate())
-            {
-                echo "<script>alert('Date depasse!');</script>";
-            }
-            else if($this->checkCandidature($candidature->getIdConcours()->getRefrence(),
-            $candidature->getIdUser()->getIdUser()))
+        $vote = new Vote($currentDate,$user,$concour);
+        $vote->setIdConcours($concour);
+        $vote->setIdUser($user);
+        if($this->checkVote($vote->getIdConcours()->getRefrence(),
+            $vote->getIdUser()->getIdUser()))
             {
                 echo "<script>alert('Vous étes deja inscrit!');</script>";
             }
@@ -84,44 +75,37 @@ class ConcoursControllerFront extends AbstractController
         {
             $concour->setNparticipant($concour->getNparticipant()+1);
             echo $concour->getRefrence();
-            $entityManager->persist($candidature);
+            $entityManager->persist($vote);
             $entityManager->flush();
-            $message = (new Email())
-            ->from('culturnaskapere@gmail.com')
-            ->to('aziz.rihani2002@gmail.com')
-            ->subject('Iscription concour Tunart')
-            ->html($this->renderView('concoursfront/email.html.twig', ['concour' => $concour]));
-            $mailer->send($message);
         }
-        
         $pagination = $paginator->paginate(
             $concoursRepository->findNonOutdated(), 
             $request->query->getInt('page', 1), 
             5
         );
 
-        return $this->render('concoursfront/indexfront.html.twig', [
+        return $this->render('concoursfront/indexfrontvote.html.twig', [
             'pagination' => $pagination,
         ]);
 
     }
 
-    private function checkCandidature(int $idConcours, int $idUser): bool
+    private function checkVote(int $idConcours, int $idUser): bool
     {
         // Get the Doctrine EntityManager
         $entityManager = $this->getDoctrine()->getManager();
 
-        // Get the Candidature repository
-        $candidatureRepository = $entityManager->getRepository(Candidature::class);
+        // Get the vote repository
+        $VoteRepository = $entityManager->getRepository(Vote::class);
 
-        // Find the candidature by concours and user IDs
-        $candidature = $candidatureRepository->findOneBy(['Concours' => $idConcours, 'user' => $idUser]);
+        // Find the vote by concours and user IDs
+        $vote = $VoteRepository->findOneBy(['Concours' => $idConcours, 'user' => $idUser]);
 
-        // Check if candidature exists
-        return ($candidature !== null);
+        // Check if vote exists
+        return ($vote !== null);
     }
 
-    #[Route('/search', name: 'app_concoursfront_search', methods: ['GET'])]
+    #[Route('/search', name: 'app_concoursfront_vote_search', methods: ['GET'])]
     public function search(Request $request, ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
         $query = $request->query->get('query');
@@ -132,7 +116,7 @@ class ConcoursControllerFront extends AbstractController
                 ->getQuery();
         }
 
-        return $this->render('concoursfront/indexfront.html.twig', [
+        return $this->render('concoursfront/indexfrontvote.html.twig', [
             'concours' => $concours,
         ]);
     }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use App\Repository\VoteRepository;
 
-#[ORM\Entity(repositoryClass: VoteRepository::class)]
+#[ORM\Entity(repositoryClass: App\Repository\CandidatureRepository::class)]
 class Vote
 {
 
@@ -23,56 +23,8 @@ class Vote
     #[ORM\JoinColumn(name: "idUser",referencedColumnName: "user")]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(targetEntity: Concours::class , inversedBy: 'Vote')]
-    #[ORM\JoinColumn(name: "idConcours",referencedColumnName: "refrence")]
-    private ?Concours $Concours = null;
+    #[ORM\ManyToOne(inversedBy: 'Candidature')]
+    private ?Concours $idConcours = null;
 
-    public function getIdVote(): ?int
-    {
-        return $this->idVote;
-    }
-    
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
 
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getIdConcours(): ?Concours
-    {
-        return $this->Concours;
-    }
-
-    public function setIdConcours(?Concours $Concours): static
-    {
-        $this->Concours = $Concours;
-
-        return $this;
-    }
-
-    public function getIdUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setIdUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function __construct(DateTime $currentDate,User $user,Concours $Concours)
-    {
-        $this->date = $currentDate;
-        $this->user = $user;
-        $this->Concours = $Concours;
-    }
-    
 }
