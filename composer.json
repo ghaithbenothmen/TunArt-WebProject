@@ -4,6 +4,8 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
+        "nelmio/cors-bundle": "^2.5",
+        "karser/recaptcha3-bundle": "^2.0",
         "php": ">=8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",

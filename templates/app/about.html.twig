@@ -4,45 +4,48 @@
 
 {% block body %}
   <!-- Navbar Start -->
-    <nav
-      class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0"
-    >
-      <a href="index.html" class="navbar-brand d-flex align-items-center">
-      <img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
-      </a>
-      <button
-        type="button"
-        class="navbar-toggler"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarCollapse"
-      >
-    
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto py-3 py-lg-0">
-          <a href="{{path('main')}}" class="nav-item nav-link ">Home</a>
-          <a href="{{path('about')}}" class="nav-item nav-link active">About Us</a>
-          <a href="{{path('services')}}" class="nav-item nav-link">Nos formations</a>
-          <div class="nav-item dropdown">
-            <a
-              href="#"
-              class="nav-link dropdown-toggle"
-              data-bs-toggle="dropdown"
-              >Pages</a
-            >
-            <div class="dropdown-menu bg-light m-0">
-              <a href="{{path('features')}}" class="dropdown-item">Features</a>
-              <a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
-              <a href="{{path('team')}}" class="dropdown-item">Our Team</a>
-              <a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
-              <a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
-            </div>
-          </div>
-          <a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
-        </div>
-      </div>
-    </nav>
+   <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+				<a href="{{path('main')}}" class="navbar-brand d-flex align-items-center">
+					<img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
+			</a>
+			<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<div class="navbar-nav ms-auto py-3 py-lg-0">
+					<a href="{{path('main')}}" class="nav-item nav-link ">Accueil</a>
+					<a href="{{path('about')}}" class="nav-item nav-link active">A propos</a>
+					<a href="{{path('services')}}" class="nav-item nav-link">Nos formations</a>
+					<div class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+						<div class="dropdown-menu bg-light m-0">
+							<a href="{{path('features')}}" class="dropdown-item">Features</a>
+							<a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
+							<a href="{{path('team')}}" class="dropdown-item">Our Team</a>
+							<a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
+							<a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
+					
+						</div>
+					</div>
+					<a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
+							  {% if app.user %}
+ {% if 'ROLE_ARTISTE' in app.user.roles %}
+        <a href="{{ path('artisteDashboard', {'id': app.user.id}) }}" class="nav-item nav-link">Dashboard</a>
+    {% elseif 'ROLE_ADMIN' in app.user.roles %}
+        <a href="{{ path('adminDashboard') }}" class="nav-item nav-link">Dashboard</a>
+    {% endif %}
+              {#   <a href="{{path('artisteDashboard', {'id': app.user.id})}}" class="nav-item nav-link">Dashboard</a> #}
+                <a href="{{ path('app_logout') }}" class="nav-item nav-link">Logout</a>
+            {% else %}
+                <a href="{{ path('app_registerr') }}" class="nav-item nav-link">Register</a>
+                <a href="{{ path('app_login') }}" class="nav-item nav-link">Login</a>
+            {% endif %}
+				</div>
+			</div>
+		</body>
+	</html>
+</nav>
     <!-- Navbar End -->
     <!-- Page Header Start -->
     <div
@@ -69,129 +72,64 @@
     <!-- Page Header End -->
 
     <!-- About Start -->
-    <div class="container-xxl py-5">
-      <div class="container">
-        <div class="row g-5">
-          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              class="position-relative overflow-hidden ps-5 pt-5 h-100"
-              style="min-height: 400px"
-            >
-              <img
-                class="position-absolute w-100 h-100"
-                src="img/about.jpg"
-                alt=""
-                style="object-fit: cover"
-              />
-              <div
-                class="position-absolute top-0 start-0 bg-white pe-3 pb-3"
-                style="width: 200px; height: 200px"
-              >
-                <div
-                  class="d-flex flex-column justify-content-center text-center bg-primary h-100 p-3"
-                >
-                  <h1 class="text-white">25</h1>
-                  <h2 class="text-white">Years</h2>
-                  <h5 class="text-white mb-0">Experience</h5>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-            <div class="h-100">
-              <div class="border-start border-5 border-primary ps-4 mb-5">
-                <h6 class="text-body text-uppercase mb-2">About Us</h6>
-                <h1 class="display-6 mb-0">
-                  Unique Solutions For Residentials & Industries!
-                </h1>
-              </div>
-              <p>
-                Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit.
-                Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit,
-                sed stet lorem sit clita duo justo magna dolore erat amet
-              </p>
-              <p class="mb-4">
-                Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit.
-                Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit,
-                sed stet lorem sit clita duo justo magna dolore erat amet
-              </p>
-              <div class="border-top mt-4 pt-4">
-                <div class="row g-4">
-                  <div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.1s">
-                    <i
-                      class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"
-                    ></i>
-                    <h6 class="mb-0">Ontime at services</h6>
-                  </div>
-                  <div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.3s">
-                    <i
-                      class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"
-                    ></i>
-                    <h6 class="mb-0">24/7 hours services</h6>
-                  </div>
-                  <div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.5s">
-                    <i
-                      class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"
-                    ></i>
-                    <h6 class="mb-0">Verified professionals</h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+   
+<!-- About Start -->
+<div class="container-xxl py-5">
+	<div class="container">
+		<div class="row g-5">
+			<div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+				<div class="position-relative overflow-hidden ps-5 pt-5 h-100" style="min-height: 400px">
+					<img class="position-absolute w-100 h-100" src="{{asset('images/art4.jpeg' )}}" alt="" style="object-fit: cover"/>
+					<div class="position-absolute top-0 start-0 bg-white pe-3 pb-3" style="width: 200px; height: 200px">
+						<div class="d-flex flex-column justify-content-center text-center bg-primary h-100 p-3">
+							<h1 class="text-white">Art</h1>
+							<h2 class="text-white">Site Web</h2>
+							<h5 class="text-white mb-0">Tunisien</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+				<div class="h-100">
+					<div class="border-start border-5 border-primary ps-4 mb-5">
+						<h6 class="text-body text-uppercase mb-2">A propos nous</h6>
+						<h1 class="display-6 mb-0">
+							Le premier site web artistique en tunisie !
+						</h1>
+					</div>
+					<p>
+					Le premier site web artistique en Tunisie" est une vision ambitieuse qui vise à créer une plateforme
+					 novatrice et inspirante pour les artistes et les passionnés d'art. Notre site se veut être un lieu de
+					  découverte et d'expression artistique, mettant en lumière la richesse et la diversité de la scène
+					   artistique tunisienne.
+					</p>
+					<p class="mb-4">
+						En offrant un espace dédié aux artistes pour présenter leurs œuvres et partager
+					    leur passion, nous souhaitons créer une communauté dynamique et créative qui célèbre l'art sous toutes
+						 ses formes. 
+					</p>
+					<div class="border-top mt-4 pt-4">
+						<div class="row g-4">
+							<div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.1s">
+								<i class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"></i>
+								<h6 class="mb-0">À l'heure aux services</h6>
+							</div>
+							<div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.3s">
+								<i class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"></i>
+								<h6 class="mb-0">24/7 heures de services</h6>
+							</div>
+							<div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.5s">
+								<i class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"></i>
+								<h6 class="mb-0">professionnel</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
     <!-- About End -->
 
-    <!-- Team Start -->
-    <div class="container-xxl py-5">
-      <div class="container">
-        <div class="row g-5 align-items-end mb-5">
-          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="border-start border-5 border-primary ps-4">
-              <h6 class="text-body text-uppercase mb-2">Our Team</h6>
-              <h1 class="display-6 mb-0">Our Expert Worker</h1>
-            </div>
-          </div>
-          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-            <p class="mb-0">
-              Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu
-              diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet
-              lorem sit clita duo justo magna dolore erat amet
-            </p>
-          </div>
-        </div>
-        <div class="row g-4">
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-1.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-2.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-            <div class="team-item position-relative">
-              <img class="img-fluid" src="img/team-3.jpg" alt="" />
-              <div class="team-text bg-white p-4">
-                <h5>Full Name</h5>
-                <span>Engineer</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- Team End -->
 {% endblock %}

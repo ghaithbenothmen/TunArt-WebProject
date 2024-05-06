@@ -122,8 +122,29 @@
 						</div>
 						<span>{{ formation.cat.nom }}</span>
 					</div>
+					<div class="col-sm-6 wow fadeIn" data-wow-delay="0.4s">
+						<div class="d-flex align-items-center mb-3">
+							<i class="fa fa-star fa-2x text-primary flex-shrink-0 me-3"></i>
+							<h6 class="mb-0">Note</h6>
+						</div>
+						<span>
+												{% set averageRating = formation.getRatingsAverage() %}
+												{% for i in 1..5 %}
+													{% if averageRating >= i %}
+														<i class="fas fa-star text-warning"></i>
+													{% elseif averageRating > i - 1 %}
+														<i class="fas fa-star-half-alt text-warning"></i>
+													{% else %}
+														<i class="far fa-star text-warning"></i>
+													{% endif %}
+												{% endfor %}</span>
+					</div>
 				</div>
+
+					
 			</div>
+		
+		
 			<div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
 				<div class="position-relative overflow-hidden ps-5 pt-5 h-100" style="min-height: 400px">
 					<img class="position-absolute w-100 h-100" src="{{ asset('uploads/' ~ formation.image) }}" alt="" style="object-fit: cover"/>
@@ -133,33 +154,44 @@
 				<hr><br>
 				<div class="row gy-3">
 					<div class="col-lg-6 wow fadeInUp" data-wow-delay="0.6s">
-						<div class="d-flex align-items-center mb-3">
-							<i class="fa fa-star fa-2x text-primary flex-shrink-0 me-3"></i>
-							<h6 class="mb-0">Votre avis :</h6>
-							<div class="d-flex align-items-center" id="ratingStars">
-								{% if existingRating is not null %}
-									{% for i in 1..5 %}
-										{% if i <= existingRating.ratingValue %}
-											<i class="fa fa-star text-warning  {% if ratingDisabled %}disabled{% endif %}" data-value="{{ i }}"></i>
-										{% else %}
-											<i class="fa fa-star {% if ratingDisabled %}disabled{% endif %}" data-value="{{ i }}"></i>
-										{% endif %}
-									{% endfor %}
-								{% else %}
-									{% for i in 1..5 %}
-										<i class="fa fa-star" data-value="{{ i }}"></i>
-									{% endfor %}
-								{% endif %}
-							</div>
-
-							{% if not existingRating %}
-								<span id="ratingValue" class="ms-3">0</span>
-							{% endif %}
-						</div>
-						{% if existingRating %}
-							<h6 class="mb-0">Merci pour votre avis !</h6>
-						{% endif %}
-					</div>
+						  <div class="row gy-3">
+                    <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fa fa-star fa-2x text-primary flex-shrink-0 me-3"></i>
+                            <h6 class="mb-0">Votre avis :</h6>
+                            <div class="d-flex align-items-center" id="ratingStars">
+                                {% if app.user %}
+                                    {% if existingRating is not null %}
+                                        {% for i in 1..5 %}
+                                            {% if i <= existingRating.ratingValue %}
+                                                <i class="fa fa-star text-warning {% if ratingDisabled %}disabled{% endif %}" data-value="{{ i }}"></i>
+                                            {% else %}
+                                                <i class="fa fa-star {% if ratingDisabled %}disabled{% endif %}" data-value="{{ i }}"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for i in 1..5 %}
+                                            <i class="fa fa-star" data-value="{{ i }}"></i>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% else %}
+                                    {% for i in 1..5 %}
+								
+                                        <a href="{{ path('app_login') }}"><i class="fa fa-star" data-value="{{averageRating}}"></i></a>
+									
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            {% if not existingRating %}
+                                <span id="ratingValue" class="ms-3">0</span>
+                            {% endif %}
+                        </div>
+                        {% if existingRating %}
+                            <h6 class="mb-0">Merci pour votre avis !</h6>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
 				</div>
 
@@ -174,9 +206,15 @@
 		<div class="col-lg-5 wow fadeInUp" data-wow-delay="0.1s">
 			<div class="border-start border-5 border-primary ps-4 mb-5">
 
-				<a href="#" id="registerButton" type="button" class="btn btn-primary btn-lg py-2 top-0 end-0 mt-2 me-2" data-bs-toggle="modal">
+				
+				
+                {% if app.user %}
+                  <a href="#" id="registerButton" type="button" class="btn btn-primary btn-lg py-2 top-0 end-0 mt-2 me-2" data-bs-toggle="modal">
 					S'inscrire
 				</a>
+                {% else %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Inscrire</button>
+                {% endif %}
 			</div>
 
 		</div>
@@ -185,6 +223,24 @@
 	
 </div></div>
 
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Connexion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Vous devez vous connecter pour vous inscrire.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <a href="{{ path('app_login') }}" class="btn btn-primary">Se connecter</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Error Modal --><div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
 <div class="modal-dialog">

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Formation;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,6 +22,32 @@ class FormationRepository extends ServiceEntityRepository
         parent::__construct($registry, Formation::class);
     }
 
+    public function findByArtiste(User $artiste): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.artiste = :artiste')
+            ->setParameter('artiste', $artiste)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllSortedByRate(): array
+{
+    return $this->createQueryBuilder('f')
+        ->leftJoin('f.ratings', 'r')
+        ->groupBy('f.id')
+        ->orderBy('AVG(r.ratingValue)', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
+
+public function findLimited($limit): array
+{
+    return $this->createQueryBuilder('f')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+}
 //    /**
 //     * @return Formation[] Returns an array of Formation objects
 //     */

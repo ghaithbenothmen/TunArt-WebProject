@@ -24,11 +24,13 @@ class AppController extends AbstractController
 {
 
     #[Route('/', name: 'main')]
-    public function main(): Response
+    public function main(FormationRepository $repo): Response
     {
-        return $this->render('base.html.twig', [
-            'controller_name' => 'AppController',
-        ]);
+        $formations = $repo->findLimited(6);
+    return $this->render('base.html.twig', [
+        'controller_name' => 'AppController',
+        'formations' => $formations
+    ]);
     }
 
     #[Route('/app', name: 'index')]
@@ -47,20 +49,36 @@ class AppController extends AbstractController
     }
 
     #[Route('/formations', name: 'services')]
-    public function formations(FormationRepository $repo): Response
+    public function formations(FormationRepository $repo, Request $request): Response
     {
-        $formations = $repo->findAll();
+        $sortBy = $request->query->get('sort', 'name_asc');
+    
+        switch ($sortBy) {
+            case 'name_asc':
+                $formations = $repo->findBy([], ['nom' => 'ASC']);
+                break;
+            case 'name_desc':
+                $formations = $repo->findBy([], ['nom' => 'DESC']);
+                break;
+            case 'rate':
+                $formations = $repo->findAllSortedByRate();
+                break;
+            default:
+                $formations = $repo->findAll();
+        }
+    
         return $this->render(
             'app/formations.html.twig',
-            ['formations' => $formations]
+            ['formations' => $formations, 'sortBy' => $sortBy]
         );
     }
+    
 
     #[Route('/details/{id}', name: 'app_formation_details')]
     public function details($id, RatingsRepository $repoRating, FormationRepository $repo, InscriptionRepository $repoIns, UserRepository $repoUser): Response
     {
-        $userId = 26; // Static user ID, replace with dynamic user ID retrieval logic
-        $user = $repoUser->find($userId);
+        //$userId = 26; // Static user ID, replace with dynamic user ID retrieval logic
+        $user = $this->getUser();
 
         $formation = $repo->find($id);
         if (!$formation) {
@@ -119,9 +137,9 @@ class AppController extends AbstractController
     #[Route('/rating/{id}', name: 'app_rating')]
     public function rateFormation(RatingsRepository $repoRating, UserRepository $repoUser, $id, Request $request, ManagerRegistry $manager, FormationRepository $repo): Response
     {
-        $userId = 26; // Static user ID, replace with dynamic user ID retrieval logic
+        //$userId = 26; // Static user ID, replace with dynamic user ID retrieval logic
 
-        $user = $repoUser->find($userId);
+        $user = $this->getUser();
 
         $entityManager = $manager->getManager();
 
@@ -233,8 +251,8 @@ class AppController extends AbstractController
                 'exp_month' => $expMonth,
                 'exp_year' => $expYear
             ]);
-            $userId = 26; // Static user ID, replace with dynamic user ID retrieval logic
-            $user = $repoUser->find($userId);
+            //$userId = 26; // Static user ID, replace with dynamic user ID retrieval logic
+            $user = $this->getUser();
 
             $entityManager = $manager->getManager();
             $inscription = new Inscription();
@@ -267,6 +285,10 @@ class AppController extends AbstractController
     #[Route('/payment/{id}', name: 'app_payment')]
     public function showPaymentPage($id, FormationRepository $repo): Response
     {
+        $user=$this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
         $formation = $repo->find($id);
         if (!$formation) {
             return new Response('Formation not found', Response::HTTP_NOT_FOUND);

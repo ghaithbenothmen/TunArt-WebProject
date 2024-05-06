@@ -317,4 +317,20 @@ tbody.appendChild(row);
 });
 });
 });
+
+		$(document).ready(function () {
+$('#searchInput').keyup(function () {
+var query = $(this).val().toLowerCase().trim();
+
+// Filtre le tableau des catégories en fonction de la requête de recherche
+$('#zero_config tbody tr').each(function () {
+var currentText = $(this).find('td:nth-child(2)').text().toLowerCase().trim();
+if (currentText.includes(query)) {
+$(this).show();
+} else {
+$(this).hide();
+}
+});
+});
+});
 </script>{% endblock %}

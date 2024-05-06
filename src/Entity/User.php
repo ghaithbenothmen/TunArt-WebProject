@@ -7,10 +7,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use App\Repository\UserRepository;
-
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -42,13 +42,22 @@ class User
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Inscription::class)]
     private Collection $inscription;
 
+    #[ORM\Column(type: "json")]
+    private array $roles = [];
+
+
     public function __construct()
     {
         $this->inscription = new ArrayCollection();
+        
     }
   
 
-
+    public function getUserIdentifier(): ?int
+    {
+        // Return the unique identifier for the user (e.g., username or email)
+        return $this->id;
+    }
     //private $formation = array();
 
     /**
@@ -148,10 +157,8 @@ class User
         return $this;
     }
 
-    /**
-     * @ORM\Column(type="json")
-     */
-    private array $roles = [];
+   
+
 
     // ...
 
@@ -160,7 +167,7 @@ class User
         return $this->roles;
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 

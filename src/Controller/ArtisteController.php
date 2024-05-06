@@ -15,6 +15,7 @@ use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/artiste')]
 class ArtisteController extends AbstractController
 {
 

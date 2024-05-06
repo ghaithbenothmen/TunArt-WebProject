@@ -97,11 +97,11 @@ class FormationType extends AbstractType
                 'placeholder' => 'Sélectionner une catégorie',
                 'choice_label' => 'nom'
             ])
-            ->add('artiste', EntityType::class, [
+      /*       ->add('artiste', EntityType::class, [
                 'class' => User::class,
                 'placeholder' => 'Sélectionner un artiste',
                 'choice_label' => 'nom'
-            ])
+            ]) */
             ->add('Ajouter', SubmitType::class);
     }
 

@@ -6,31 +6,46 @@
 {% block body %}
 	<!-- Navbar Start -->
 	<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
-		<a href="index.html" class="navbar-brand d-flex align-items-center">
-			<img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
-	</a>
-	<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+				<a href="{{path('main')}}" class="navbar-brand d-flex align-items-center">
+					<img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
+			</a>
+			<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
 
-		<span class="navbar-toggler-icon"></span>
-	</button>
-	<div class="collapse navbar-collapse" id="navbarCollapse">
-		<div class="navbar-nav ms-auto py-3 py-lg-0">
-			<a href="{{path('main')}}" class="nav-item nav-link ">Accueil</a>
-			<a href="{{path('about')}}" class="nav-item nav-link">A propos</a>
-			<a href="{{path('services')}}" class="nav-item nav-link active">Nos formations</a>
-			<div class="nav-item dropdown">
-				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-				<div class="dropdown-menu bg-light m-0">
-					<a href="{{path('features')}}" class="dropdown-item">Features</a>
-					<a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
-					<a href="{{path('team')}}" class="dropdown-item">Our Team</a>
-					<a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
-					<a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<div class="navbar-nav ms-auto py-3 py-lg-0">
+					<a href="{{path('main')}}" class="nav-item nav-link ">Accueil</a>
+					<a href="{{path('about')}}" class="nav-item nav-link">A propos</a>
+					<a href="{{path('services')}}" class="nav-item nav-link active">Nos formations</a>
+					<div class="nav-item dropdown">
+						<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+						<div class="dropdown-menu bg-light m-0">
+							<a href="{{path('features')}}" class="dropdown-item">Features</a>
+							<a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
+							<a href="{{path('team')}}" class="dropdown-item">Our Team</a>
+							<a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
+							<a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
+					
+						</div>
+					</div>
+					<a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
+							  {% if app.user %}
+ {% if 'ROLE_ARTISTE' in app.user.roles %}
+        <a href="{{ path('artisteDashboard', {'id': app.user.id}) }}" class="nav-item nav-link">Dashboard</a>
+    {% elseif 'ROLE_ADMIN' in app.user.roles %}
+        <a href="{{ path('adminDashboard') }}" class="nav-item nav-link">Dashboard</a>
+    {% endif %}
+              {#   <a href="{{path('artisteDashboard', {'id': app.user.id})}}" class="nav-item nav-link">Dashboard</a> #}
+                <a href="{{ path('app_logout') }}" class="nav-item nav-link">Logout</a>
+            {% else %}
+                <a href="{{ path('app_registerr') }}" class="nav-item nav-link">Register</a>
+                <a href="{{ path('app_login') }}" class="nav-item nav-link">Login</a>
+            {% endif %}
 				</div>
 			</div>
-			<a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
-		</div>
-	</div>
+		</body>
+	</html>
 </nav>
 <!-- Navbar End -->
 <!-- Page Header Start -->
@@ -55,10 +70,29 @@
 					</h1>
 				</div>
 			</div>
+		
 			{# <div class="col-lg-6 text-lg-end wow fadeInUp" data-wow-delay="0.3s">
 						            <a class="btn btn-primary py-3 px-5" href="">More Services</a>
 						          </div> #}
 		</div>
+	<form action="{{ path('services') }}" method="get" class="mb-3">
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <label for="sort" class="form-label">Trier par :</label>
+        </div>
+        <div class="col-auto">
+            <select name="sort" id="sort" class="form-select">
+                <option value="name_asc" {% if sortBy == 'name_asc' %} selected {% endif %}>Nom (A-Z)</option>
+                <option value="name_desc" {% if sortBy == 'name_desc' %} selected {% endif %}>Nom (Z-A)</option>
+                <option value="rate" {% if sortBy == 'rate' %} selected {% endif %}>Note</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Trier</button>
+        </div>
+    </div>
+</form>
+
 		<div class="row g-4 justify-content-center">
 			{% for form in formations %}
 				<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
@@ -78,6 +112,18 @@
 							<p>
 								{{ form.description|capitalize }}
 							</p>
+				<p>
+												{% set averageRating = form.getRatingsAverage() %}
+												{% for i in 1..5 %}
+													{% if averageRating >= i %}
+														<i class="fas fa-star text-warning"></i>
+													{% elseif averageRating > i - 1 %}
+														<i class="fas fa-star-half-alt text-warning"></i>
+													{% else %}
+														<i class="far fa-star text-warning"></i>
+													{% endif %}
+												{% endfor %}
+											</p>
 							<a class="small" href="{{ path('app_formation_details', {'id': form.id}) }}">PLUS<i class="fa fa-arrow-right ms-3"></i>
 							</a>
 

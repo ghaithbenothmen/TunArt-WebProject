@@ -18,8 +18,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-#[Route('/formation')]
+#[Route('/artiste/formation')]
 class FormationController extends AbstractController
 {
 
@@ -45,6 +46,17 @@ class FormationController extends AbstractController
     public function listeFor(PaginatorInterface $paginator, Request $request, FormationRepository $repo, CategorieRepository $categorieRepo): Response
     {
 
+        $user = $this->getUser();
+        //$userId=$user->getUserIdentifier();
+        //dump($user->getUserIdentifier());
+
+
+
+        if (!$user instanceof UserInterface) {
+            // Redirect to the login page
+            return $this->redirectToRoute('app_login');
+        }
+
         $term = $request->query->get('q');
         $categorieId = $request->query->get('categorie');
 
@@ -63,14 +75,13 @@ class FormationController extends AbstractController
             }
         }
 
-        $query = $queryBuilder->getQuery();
+        //$query = $queryBuilder->getQuery();
 
         $formations = $paginator->paginate(
-            $query, // Requête contenant les données à paginer
-            $request->query->getInt('page', 1), // Numéro de page par défaut
-            4 // Nombre d'éléments par page
-        );
-
+        $repo->findByArtiste($user),
+        $request->query->getInt('page', 1),
+        4
+    );
         $categories = $categorieRepo->findAll();
         // $formations = $query->getResult();
 
@@ -88,7 +99,9 @@ class FormationController extends AbstractController
     public function addFormation(Request $request, ManagerRegistry $manager): Response
     {
         $formation = new Formation();
+        $user = $this->getUser();
 
+        $formation->setArtiste($user);
         $datedebut = $request->query->get('datedebut');
         $datefin = $request->query->get('datefin');
     
@@ -100,6 +113,8 @@ class FormationController extends AbstractController
             $formation->setDatedebut($datedebutDateTime);
             $formation->setDatefin($datefinDateTime);
         }
+       
+
 
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
