@@ -2,52 +2,28 @@
 
 namespace App\Entity;
 
+use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Like
- *
- * @ORM\Table(name="user_like", indexes={@ORM\Index(name="fk_like", columns={"id_user"}), @ORM\Index(name="fk_oeuvre", columns={"id_oeuvre"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: LikeRepository::class)]
 class Like
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_user", type="integer", nullable=false)
-     */
-    private $idUser;
+    #[ORM\Column]
+    private ?int $idUser;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id_oeuvre", type="integer", nullable=false)
-     */
-    private $idOeuvre;
+    #[ORM\Column]
+    private ?int $idOeuvre;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="etat", type="boolean", nullable=false)
-     */
-    private $etat;
+    #[ORM\Column]
+    private ?bool $etat;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="LikeCount", type="integer", nullable=false)
-     */
-    private $likecount;
+    #[ORM\Column]
+    private ?int $likecount;
 
     public function getId(): ?int
     {
@@ -101,6 +77,4 @@ class Like
 
         return $this;
     }
-
-
 }

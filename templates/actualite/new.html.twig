@@ -1,0 +1,21 @@
+{% extends 'admin-dash.html.twig' %}
+
+{% block title %}Nouvelle Actualite{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="page-title">Créer une nouvelle Actualite</h1>
+
+        <div class="form-container">
+            {{ include('actualite/_form.html.twig') }}
+        </div>
+
+        <div class="navigation">
+            <a href="{{ path('app_actualite_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+
+    {% block javascripts %}
+        <script src="{{ asset('js/main.js') }}"></script>
+    {% endblock %}
+{% endblock %}

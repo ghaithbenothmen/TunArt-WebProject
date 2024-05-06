@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class RegisterUserType extends AbstractType
 {
@@ -21,7 +21,7 @@ class RegisterUserType extends AbstractType
             ->add('nom', TextType::class)
             ->add('prenom', TextType::class)
             ->add('email', TextType::class)
-            ->add('mdp', TextType::class)
+            ->add('mdp', PasswordType::class)
             ->add('tel', TextType::class)
             
             ->add('image', FileType::class, [

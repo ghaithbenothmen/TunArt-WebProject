@@ -1,0 +1,169 @@
+{% extends 'admin-dash.html.twig' %}
+
+{% block title %}Actualite index{% endblock %}
+
+{% block body %}
+    <h1>Actualite index</h1>
+    <style>
+    .modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+}
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination span.current {
+    background-color: #5f76e8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.pagination a.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+    </style>
+ <form action="{{ path('app_actualite_search') }}" method="GET">
+        <input type="text" id="query" name="query">
+        <button type="submit">Search</button>
+    </form>
+    </form>
+      <form action="{{ path('app_actualitesback_tri') }}" method="GET">
+        <label for="order">Ordre :</label>
+        <select name="order" id="order">
+            <option value="asc">Croissant</option>
+            <option value="desc">Décroissant</option>
+        </select>
+
+        <label for="field">Champ de tri :</label>
+        <select name="field" id="field">
+            <option value="titre">Titre</option>
+            <option value="date">Date</option>
+            <!-- Ajoutez d'autres options pour les champs de tri si nécessaire -->
+        </select>
+
+        <button type="submit" class="btn btn-primary">Trier</button>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Text</th>
+                <th>Date</th>
+                <th>Like</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for actualite in pagination %}
+            <tr>
+                <td>{{ actualite.id }}</td>
+                <td>{{ actualite.titre }}</td>
+                <td>{{ actualite.text }}</td>
+                <td>{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}</td>
+                <td>{{ actualite.liked }}</td>
+                <td> {% if actualite.image %}
+                    <img src="{{ asset('imageAct/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 100px; max-height: 100px;">
+                        {% else %}
+                            Pas d'image
+                        {% endif %}</td>
+                <td>
+                    <a href="{{ path('app_actualite_show', {'id': actualite.id}) }} "class="btn btn-warning">show</a>
+                    <a href="{{ path('app_actualite_edit', {'id': actualite.id}) }} "class="btn btn-success">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+                                       {# <ul class="pagination float-right">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    </ul>#}
+                                    <div class="pagination">
+        {% if pagination.currentPageNumber > 1 %}
+            <a href="{{ path('app_actualite_index', {'page': pagination.currentPageNumber - 1}) }}">Précédent</a>&nbsp;
+        {% else %}
+            <span class="disabled">Précédent</span>&nbsp;
+        {% endif %}
+
+        {% for page in 1..pagination.pageCount %}
+            {% if page <= 2 %}
+                {% if pagination.currentPageNumber == page %}
+                    <span class="current">{{ page }}</span>
+                {% else %}
+                    <a href="{{ path('app_actualite_index', {'page': page}) }}">{{ page }}</a>
+                {% endif %}
+                &nbsp; {# Ajouter un espace après chaque numéro de page #}
+            {% elseif page == 3 %}
+                {% if pagination.currentPageNumber == page - 1 %}
+                    <a href="{{ path('app_actualite_index', {'page': pagination.currentPageNumber + 1}) }}">{{ pagination.currentPageNumber + 1 }}</a>&nbsp;
+                {% else %}
+                    <span>...</span>&nbsp;
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination.pageCount > 2 %}
+            <a href="{{ path('app_actualite_index', {'page': pagination.pageCount}) }}">{{ pagination.pageCount }}</a>&nbsp;
+        {% endif %}
+
+        &nbsp;{% if pagination.currentPageNumber < pagination.pageCount %}
+        <a href="{{ path('app_actualite_index', {'page': pagination.currentPageNumber + 1}) }}">Suivant</a>
+    {% else %}
+        <span class="disabled">Suivant</span>
+        {% endif %}
+    </div>
+
+    <a href="{{ path('app_actualite_new') }}"class="btn btn-info">Create new</a>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Actualites
+{% endblock %}
+
+{% block body %}
+	<!-- Navbar Start -->
+	<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+		<a href="index.html" class="navbar-brand d-flex align-items-center">
+			<img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
+	</a>
+	<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarCollapse">
+		<div class="navbar-nav ms-auto py-3 py-lg-0">
+			<a href="{{path('main')}}" class="nav-item nav-link ">Accueil</a>
+			<a href="{{path('about')}}" class="nav-item nav-link">A propos</a>
+			<a href="{{path('services')}}" class="nav-item nav-link active">Nos Actualites</a>
+			<div class="nav-item dropdown">
+				<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+				<div class="dropdown-menu bg-light m-0">
+					<a href="{{path('features')}}" class="dropdown-item">Features</a>
+					<a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
+					<a href="{{path('team')}}" class="dropdown-item">Our Team</a>
+					<a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
+					<a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
+				</div>
+			</div>
+			<a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
+		</div>
+	</div>
+</nav>
+<!-- Navbar End -->
+<!-- Page Header Start -->
+<div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+	<div class="container text-center py-5">
+		<h1 class="display-4 text-white animated slideInDown mb-4">
+			Nos Actualites
+		</h1>
+
+	</div>
+</div>
+<!-- Page Header End -->
+<!-- Service Actualite -->
+<div class="container-xxl py-5">
+	<div class="container">
+		<div class="row g-5 align-items-end mb-5">
+			<div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+				<div class="border-start border-5 border-primary ps-4">
+					<h6 class="text-body text-uppercase mb-2">Nos Actualites</h6>
+					<h1 class="display-6 mb-0">
+						Les actualites 
+					</h1>
+				</div>
+			</div>
+			{# <div class="col-lg-6 text-lg-end wow fadeInUp" data-wow-delay="0.3s">
+						            <a class="btn btn-primary py-3 px-5" href="">More Services</a>
+						          </div> #}
+		</div>
+
+
+<!-- ****-->
+            <div class="row g-4">
+			<form action="{{ path('actualite') }}" method="get">
+    			<select name="lang">
+        			<option value="en">English</option>
+        			<option value="fr">Français</option>
+  				 </select>
+   				 <input type="submit" value="Choisir la langue">
+			</form>
+        		{% for actualite in translated %}
+         <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class=" team-item position-relative">
+						{% if actualite.image %}
+                    <img class="img-fluid w-100" src="{{ asset('imageAct/' ~ actualite.image) }}" alt="Image du actualite" >
+						{% else %}
+							<span>Aucune image disponible</span>
+						{% endif %}
+              		<div class="facts-overlay ">
+							<h5 style="color:white;" class="mb-3">{{ actualite.titre}}</h5>
+							<span>
+								{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}
+						</span>
+							<p
+								<td>{{ actualite.text }}</td>
+							</p>
+							<a class="small" href="{{ path('app_actualite_commentaire', {'id': actualite.id}) }}">Commentaire<i class="fa fa-arrow-right ms-3"></i>
+							</a>
+						</a>
+						</br>
+						<div class="vertical-align">
+                            <a href="{{ path('app_actualite_like_actualite', {'id': actualite.id}) }}"><i class="bi bi-hand-thumbs-up-fill">Like</i></i></a>
+							&nbsp;&nbsp;
+							<a href="{{ path('app_actualite_dislike_actualite', {'id': actualite.id}) }}"><i class="bi bi-hand-thumbs-down-fill">Dislike</i></a>
+                       </div>
+              </div>
+            </div>	
+          </div>
+{% endfor %}
+	</div>
+</div>
+<!-- End ****-->
+</div><!-- Service End -->{% endblock %}

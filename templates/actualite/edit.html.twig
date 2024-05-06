@@ -1,0 +1,29 @@
+{% extends 'admin-dash.html.twig' %}
+
+{% block title %}Modifier une Actualité{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="page-title">Modifier une Actualité</h1>
+
+        <div class="form-container">
+            {{ include('actualite/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+
+        <div class="navigation">
+            <a href="{{ path('app_actualite_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+
+        <div  class="delete-section">
+            {{ include('actualite/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    {% block javascripts %}
+        <script src="{{ asset('js/main.js') }}"></script>
+    {% endblock %}
+{% endblock %}

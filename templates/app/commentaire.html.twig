@@ -1,0 +1,212 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact us{% endblock %}
+
+{% block body %}
+
+   <!-- Navbar Start -->
+    <nav
+      class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0"
+    >
+      <a href="index.html" class="navbar-brand d-flex align-items-center">
+      <img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
+      </a>
+      <button
+        type="button"
+        class="navbar-toggler"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarCollapse"
+      >
+    
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-3 py-lg-0">
+          <a href="{{path('main')}}" class="nav-item nav-link ">Home</a>
+          <a href="{{path('about')}}" class="nav-item nav-link">About Us</a>
+          <a href="{{path('services')}}" class="nav-item nav-link">Our Services</a>
+          <div class="nav-item dropdown">
+            <a
+              href="#"
+              class="nav-link dropdown-toggle"
+              data-bs-toggle="dropdown"
+              >Pages</a
+            >
+            <div class="dropdown-menu bg-light m-0">
+              <a href="{{path('features')}}" class="dropdown-item">Features</a>
+              <a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
+              <a href="{{path('team')}}" class="dropdown-item">Our Team</a>
+              <a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
+              <a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
+            </div>
+          </div>
+          <a href="{{path('contact')}}" class="nav-item nav-link active">Contact</a>
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar End -->
+    <!-- Page Header Start -->
+    <div
+      class="container-fluid page-header py-5 mb-5 wow fadeIn"
+      data-wow-delay="0.1s"
+    >
+      <div class="container text-center py-5">
+        <h1 class="display-4 text-white animated slideInDown mb-4">
+          Commentaire
+        </h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+          <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item">
+              <a class="text-white" href="#">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="text-white" href="#">Pages</a>
+            </li>
+            <li class="breadcrumb-item text-primary active" aria-current="page">
+              Contact Us
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Contact Start -->
+    <div class="container-xxl py-5">
+      <div class="container">
+        <div class="row g-5">
+          <div
+            class="col-lg-6 wow fadeInUp"
+            data-wow-delay="0.1s"
+            style="min-height: 450px"
+          >
+            <div class="position-relative h-100">
+                <td> {% if actualite.image %}
+                    <img src="{{ asset('imageAct/' ~ actualite.image) }}" alt="Image du actualite" style="min-height: 450px; border: 0">
+                        {% else %}
+                            Pas d'image
+                        {% endif %}</td>
+                <td>
+            </div>
+          </div>
+          <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="border-start border-5 border-primary ps-4 mb-5">
+              <h6 class="text-body text-uppercase mb-2">Commentaire</h6>
+              <h1 class="display-6 mb-0">
+                <td>{{ actualite.titre}}</td>
+              </h1>
+            </div>
+            <p class="mb-4">
+                <td>{{ actualite.text }}</td>
+            </p>
+            <form  id="comment-form" method="post" action="{{ path('addCommentaire', {'id': actualite.id}) }}">
+                  <div class="mb-3">
+                    <label for="commentaire" class="form-label">Votre commentaire</label>
+                    <textarea class="form-control" id="commentaire" name="commentaire"></textarea>
+                    <span type="text" class="form-control" id="comment-error-message"></span>
+                    <style>
+									.error-message {
+										position: relative;
+										color: red; /* Set the text color to red or any color you prefer */
+										margin-top: 5px; /* Add margin to create space between the input field and the error message */
+										font-size: 14px; /* Set the font size for the error message */
+									}
+								</style>
+                  </div>
+                <button type="submit" class="btn btn-primary">Envoyer le commentaire</button>
+            </form>
+                    </div>
+                    <script>
+                      document.addEventListener('DOMContentLoaded', function () {
+                      const commentForm = document.querySelector('#comment-form');
+
+                      if (commentForm) {
+                      commentForm.addEventListener('submit', function (event) {
+                      event.preventDefault(); // Prevent the default form submission behavior
+
+                      const formData = new FormData(this);
+                      const commentInput = formData.get('commentaire');
+                      const commentInputField = document.querySelector('input[name="commentaire"]');
+                      const errorMessageContainer = document.querySelector('#comment-error-message');
+
+
+                      // Check if the comment is blank
+                      if (commentInput.trim() === '') {
+                      errorMessageContainer.classList.add('error-message'); // Add the error-message class
+                      errorMessageContainer.textContent = 'Comment cannot be blank';
+                      return; // Do not proceed if the comment is blank
+                      }
+
+
+                      // Send AJAX request to add the comment
+                      fetch(this.action, {
+                      method: 'POST',
+                      body: formData,
+                      headers: {
+                      'X-Requested-With': 'XMLHttpRequest'
+                      }
+                      }).then(response => {
+                      if (response.ok) {
+                      console.log('Comment added successfully');
+                      errorMessageContainer.textContent = 'Comment added successfully';
+
+                      return response.text();
+                      }
+                      if (response.status == 403) {
+                      errorMessageContainer.classList.add('error-message'); // Add the error-message class
+                      errorMessageContainer.textContent = 'Inappropriate content';
+
+                      console.error('Failed to add comment');
+                      throw new Error('Failed to add comment');
+                      } else {
+                      console.error('Failed to add comment');
+                      throw new Error('Failed to add comment');
+                      }
+
+                      }).then(html => {
+                      errorMessageContainer.textContent = 'Comment added successfully';
+
+                      const tempDiv = document.createElement('div');
+
+                      tempDiv.innerHTML = html.trim();
+                      const commentDivs = tempDiv.querySelectorAll('.comment-div');
+                      const lastCommentDiv = commentDivs[commentDivs.length - 1];
+
+                      if (lastCommentDiv) {
+                      const commentsContainer = document.querySelector('#comments-container');
+                      const commentCount = document.querySelector('#comment-count');
+                      const nbComments = tempDiv.querySelector('#comment-count');
+
+                      commentCount.innerHTML = nbComments.innerHTML;
+                      commentsContainer.appendChild(lastCommentDiv);
+
+                      const commentInput = document.querySelector('input[name="commentaire"]');
+                      commentInput.value = '';
+                      } else {
+                      console.error('No comment divs found');
+                      }
+                      }).catch(error => {
+                      console.error('Error adding comment:', error);
+                      });
+                      });
+                      } else {
+                      console.error('Comment form not found');
+                      }
+
+                      function displayErrorMessage(message) {
+                      errorMessageContainer.classList.add('error-message');
+                      errorMessageContainer.textContent = message;
+                      }
+
+                      function clearErrorMessage() {
+                      errorMessageContainer.textContent = '';
+                      }
+                      });
+                    </script>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Contact End -->
+
+{% endblock %}

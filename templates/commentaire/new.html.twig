@@ -1,0 +1,17 @@
+{% extends 'admin-dash.html.twig' %}
+
+{% block title %}Nouveau Commentaire{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="page-title">Créer un nouveau Commentaire</h1>
+
+        <div class="form-container">
+            {{ include('commentaire/_form.html.twig') }}
+        </div>
+
+        <div class="navigation">
+            <a href="{{ path('app_commentaire_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+{% endblock %}

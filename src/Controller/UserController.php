@@ -31,7 +31,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class UserController extends AbstractController
 {
-
     private $managerRegistry;
     private $entityManager;
     private $slugger;
@@ -116,7 +115,7 @@ public function register(
 
             try {
                 // Send SMS to the registered user
-                $toNumber = $user->getTel();
+                $toNumber = '+21656765293';
                 $fromNumber = '+18588793064';
         
                 $message = $this->twilioClient->messages->create(

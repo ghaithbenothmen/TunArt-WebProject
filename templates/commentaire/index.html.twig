@@ -1,0 +1,52 @@
+{% extends 'admin-dash.html.twig' %}
+
+{% block title %}Commentaire index{% endblock %}
+
+{% block body %}
+    <h1>Commentaire index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdC</th>
+                <th>Titre</th>
+                <th>Prenom</th>
+                <th>Contenuc</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for commentaire in commentaires %}
+            <tr>
+                <td>{{ commentaire.idC }}</td>
+                <td>{{ commentaire.actualite.titre}}</td>
+                <td>{{ commentaire.user.Prenom}}</td>
+                <td>{{ commentaire.contenuc }}</td>
+                <td>
+                    <a href="{{ path('app_commentaire_show', {'idC': commentaire.idC}) }} "class="btn btn-warning">show</a>
+                    <a href="{{ path('app_commentaire_edit', {'idC': commentaire.idC}) }} "class="btn btn-success">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+                                        <ul class="pagination float-right">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Next</a>
+                                        </li>
+                                    </ul>
+
+    <a href="{{ path('app_commentaire_new') }} "class="btn btn-info">Create new</a>
+{% endblock %}

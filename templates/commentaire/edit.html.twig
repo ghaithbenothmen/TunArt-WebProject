@@ -1,0 +1,21 @@
+{% extends 'admin-dash.html.twig' %}
+
+{% block title %}Modifier un Commentaire{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="page-title">Modifier un Commentaire</h1>
+
+        <div class="form-container">
+            {{ include('commentaire/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+
+        <div class="navigation">
+            <a href="{{ path('app_commentaire_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+
+        <div class="delete-section">
+            {{ include('commentaire/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}
