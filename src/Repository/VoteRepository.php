@@ -45,4 +45,15 @@ class VoteRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function findByExampleField($value): array
+{
+    return $this->createQueryBuilder('c')
+        ->andWhere('c.exampleField = :val')
+        ->setParameter('val', $value)
+        ->orderBy('c.id', 'ASC')
+        ->setMaxResults(10)
+        ->getQuery()
+        ->getResult()
+    ;
+}
 }
