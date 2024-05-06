@@ -24,7 +24,6 @@
                 <td>{{ vote.idUser.getIdUser }}</td> 
                 <td>
                     <a href="{{ path('app_vote_show', {'idVote': vote.idVote}) }}" class="btn btn-primary">Show</a>
-                    <a href="{{ path('app_vote_edit', {'idVote': vote.idVote}) }}" class="btn btn-secondary">Edit</a>
                 </td>
             </tr>
         {% else %}

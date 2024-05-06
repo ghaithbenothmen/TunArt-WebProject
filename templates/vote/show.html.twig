@@ -18,8 +18,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_vote_index') }}" class="btn btn-primary">Back to List</a>
-    <a href="{{ path('app_vote_edit', {'idVote': vote.idVote}) }}" class="btn btn-secondary">Edit</a>
+    <a href="{{ path('app_vote_index') }}" class="btn btn-secondary">Back to List</a>
 
     {{ include('vote/_delete_form.html.twig') }}
 {% endblock %}
