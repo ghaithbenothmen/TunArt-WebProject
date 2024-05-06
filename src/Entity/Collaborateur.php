@@ -35,34 +35,5 @@ class Collaborateur
      */
     private $email;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getNomcomplet(): ?string
-    {
-        return $this->nomcomplet;
-    }
-
-    public function setNomcomplet(string $nomcomplet): static
-    {
-        $this->nomcomplet = $nomcomplet;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
 
 }

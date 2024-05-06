@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 /**
  * User
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User
+class User implements UserInterface
 {
     /**
      * @var int
@@ -27,6 +28,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="Nom", type="string", length=100, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=255)
      */
     private $nom;
 
@@ -34,6 +37,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="Prenom", type="string", length=100, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=255)
      */
     private $prenom;
 
@@ -41,6 +46,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="Email", type="string", length=100, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Email
      */
     private $email;
 
@@ -48,6 +55,9 @@ class User
      * @var string
      *
      * @ORM\Column(name="Mdp", type="string", length=100, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(min=8, max=255)
+     * 
      */
     private $mdp;
 
@@ -55,45 +65,31 @@ class User
      * @var int
      *
      * @ORM\Column(name="Tel", type="integer", nullable=false)
+     * @Assert\NotBlank(message="remplir votre téléphone")
      */
     private $tel;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Role", type="string", length=100, nullable=false)
-     */
-    private $role;
+  
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
+     * @Assert\Length(max=255)
      */
     private $image;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
+ /**
+     * @var string
      *
-     * @ORM\ManyToMany(targetEntity="Formation", inversedBy="user")
-     * @ORM\JoinTable(name="inscription",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="ID")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="formation_id", referencedColumnName="id")
-     *   }
-     * )
+     * @ORM\Column(name="Role", type="string", length=255, nullable=true)
      */
-    private $formation = array();
+    private $role;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->formation = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    
+
+
+
 
     public function getId(): ?int
     {
@@ -105,7 +101,7 @@ class User
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
 
@@ -117,7 +113,7 @@ class User
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
 
@@ -129,7 +125,7 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -141,33 +137,36 @@ class User
         return $this->mdp;
     }
 
-    public function setMdp(string $mdp): static
+    public function setMdp(string $mdp): self
     {
-        $this->mdp = $mdp;
+    $this->mdp = $mdp;
 
-        return $this;
+    return $this;
     }
 
-    public function getTel(): ?int
-    {
-        return $this->tel;
-    }
-
-    public function setTel(int $tel): static
-    {
-        $this->tel = $tel;
-
-        return $this;
-    }
-
-    public function getRole(): ?string
+    
+   public function getRole(): ?string
     {
         return $this->role;
     }
 
-    public function setRole(string $role): static
+    public function setRole(string $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+
+
+    public function getTel(): ?string
+    {
+        return $this->tel;
+    }
+
+    public function setTel(string $tel): self
+    {
+        $this->tel = $tel;
 
         return $this;
     }
@@ -177,7 +176,7 @@ class User
         return $this->image;
     }
 
-    public function setImage(?string $image): static
+    public function setImage(string $image): self
     {
         $this->image = $image;
 
@@ -185,33 +184,73 @@ class User
     }
 
     /**
-     * @return Collection<int, Formation>
+     * @ORM\Column(type="json")
      */
-    public function getFormation(): Collection
+    private array $roles = [];
+
+    // ...
+
+    public function getRoles(): array
     {
-        return $this->formation;
+        return $this->roles;
     }
 
-    public function addFormation(Formation $formation): static
+    public function setRoles(array $roles): self
     {
-        if (!$this->formation->contains($formation)) {
-            $this->formation->add($formation);
-        }
+        $this->roles = $roles;
 
         return $this;
     }
-
-    public function removeFormation(Formation $formation): static
+    public function getUserIdentifier(): ?int
     {
-        $this->formation->removeElement($formation);
-
-        return $this;
+        // Return the unique identifier for the user (e.g., username or email)
+        return $this->id;
     }
 
-    public function __toString()
+    
+    
+
+
+
+
+
+
+
+
+
+ /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
     {
-        // Return the property you want to display
-        return $this->nom;
+        return null;
     }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+   
+
+    // Methods required by UserInterface
+
+    public function getUsername(): ?string
+    {
+        return $this->email;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->mdp;
+    }
+
 
 }

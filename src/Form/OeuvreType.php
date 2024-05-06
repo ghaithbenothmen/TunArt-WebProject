@@ -67,11 +67,7 @@ class OeuvreType extends AbstractType
             )
             ->add('datePublication')
             ->add('note')
-            ->add('artisteId', EntityType::class, [
-                'class' => User::class,
-                'placeholder' => 'Sélectionner un artiste',
-                'choice_label' => 'nom'
-            ])
+            
             ->add('Ajouter', SubmitType::class);;
     }
 

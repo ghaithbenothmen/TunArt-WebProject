@@ -1,0 +1,523 @@
+{% extends 'base.html.twig' %}
+{% block title %}Liste oeuvres{% endblock %}
+
+{% block body %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Symfony Project</title>
+
+<style>
+        
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+}
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination span.current {
+    background-color: #5f76e8;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.pagination a.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .card .card-body {
+        padding: 20px;
+    }
+
+    .card h5 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 14px;
+        color: #666;
+    }
+
+</style>
+
+  <!-- Navbar Start -->
+    <nav
+      class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0"
+    >
+      <a href="index.html" class="navbar-brand d-flex align-items-center">
+      <img style="width:100px;height:100px" src="{{asset('img/logo.png' )}}"></img>
+      </a>
+      <button
+        type="button"
+        class="navbar-toggler"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarCollapse"
+      >
+
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="customize-input">
+                                        <input class="form-control custom-shadow custom-radius border-0 bg-white"
+                                            type="text" id="searchInput" class="form-control" placeholder="Chercher oeuvre...">
+                                        <i class="form-control-icon" data-feather="search"></i>
+                                        
+        
+                                    </div>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-3 py-lg-0">
+          <a href="{{path('main')}}" class="nav-item nav-link ">Home</a>
+          <a href="{{path('about')}}" class="nav-item nav-link">About Us</a>
+          <a href="{{path('services')}}" class="nav-item nav-link">Nos formations</a>
+          <a href="{{path('team')}}" class="nav-item nav-link">Nos artistes</a>
+          <div class="nav-item dropdown">
+            <a
+              href="#"
+              class="nav-link dropdown-toggle active"
+              data-bs-toggle="dropdown"
+              >Pages</a
+            >
+            <div class="dropdown-menu bg-light m-0">
+              <a href="{{path('features')}}" class="dropdown-item">Features</a>
+              <a href="{{path('appointment')}}" class="dropdown-item">Appointment</a>
+              <a href="{{path('team')}}" class="dropdown-item active">Nos artistes</a>
+              <a href="{{path('testimonial')}}" class="dropdown-item">Testimonial</a>
+              <a href="{{path('404page')}}" class="dropdown-item">404 Page</a>
+            </div>
+          </div>
+          <a href="{{path('contact')}}" class="nav-item nav-link">Contact Us</a>
+        </div>
+        
+      </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Page Header Start -->
+    <div
+      class="container-fluid page-header py-5 mb-5 wow fadeIn"
+      data-wow-delay="0.1s"
+    >
+      <div class="container text-center py-5">
+        <h1 class="display-4 text-white animated slideInDown mb-4">Profile</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+          <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item">
+              <a class="text-white" href="#">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="text-white" href="#">Pages</a>
+            </li>
+            <li class="breadcrumb-item text-primary active" aria-current="page">
+              Nos Artistes
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <div class="container">
+    <!-- Artist Information Section -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-3">
+            {% if artiste.image %}
+            <img src="{{ asset('uploads/' ~ artiste.image) }}" alt="Artist Image" class="img-fluid">
+            {% else %}
+            <span>No Image Available</span>
+            {% endif %}
+        </div>
+        <div class="col-md-9">
+            <h2>{{ artiste.nom }} {{ artiste.prenom }}</h2>
+            <p>Email: {{ artiste.email }}</p>
+            <p>Tel: {{ artiste.tel }}</p>
+        </div>
+    </div>
+    <!-- Divider -->
+    <hr class="my-4">
+    <hr class="my-4">
+    <!-- Profile, Likes, Autre Artistes Section -->
+    <div class="row mb-1">
+        <div class="col-md-3">
+            <!-- Profile Section -->
+            <div class="profile-section">
+    <!-- Profile Content -->
+    <h3><a href="{{ path('app_artiste_oeuvre') }}">Autre oeuvres</a></h3>
+    <!-- Add Profile Content Here -->
+</div>
+        </div>
+        <div class="col-md-3">
+            <!-- Likes Section -->
+            <div class="likes-section">
+                <!-- Likes Content -->
+                <h3>Likes</h3>
+                <!-- Add Likes Content Here -->
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Autre Artistes Section -->
+            <!-- Autre Artistes Section -->
+<div class="autre-artistes-section">
+    <!-- Autre Artistes Content -->
+    <h3><a href="{{ path('team') }}">Autre Artistes</a></h3>
+    <!-- Add Autre Artistes Content Here -->
+</div>
+
+        </div>
+    </div>
+
+    <hr class="my-4">
+    <hr class="my-4">
+
+    <!-- Search and Sort Section -->
+    <div class="row mb-4">
+        <div class="col-md-6 d-flex align-items-center">
+            <button id="sortButton" class="btn btn-primary">Trier par nom</button>
+            
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <select id="typeOeuvreSelect" class="form-control">
+                <option value="all">Tous les types d'oeuvres</option>
+                <option value="FILM">Film</option>
+                <option value="CHANSON">Chanson</option>
+                <option value="PIECETHEATRE">Pièce de théâtre</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="page-breadcrumb">
+        <div class="row">
+            <div class="col-7 align-self-center">
+                <h4 class="page-title text-trunforme text-dark font-weight-medium mb-1">Liste des oeuvres</h4>
+                <div class="d-flex align-items-center">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb m-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a href="index.html" class="text-muted">Artiste</a>
+                            </li>
+                            <li class="breadcrumb-item text-muted active" aria-current="page">Liste oeuvres</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row g-4 justify-content-center">
+        {% for oeuvre in oeuvres %}
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="card" data-type="{{ oeuvre.typeoeuvre|lower }}" data-toggle="modal" data-target="#popup{{ oeuvre.id }}">
+                    {% if oeuvre.img %}
+                        <img src="{{ asset('uploads/' ~ oeuvre.img) }}" alt="Image" class="card-img-top">
+                    {% else %}
+                        <span class="card-img-top">Aucune image disponible</span>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Nom de l'oeuvre: {{ oeuvre.nomOeuvre }}</h5>
+                        <p class="card-text mb-3">Nom de l'artiste: {{ oeuvre.artisteId.nom }}</p>
+                        <p class="card-text mb-3">Type de l'oeuvre: {{ oeuvre.typeoeuvre }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="popup{{ oeuvre.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Détails de l'oeuvre</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+        <div class="modal-body">
+    <!-- Add the content of the popup -->
+    		{% if oeuvre.img %}
+        		<img src="{{ asset('uploads/' ~ oeuvre.img) }}" alt="Image" class="card-img-top mb-3">
+    		{% else %}
+        		<span class="card-img-top">Aucune image disponible</span>
+    		{% endif %}
+    		<p><strong>Nom de l'oeuvre:</strong> {{ oeuvre.nomOeuvre }}</p>
+    		<p><strong>Nom de l'artiste:</strong> {{ oeuvre.artisteId.nom }}</p>
+    		<p><strong>Type de l'oeuvre:</strong> {{ oeuvre.typeoeuvre }}</p>
+    		<p><strong>Description:</strong> {{ oeuvre.description }}</p>
+    <!-- Add like and dislike buttons -->
+    		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<!-- Replace the like and dislike buttons with icons -->
+<div class="modal-body">
+    <!-- Add the content of the popup -->
+    <!-- Other content remains unchanged -->
+
+    <!-- Add icons for like and dislike buttons -->
+    <button class="btn btn-primary like-btn" id="like-btn" data-id="{{ oeuvre.id }}">
+        <i class="fas fa-thumbs-up"></i> <!-- Like icon -->
+    </button>
+    <button class="btn btn-danger dislike-btn" id="dislike-btn" data-id="{{ oeuvre.id }}">
+        <i class="fas fa-thumbs-down"></i> <!-- Dislike icon -->
+    </button>
+</div>
+
+
+		</div>
+		<div id="like-dislike-message"></div>
+
+            <div class="modal-footer">
+                <!-- Add the button to view the QR code -->
+                <a href="{{ path('oeuvre_qrcode', {'id': oeuvre.id}) }}" class="btn btn-primary">Voir le QR Code</a>
+                
+            </div>
+			
+        </div>
+		<div class="modal fade" id="likeDislikeModal" tabindex="-1" aria-labelledby="likeDislikeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="likeDislikeModalLabel">Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="likeDislikeMessage"></p>
+            </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+
+    {% endfor %}
+</div>
+<!-- Pagination Links -->
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="pagination">
+            {{ knp_pagination_render(oeuvres) }}
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#searchInput').on('keyup', function() {
+        var searchText = $(this).val().toLowerCase().trim();
+        filterCards(searchText);
+    });
+
+    $('#sortButton').on('click', function() {
+        toggleSortOrder();
+    });
+	$('#typeOeuvreSelect').on('change', function() {
+    var type = $(this).val();
+    if (type === 'all') {
+            // Reload the page to show all oeuvres
+            window.location.href = "{{ path('app_artiste_oeuvre') }}";
+        } else {
+            filterOeuvreByType(type);
+        }
+    window.location.href = '{{ path('app_artiste_oeuvre') }}?typeoeuvre=' + type;
+});
+});
+function filterOeuvreByType(type) {
+    $.ajax({
+        url: '{{ path('app_filter_oeuvre_by_type') }}',
+        method: 'GET',
+        data: { type: type },
+        success: function(response) {
+            // Replace the HTML content of the container with the filtered oeuvres
+            $('#cardsContainer').html(response);
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+var ascendingOrder = true;
+var originalCardsOrder = null;
+
+function toggleSortOrder() {
+    ascendingOrder = !ascendingOrder; // Toggle the sorting order
+
+    if (ascendingOrder) {
+        sortCardsAlphabetically();
+    } else {
+        restoreOriginalOrder();
+    }
+}
+
+function sortCardsAlphabetically() {
+    var cardsContainer = $('.row.g-4.justify-content-center');
+    var cards = cardsContainer.find('.card').toArray();
+
+    cards.sort(function(a, b) {
+        var nameA = $(a).find('.card-title').text().toLowerCase();
+        var nameB = $(b).find('.card-title').text().toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
+
+    cardsContainer.empty();
+    cards.forEach(function(card) {
+        cardsContainer.append(card);
+    });
+}
+
+function restoreOriginalOrder() {
+    if (originalCardsOrder !== null) {
+        $('.row.g-4.justify-content-center').empty().append(originalCardsOrder);
+    }
+}
+
+// Call this function when the page is loaded to store the original order of cards
+function storeOriginalOrder() {
+    originalCardsOrder = $('.row.g-4.justify-content-center').html();
+}
+
+// Store the original order when the page is loaded
+$(window).on('load', function() {
+    storeOriginalOrder();
+});
+
+function filterCards(searchText) {
+    var cardsToShow = $('.card').filter(function() {
+        var cardText = $(this).text().toLowerCase();
+        return cardText.includes(searchText);
+    });
+
+    if (cardsToShow.length > 0) {
+        $('.no-cards-message').hide(); // Hide the message if there are cards to show
+        $('.card').hide(); // Hide all cards initially
+        cardsToShow.show(); // Show only the filtered cards
+    } else {
+        $('.card').hide(); // Hide all cards if no cards match the search criteria
+        $('.no-cards-message').show(); // Show the message
+    }
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const cardsContainer = document.getElementById('cardsContainer');
+
+    searchInput.addEventListener('input', function(event) {
+        const searchTerm = event.target.value.trim().toLowerCase();
+        const cards = Array.from(cardsContainer.getElementsByClassName('card'));
+
+        cards.forEach(function(card) {
+            const cardText = card.textContent.trim().toLowerCase();
+
+            if (cardText.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    // Handle like button click
+    $('.like-btn').click(function() {
+        var oeuvreId = $(this).data('id');
+        handleLikeDislike(oeuvreId, true, 'Oeuvre Liked');
+    });
+
+    // Handle dislike button click
+    $('.dislike-btn').click(function() {
+        var oeuvreId = $(this).data('id');
+        handleLikeDislike(oeuvreId, false, 'Oeuvre Disliked');
+    });
+
+    // Function to handle like and dislike actions
+    function handleLikeDislike(oeuvreId, isLike, message) {
+        $.ajax({
+            url: '{{ path('app_like_dislike_oeuvre') }}',
+            method: 'POST',
+            data: {
+                oeuvreId: oeuvreId,
+                isLike: isLike
+            },
+            success: function(response) {
+                // Display like or dislike message
+                $('#likeDislikeMessage').text(message);
+                $('#likeDislikeModal').modal('show');
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+});
+</script>
+
+
+
+
+
+
+
+{% endblock %}

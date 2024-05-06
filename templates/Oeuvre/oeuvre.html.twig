@@ -382,42 +382,27 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
 $(document).ready(function() {
-    // Handle like button click
-    $('.like-btn').click(function() {
+    // Other existing code...
+
+    // Event listener for like button click
+    $(document).on('click', '.like-btn', function() {
         var oeuvreId = $(this).data('id');
-        handleLikeDislike(oeuvreId, true, 'Oeuvre Liked');
+        // Here you can perform an AJAX request to handle liking the artwork
+        // For now, let's just display a message in a modal popup
+        $('#likeDislikeMessage').text('You liked the artwork.');
+        $('#likeDislikeModal').modal('show');
     });
 
-    // Handle dislike button click
-    $('.dislike-btn').click(function() {
+    // Event listener for dislike button click
+    $(document).on('click', '.dislike-btn', function() {
         var oeuvreId = $(this).data('id');
-        handleLikeDislike(oeuvreId, false, 'Oeuvre Disliked');
+        // Similar to the like button, handle disliking the artwork here
+        // For now, let's just display a message in a modal popup
+        $('#likeDislikeMessage').text('You disliked the artwork.');
+        $('#likeDislikeModal').modal('show');
     });
-
-    // Function to handle like and dislike actions
-    function handleLikeDislike(oeuvreId, isLike, message) {
-        $.ajax({
-            url: '{{ path('app_like_dislike_oeuvre') }}',
-            method: 'POST',
-            data: {
-                oeuvreId: oeuvreId,
-                isLike: isLike
-            },
-            success: function(response) {
-                // Display like or dislike message
-                $('#likeDislikeMessage').text(message);
-                $('#likeDislikeModal').modal('show');
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }
 });
 </script>
-
-
-
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Security;
 use App\Entity\Oeuvre;
 use App\Entity\Like;
 use App\Entity\User;
@@ -31,7 +32,6 @@ use App\Entity\OeuvreNotification;
 
 
 
-#[Route('/oeuvre')]
 class OeuvreController extends AbstractController
 {
 
@@ -61,15 +61,40 @@ public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginato
 
     return $this->render('oeuvre/oeuvre.html.twig', ['oeuvres' => $oeuvres]);
 }
+#[Route('/artiste/listeOeuvre', name: 'app_oeuvre')]
+public function listeOeuvre1(OeuvreRepository $repo, PaginatorInterface $paginator, Request $request, Security $security): Response
+{
+    // Get the currently logged-in user
+    $user = $security->getUser();
 
+    // Check if a user is logged in
+    if (!$user) {
+        // Redirect or show an error message
+        // For example, return a 403 Forbidden response
+        return new Response('You are not authorized to view this page.', Response::HTTP_FORBIDDEN);
+    }
+
+    // Get all oeuvres associated with the currently logged-in user
+    $oeuvres = $repo->findByArtiste($user);
+
+    // Paginate the query results
+    $oeuvres = $paginator->paginate(
+        $oeuvres,
+        $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+        3 // Number of items per page
+    );
+
+    return $this->render('oeuvre/oeuvre.html.twig', ['oeuvres' => $oeuvres]);
+}
 
 
     
-    #[Route('/addOeuvre', name: 'app_add_oeuvre')]
+    #[Route('/artite/addOeuvre', name: 'app_add_oeuvre')]
     public function addOeuvre(Request $request, ManagerRegistry $manager,NotifierInterface $notifier): Response
     {
         $oeuvre = new Oeuvre();
-       
+        $user = $this->getUser();
+       $oeuvre->setArtisteId($user);
         $form = $this->createForm(OeuvreType::class, $oeuvre);
         $form->handleRequest($request);
    
@@ -98,7 +123,7 @@ public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginato
             
                 
             
-                return $this->redirectToRoute('app_artiste_oeuvre');
+                return $this->redirectToRoute('app_oeuvre');
             } catch (\Exception $e) {
                 $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement.');
             }
@@ -111,7 +136,7 @@ public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginato
     }
     
 
-    #[Route('/update/{Id}', name: 'app_oeuvre_update')]
+    #[Route('/artiste/update/{Id}', name: 'app_oeuvre_update')]
     public function updateOeuvre(ManagerRegistry $manager, $Id, OeuvreRepository $rep, Request $req)
     {
         $oeuvre = $rep->find($Id);
@@ -131,19 +156,19 @@ public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginato
             }
 
             $manager->getManager()->flush();
-            return $this->redirectToRoute('app_artiste_oeuvre');
+            return $this->redirectToRoute('app_oeuvre');
         }
         return $this->render('oeuvre/UpdateOeuvre.html.twig', ['f' => $form->createView()]); //create vue bch ybadel form l html ou renderForm
     }
 
     
-    #[Route('/oeuvre/delete/{id}', name: 'app_oeuvre_delete')]
+    #[Route('/artiste/oeuvre/delete/{id}', name: 'app_oeuvre_delete')]
     public function deleteOeuvre($id, ManagerRegistry $manager, OeuvreRepository $repo)
     {
         $oeuvre = $repo->find($id);
         $manager->getManager()->remove($oeuvre);
         $manager->getManager()->flush();
-        return $this->redirectToRoute('app_artiste_oeuvre');
+        return $this->redirectToRoute('app_oeuvre');
     }
 
     #[Route('/search/oeuvre', name: 'app_search_oeuvre')]
@@ -167,7 +192,7 @@ public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginato
 
 
 
-    #[Route('/oeuvre/qrcode/{id}', name: 'oeuvre_qrcode')]
+    #[Route('/artiste/oeuvre/qrcode/{id}', name: 'oeuvre_qrcode')]
 public function generateOeuvreQrCode(int $id): Response
 {
     $oeuvre = $this->getDoctrine()->getRepository(Oeuvre::class)->find($id);
@@ -239,8 +264,8 @@ public function likeDislikeOeuvre(Request $request, ManagerRegistry $manager): R
     $isLike = $request->request->get('isLike');
 
     // Handle user ID generation randomly (replace with your logic)
-    $userId = mt_rand(1, 100); // Generate random user ID between 1 and 100
-
+    $userId = $this->getUser()->getUserIdentifier(); // Generate random user ID between 1 and 100
+    
     // Save like/dislike to the database
     $like = new Like();
     $like->setIdUser($userId);
@@ -277,11 +302,12 @@ public function showOeuvresByArtiste($artisteId, PaginatorInterface $paginator, 
     );
 
     // Render the template with the fetched oeuvres and artiste information
-    return $this->render('oeuvre/list.html.twig', [
+    return $this->render('app/listoeuvres.html.twig', [
         'oeuvres' => $oeuvres,
         'artiste' => $artiste, // Pass artiste information to the template
     ]);
 }
+
 
 
 

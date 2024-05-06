@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Oeuvre;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,6 +26,14 @@ class OeuvreRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->andWhere('o.typeoeuvre = :type')
             ->setParameter('type', $type)
+            ->getQuery()
+            ->getResult();
+    }
+    public function findByArtiste(User $artiste): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.artiste = :artiste')
+            ->setParameter('artiste', $artiste)
             ->getQuery()
             ->getResult();
     }

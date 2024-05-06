@@ -114,13 +114,13 @@ dump($formation);
             'controller_name' => 'AppController',
         ]);
     }
-    #[Route('/team', name: 'team')]
+  /*   #[Route('/team', name: 'team')]
     public function team(): Response
     {
         return $this->render('app/team.html.twig', [
             'controller_name' => 'AppController',
         ]);
-    }
+    } */
     #[Route('/testimonial', name: 'testimonial')]
     public function testimonial(): Response
     {
@@ -135,4 +135,5 @@ dump($formation);
             'controller_name' => 'AppController',
         ]);
     }
+    
 }
