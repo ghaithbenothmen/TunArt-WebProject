@@ -1,0 +1,207 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste oeuvres
+{% endblock %}
+
+{% block body %}
+
+<style>
+.input-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.custom-file {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    margin-bottom: 1rem;
+}
+
+.custom-file-input {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    margin: 0;
+    opacity: 0;
+}
+
+.custom-file-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 0.75rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.custom-file-label::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    display: block;
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 0.75rem;
+    line-height: 1.5;
+    color: #495057;
+    content: "Browse";
+    background-color: #e9ecef;
+    border-left: 1px solid #ced4da;
+    border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.custom-file-input:focus ~ .custom-file-label::after {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.custom-file-input:disabled ~ .custom-file-label,
+.custom-file-input[readonly] ~ .custom-file-label {
+    background-color: #e9ecef;
+}
+
+</style>
+	<!--===============================================================================================-->
+	<link
+	rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+	<!--===============================================================================================-->
+	<link
+	rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+	<!--===============================================================================================-->
+	<link
+	rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<!--===============================================================================================-->
+	<link
+	rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+	<!--===============================================================================================-->
+	<link
+	rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+	<!--===============================================================================================-->
+	<link
+	rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link
+	rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+</head>
+
+
+<div class="limiter">
+	<div class="container-login100">
+		<div class="wrap-login100">
+			<div class="login100-pic js-tilt" data-tilt>
+				<img src="{{ asset('logopng.png')}}" alt="IMG">
+			</div>
+
+			<form class="login100-form validate-form">
+				<span class="login100-form-title">
+					Créer votre compte
+				</span>
+				<div class="wrap-input100 validate-input">
+					<input class="input100" type="text" name="nom" placeholder="Nom">
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-user" aria-hidden="true"></i>
+					</span>
+				</div>
+				<div class="wrap-input100 validate-input">
+					<input class="input100" type="text" name="prenom" placeholder="Prenom">
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-user" aria-hidden="true"></i>
+					</span>
+				</div>
+				<div class="wrap-input100 validate-input" data-validate="Valid email est obligé: ex@abc.xyz">
+					<input class="input100" type="text" name="email" placeholder="Email">
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-envelope" aria-hidden="true"></i>
+					</span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate="Mot de passe est obligé">
+					<input class="input100" type="password" name="pass" placeholder="Mot de passe">
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-lock" aria-hidden="true"></i>
+					</span>
+				</div>
+
+<div class="wrap-input100 validate-input">
+    <input class="input100" type="tel" name="phone" placeholder="Numéro de téléphone">
+    <span class="focus-input100"></span>
+    <span class="symbol-input100">
+        <i class="fa fa-phone" aria-hidden="true"></i>
+    </span>
+</div>
+
+<div class="wrap-input100 validate-input">
+    <select class="input100" name="role">
+        <option value="artiste">Artiste</option>
+        <option value="client">Client</option>
+    </select>
+    <span class="focus-input100"></span>
+    <span class="symbol-input100">
+        <i class="fa fa-user" aria-hidden="true"></i>
+    </span>
+</div>
+<div class="wrap-input100 validate-input">
+    <label for="photo" class="input-label">Photo</label>
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" id="photo" name="photo" accept="image/*">
+        <label class="custom-file-label" for="photo">Choisir fichier</label>
+    </div>
+</div>
+
+
+				<div class="container-login100-form-btn">
+					<button class="login100-form-btn">
+						S'inscrire
+					</button>
+				</div>
+
+				<div class="text-center p-t-12">
+
+					<a class="txt2" href="#">
+						Vous avez déja un compte ?.
+					</a>
+				</div>
+
+				<div class="text-center p-t-136">
+					<a class="txt2" href="#">
+						Se connecter 
+						<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<!--===============================================================================================-->
+<script src="{{ asset('vendor/jquery/jquery-3.2.1.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{ asset('vendor/bootstrap/js/popper.js')}}"></script>
+<script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{ asset('vendor/select2/select2.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{ asset('vendor/tilt/tilt.jquery.min.js')}}"></script>
+<script>
+	$('.js-tilt').tilt({scale: 1.1})
+</script>
+<!--===============================================================================================-->
+<script src="{{ asset('js/main2.js')}}"></script>{% endblock %}

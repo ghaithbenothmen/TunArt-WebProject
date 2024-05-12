@@ -18,6 +18,7 @@ use Stripe\Stripe;
 use App\Entity\Actualite;
 use App\Form\ActualiteType;
 use App\Repository\ActualiteRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -54,7 +55,22 @@ class AppController extends AbstractController
             'controller_name' => 'AppController',
         ]);
     }
-/*
+    #[Route('/login2', name: 'login2')]
+    public function login(): Response
+    {
+        return $this->render('app/login.html.twig', [
+            'controller_name' => 'AppController',
+        ]);
+    }
+    #[Route('/register2', name: 'register2')]
+    public function register(): Response
+    {
+        return $this->render('app/register.html.twig', [
+            'controller_name' => 'AppController',
+        ]);
+    }
+
+    /*
     #[Route('/actualite', name: 'actualite', methods: ['GET'])]
     public function actualite(ActualiteRepository $actualiteRepository): Response
     {
@@ -213,13 +229,36 @@ class AppController extends AbstractController
             'controller_name' => 'AppController',
         ]);
     }
-  /*   #[Route('/team', name: 'team')]
+   /*   #[Route('/team', name: 'team')]
     public function team(): Response
     {
         return $this->render('app/team.html.twig', [
             'controller_name' => 'AppController',
         ]);
-    } */
+    }  */
+
+    #[Route('/nosArtistes', name: 'team')]
+    public function test(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
+    {
+        // Get all users query
+        $usersAll = $userRepository->findAll();
+
+        // Filter artists
+        $artists = array_filter($usersAll, function ($user) {
+            return in_array('ROLE_ARTISTE', $user->getRoles());
+        });
+    
+        // Paginate the query results
+        $users = $paginator->paginate(
+            $artists,
+            $request->query->getInt('page', 1), // Get the page number from the request, default to 1
+            6 // Number of items per page
+        );
+ //   dump($users);
+        return $this->render('app/team.html.twig', ['users' => $users]);
+    }
+
+
     #[Route('/testimonial', name: 'testimonial')]
     public function testimonial(): Response
     {

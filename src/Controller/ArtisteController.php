@@ -174,22 +174,9 @@ public function listeCat(CategorieRepository $repo, Request $request, PaginatorI
 
         return $this->redirectToRoute('app_artiste_listeCat');
     }
-    #[Route('/team', name: 'team')]
-public function test(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
-{
-    // Get all users query
-    $query = $userRepository->createQueryBuilder('u')
-        ->getQuery();
 
-    // Paginate the query results
-    $users = $paginator->paginate(
-        $query,
-        $request->query->getInt('page', 1), // Get the page number from the request, default to 1
-        3 // Number of items per page
-    );
-dump($users);
-    return $this->render('app/team.html.twig', ['users' => $users]);
-}
+
+  
 #[Route('/liste', name: 'listeartiste')]
 public function artiste(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
 {

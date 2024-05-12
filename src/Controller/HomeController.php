@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Twilio\Rest\Client;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class HomeController extends AbstractController
 {

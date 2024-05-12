@@ -59,7 +59,7 @@ public function listeOeuvre(OeuvreRepository $repo, PaginatorInterface $paginato
         6 // Number of items per page
     );
 
-    return $this->render('oeuvre/oeuvre.html.twig', ['oeuvres' => $oeuvres]);
+    return $this->render('app/listoeuvres.html.twig', ['oeuvres' => $oeuvres]);
 }
 #[Route('/artiste/listeOeuvre', name: 'app_oeuvre')]
 public function listeOeuvre1(OeuvreRepository $repo, PaginatorInterface $paginator, Request $request, Security $security): Response
@@ -89,7 +89,7 @@ public function listeOeuvre1(OeuvreRepository $repo, PaginatorInterface $paginat
 
 
     
-    #[Route('/artite/addOeuvre', name: 'app_add_oeuvre')]
+    #[Route('/artiste/addOeuvre', name: 'app_add_oeuvre')]
     public function addOeuvre(Request $request, ManagerRegistry $manager,NotifierInterface $notifier): Response
     {
         $oeuvre = new Oeuvre();
@@ -280,14 +280,24 @@ public function likeDislikeOeuvre(Request $request, ManagerRegistry $manager): R
     // Return a success response
     return new Response('Success', Response::HTTP_OK);
 }
-
-#[Route('/artiste/{artisteId}', name: "oeuvre_by_artiste")]
-public function showOeuvresByArtiste($artisteId, PaginatorInterface $paginator, Request $request)
+#[Route('/oeuvres/{artisteId}', name: "oeuvre_by_artiste")]
+public function showOeuvresByArtiste(OeuvreRepository $repo, $artisteId, PaginatorInterface $paginator, Request $request)
 {
+
+    $type = $request->query->get('typeoeuvre');
+
+    // Get all oeuvres query
+    $queryBuilder = $repo->createQueryBuilder('o');
+
+    // Filter by type if the type parameter is provided
+    if ($type && $type !== 'all') {
+        $queryBuilder->andWhere('o.typeoeuvre = :type')
+              ->setParameter('type', $type);
+    }
+
+    $query = $queryBuilder->getQuery();
     // Fetch oeuvres by artiste ID
-    $oeuvres = $this->getDoctrine()
-        ->getRepository(Oeuvre::class)
-        ->findBy(['artiste' => $artisteId]);
+    $oeuvres = $query->getResult();
 
     // Fetch artiste information
     $artiste = $this->getDoctrine()
