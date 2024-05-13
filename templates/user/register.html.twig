@@ -16,13 +16,13 @@
         }
 
         .card-body {
-            padding-left: 30px;
-            padding-right: 30px;
-            padding-bottom: 10px;
+            padding: 30px;
         }
 
         .card-title {
             font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -36,6 +36,25 @@
             border-bottom: 1px solid #ced4da; /* Add bottom border for separation */
             padding-left: 30px; /* Adjust padding for icon */
         }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .alert {
+            margin-bottom: 20px;
+        }
+
     </style>
 {% endblock %}
 
@@ -45,7 +64,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h1 class="card-title text-center">Register</h1>
+                    <h1 class="card-title">Register</h1>
                 </div>
                 <div class="card-body">
                     {% set flashBag = app.session.flashbag %}
@@ -68,27 +87,26 @@
                         {{ form_row(registration_form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
                     </div>
                     <div class="form-group">
-                        {{ form_row(registration_form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Prenom'}}) }}
+                        {{ form_row(registration_form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
                     </div>
                     <div class="form-group">
                         {{ form_row(registration_form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
                     </div>
                     <div class="form-group">
-                        {{ form_row(registration_form.mdp, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
+                        {{ form_row(registration_form.mdp, {'attr': {'class': 'form-control', 'placeholder': 'Mot de passe'}}) }}
                     </div>
                     <div class="form-group">
                         {{ form_label(registration_form.roles) }}
                         {{ form_widget(registration_form.roles) }}
                     </div>
                     <div class="form-group">
-                        {{ form_row(registration_form.tel, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}
+                        {{ form_row(registration_form.tel, {'attr': {'class': 'form-control', 'placeholder': 'Numéro de téléphone'}}) }}
                     </div>
                     <div class="form-group">
                         {{ form_row(registration_form.image, {'attr': {'class': 'form-control-file'}}) }}
                     </div>
-                   
 
-                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                     {{ form_end(registration_form) }}
                 </div>
             </div>
@@ -96,5 +114,3 @@
     </div>
 </div>
 {% endblock %}
-
-

@@ -8,6 +8,7 @@
     <style>
         body {
             background-color: #f8f9fa;
+            font-family: Arial, sans-serif; /* Change to your preferred font */
         }
 
         .login-container {
@@ -25,7 +26,39 @@
         }
 
         .login-card .card-body {
-            padding: 10px;
+            padding: 30px; /* Increase padding for better spacing */
+        }
+
+        .logo {
+            max-width: 150px; /* Adjust logo size */
+            margin-bottom: 20px; /* Add some space below the logo */
+        }
+
+        .card-title {
+            font-size: 24px; /* Increase title font size */
+            font-weight: bold; /* Make title bold */
+        }
+
+        .form-label {
+            font-weight: bold; /* Make form labels bold */
+        }
+
+        .btn-primary {
+            background-color: #007bff; /* Change primary button color */
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Change primary button hover color */
+            border-color: #0056b3;
+        }
+
+        .forgot-password-link {
+            color: #6c757d; /* Change link color */
+        }
+
+        .forgot-password-link:hover {
+            color: #495057; /* Change link hover color */
         }
     </style>
 {% endblock %}
@@ -39,7 +72,7 @@
                 <img src="{{ asset('LOGODASHA.png') }}" alt="Your Logo" class="logo">
             </div>
             <h1 class="card-title text-center mb-4">
-                Log in!
+                Log in
             </h1>
 
             <form method="post">
@@ -52,7 +85,7 @@
                     <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
                 </div>
                 <div class="mb-3">
-                    <label for="inputPassword" class="form-label">Password</label>
+                    <label for="inputPassword" class="form-label">Mot De Passe</label>
                     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
                 </div>
 
@@ -64,7 +97,7 @@
             </form>
 
             <div class="text-center mt-3">
-                <p> Forgot your password ?       <a href="{{ path('EmailVerif') }}"> Reset it here.</a> </p>
+                <p>Forgot your password? <a href="{{ path('EmailVerif') }}" class="forgot-password-link">Reset it here</a></p>
             </div>
         </div>
     </div>

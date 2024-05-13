@@ -62,5 +62,6 @@ user_list_pdf_download:
     controller: App\Controller\PdfController::downloadUserListPdf
 
  
-    
+logout:
+    path: /logout    
 
