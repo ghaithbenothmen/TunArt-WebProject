@@ -1,0 +1,35 @@
+{# templates/auth/require_login.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- Modal HTML structure -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Notification</h5>
+                </div>
+                <div class="modal-body">
+                    Vous devez connecter !
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="loginButton">Se connecter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to show the modal and handle redirection -->
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            $('#loginModal').modal('show');
+
+            document.getElementById('loginButton').addEventListener('click', function() {
+                window.location.href = "{{ path('app_login') }}";
+            });
+        });
+    </script>
+    <noscript>
+        <p>Vous devez connecter! <a href="{{ path('app_login') }}">Cliquez ici pour vous connecter</a>.</p>
+    </noscript>
+{% endblock %}
