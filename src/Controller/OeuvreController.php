@@ -27,10 +27,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Notifier\NotifierInterface;
 use App\Entity\OeuvreNotification;
-
-
-
-
+use App\Repository\UserRepository;
 
 class OeuvreController extends AbstractController
 {
@@ -280,14 +277,19 @@ public function likeDislikeOeuvre(Request $request, ManagerRegistry $manager): R
     // Return a success response
     return new Response('Success', Response::HTTP_OK);
 }
-#[Route('/oeuvres/{artisteId}', name: "oeuvre_by_artiste")]
-public function showOeuvresByArtiste(OeuvreRepository $repo, $artisteId, PaginatorInterface $paginator, Request $request)
-{
 
+#[Route('/oeuvres/{artisteId}', name: "oeuvre_by_artiste")]
+public function showOeuvresByArtiste(UserRepository $repoU, OeuvreRepository $repo, $artisteId, PaginatorInterface $paginator, Request $request)
+{
     $type = $request->query->get('typeoeuvre');
 
+    // Fetch artiste information
+    $artiste = $repoU->find($artisteId);
+
     // Get all oeuvres query
-    $queryBuilder = $repo->createQueryBuilder('o');
+    $queryBuilder = $repo->createQueryBuilder('o')
+        ->where('o.artiste = :artisteId')
+        ->setParameter('artisteId', $artisteId);
 
     // Filter by type if the type parameter is provided
     if ($type && $type !== 'all') {
@@ -296,17 +298,10 @@ public function showOeuvresByArtiste(OeuvreRepository $repo, $artisteId, Paginat
     }
 
     $query = $queryBuilder->getQuery();
-    // Fetch oeuvres by artiste ID
-    $oeuvres = $query->getResult();
-
-    // Fetch artiste information
-    $artiste = $this->getDoctrine()
-        ->getRepository(User::class)
-        ->find($artisteId);
 
     // Paginate the query results
     $oeuvres = $paginator->paginate(
-        $oeuvres,
+        $query,
         $request->query->getInt('page', 1), // Get the page number from the request, default to 1
         3 // Number of items per page
     );
@@ -314,9 +309,10 @@ public function showOeuvresByArtiste(OeuvreRepository $repo, $artisteId, Paginat
     // Render the template with the fetched oeuvres and artiste information
     return $this->render('app/listoeuvres.html.twig', [
         'oeuvres' => $oeuvres,
-        'artiste' => $artiste, // Pass artiste information to the template
+        'artiste' => $artiste,
     ]);
 }
+
 
 
 

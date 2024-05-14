@@ -331,143 +331,143 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"> </script><!-- Bootstrap JS --><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script>
-	$(document).ready(function () {
-$('#searchInput').on('keyup', function () {
-var searchText = $(this).val().toLowerCase().trim();
-filterCards(searchText);
-});
+			$(document).ready(function () {
+		$('#searchInput').on('keyup', function () {
+		var searchText = $(this).val().toLowerCase().trim();
+		filterCards(searchText);
+		});
 
-$('#sortButton').on('click', function () {
-toggleSortOrder();
-});
-$('#typeOeuvreSelect').on('change', function () {
-var type = $(this).val();
-if (type === 'all') { // Reload the page to show all oeuvres
-window.location.href = "{{ path('app_artiste_oeuvre') }}";
-} else {
-filterOeuvreByType(type);
-}
-window.location.href = '{{ path('app_artiste_oeuvre') }}?typeoeuvre=' + type;
-});
-});
-function filterOeuvreByType(type) {
-$.ajax({
-url: '{{ path('app_filter_oeuvre_by_type') }}',
-method: 'GET',
-data: {
-type: type
-},
-success: function (response) { // Replace the HTML content of the container with the filtered oeuvres
-$('#cardsContainer').html(response);
-},
-error: function (xhr, status, error) {
-console.error(error);
-}
-});
-}
+		$('#sortButton').on('click', function () {
+		toggleSortOrder();
+		});
+		$('#typeOeuvreSelect').on('change', function () {
+		var type = $(this).val();
+		if (type === 'all') { // Reload the page to show all oeuvres
+		window.location.href = "{{ path('app_artiste_oeuvre') }}";
+		} else {
+		filterOeuvreByType(type);
+		}
+		window.location.href = '{{ path('app_artiste_oeuvre') }}?typeoeuvre=' + type;
+		});
+		});
+		function filterOeuvreByType(type) {
+		$.ajax({
+		url: '{{ path('app_filter_oeuvre_by_type') }}',
+		method: 'GET',
+		data: {
+		type: type
+		},
+		success: function (response) { // Replace the HTML content of the container with the filtered oeuvres
+		$('#cardsContainer').html(response);
+		},
+		error: function (xhr, status, error) {
+		console.error(error);
+		}
+		});
+		}
 
-var ascendingOrder = true;
-var originalCardsOrder = null;
+		var ascendingOrder = true;
+		var originalCardsOrder = null;
 
-function toggleSortOrder() {
-ascendingOrder = ! ascendingOrder; // Toggle the sorting order
+		function toggleSortOrder() {
+		ascendingOrder = ! ascendingOrder; // Toggle the sorting order
 
-if (ascendingOrder) {
-sortCardsAlphabetically();
-} else {
-restoreOriginalOrder();
-}
-}
+		if (ascendingOrder) {
+		sortCardsAlphabetically();
+		} else {
+		restoreOriginalOrder();
+		}
+		}
 
-function sortCardsAlphabetically() {
-var cardsContainer = $('.row.g-4.justify-content-center');
-var cards = cardsContainer.find('.card').toArray();
+		function sortCardsAlphabetically() {
+		var cardsContainer = $('.row.g-4.justify-content-center');
+		var cards = cardsContainer.find('.card').toArray();
 
-cards.sort(function (a, b) {
-var nameA = $(a).find('.card-title').text().toLowerCase();
-var nameB = $(b).find('.card-title').text().toLowerCase();
-return nameA.localeCompare(nameB);
-});
+		cards.sort(function (a, b) {
+		var nameA = $(a).find('.card-title').text().toLowerCase();
+		var nameB = $(b).find('.card-title').text().toLowerCase();
+		return nameA.localeCompare(nameB);
+		});
 
-cardsContainer.empty();
-cards.forEach(function (card) {
-cardsContainer.append(card);
-});
-}
+		cardsContainer.empty();
+		cards.forEach(function (card) {
+		cardsContainer.append(card);
+		});
+		}
 
-function restoreOriginalOrder() {
-if (originalCardsOrder !== null) {
-$('.row.g-4.justify-content-center').empty().append(originalCardsOrder);
-}
-}
+		function restoreOriginalOrder() {
+		if (originalCardsOrder !== null) {
+		$('.row.g-4.justify-content-center').empty().append(originalCardsOrder);
+		}
+		}
 
-// Call this function when the page is loaded to store the original order of cards
-function storeOriginalOrder() {
-originalCardsOrder = $('.row.g-4.justify-content-center').html();
-}
+		// Call this function when the page is loaded to store the original order of cards
+		function storeOriginalOrder() {
+		originalCardsOrder = $('.row.g-4.justify-content-center').html();
+		}
 
-// Store the original order when the page is loaded
-$(window).on('load', function () {
-storeOriginalOrder();
-});
+		// Store the original order when the page is loaded
+		$(window).on('load', function () {
+		storeOriginalOrder();
+		});
 
-function filterCards(searchText) {
-var cardsToShow = $('.card').filter(function () {
-var cardText = $(this).text().toLowerCase();
-return cardText.includes(searchText);
-});
+		function filterCards(searchText) {
+		var cardsToShow = $('.card').filter(function () {
+		var cardText = $(this).text().toLowerCase();
+		return cardText.includes(searchText);
+		});
 
-if (cardsToShow.length > 0) {
-$('.no-cards-message').hide(); // Hide the message if there are cards to show
-$('.card').hide(); // Hide all cards initially
-cardsToShow.show(); // Show only the filtered cards
-} else {
-$('.card').hide(); // Hide all cards if no cards match the search criteria
-$('.no-cards-message').show(); // Show the message
-}
-}
-</script>
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-const searchInput = document.getElementById('searchInput');
-const cardsContainer = document.getElementById('cardsContainer');
+		if (cardsToShow.length > 0) {
+		$('.no-cards-message').hide(); // Hide the message if there are cards to show
+		$('.card').hide(); // Hide all cards initially
+		cardsToShow.show(); // Show only the filtered cards
+		} else {
+		$('.card').hide(); // Hide all cards if no cards match the search criteria
+		$('.no-cards-message').show(); // Show the message
+		}
+		}
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+		const searchInput = document.getElementById('searchInput');
+		const cardsContainer = document.getElementById('cardsContainer');
 
-searchInput.addEventListener('input', function (event) {
-const searchTerm = event.target.value.trim().toLowerCase();
-const cards = Array.from(cardsContainer.getElementsByClassName('card'));
+		searchInput.addEventListener('input', function (event) {
+		const searchTerm = event.target.value.trim().toLowerCase();
+		const cards = Array.from(cardsContainer.getElementsByClassName('card'));
 
-cards.forEach(function (card) {
-const cardText = card.textContent.trim().toLowerCase();
+		cards.forEach(function (card) {
+		const cardText = card.textContent.trim().toLowerCase();
 
-if (cardText.includes(searchTerm)) {
-card.style.display = 'block';
-} else {
-card.style.display = 'none';
-}
-});
-});
-});
-</script>
-<script>
-	$(document).ready(function () {
-// Other existing code...
+		if (cardText.includes(searchTerm)) {
+		card.style.display = 'block';
+		} else {
+		card.style.display = 'none';
+		}
+		});
+		});
+		});
+		</script>
+		<script>
+			$(document).ready(function () {
+		// Other existing code...
 
-// Event listener for like button click
-$(document).on('click', '.like-btn', function () {
-var oeuvreId = $(this).data('id');
-// Here you can perform an AJAX request to handle liking the artwork
-// For now, let's just display a message in a modal popup
-$('#likeDislikeMessage').text('You liked the artwork.');
-$('#likeDislikeModal').modal('show');
-});
+		// Event listener for like button click
+		$(document).on('click', '.like-btn', function () {
+		var oeuvreId = $(this).data('id');
+		// Here you can perform an AJAX request to handle liking the artwork
+		// For now, let's just display a message in a modal popup
+		$('#likeDislikeMessage').text('You liked the artwork.');
+		$('#likeDislikeModal').modal('show');
+		});
 
-// Event listener for dislike button click
-$(document).on('click', '.dislike-btn', function () {
-var oeuvreId = $(this).data('id');
-// Similar to the like button, handle disliking the artwork here
-// For now, let's just display a message in a modal popup
-$('#likeDislikeMessage').text('You disliked the artwork.');
-$('#likeDislikeModal').modal('show');
-});
-});
-</script>{% endblock %}
+		// Event listener for dislike button click
+		$(document).on('click', '.dislike-btn', function () {
+		var oeuvreId = $(this).data('id');
+		// Similar to the like button, handle disliking the artwork here
+		// For now, let's just display a message in a modal popup
+		$('#likeDislikeMessage').text('You disliked the artwork.');
+		$('#likeDislikeModal').modal('show');
+		});
+		});
+		</script>{% endblock %}

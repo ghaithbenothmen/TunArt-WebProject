@@ -45,7 +45,12 @@
 		{% endblock %}
 
 	</head>
-
+<style>
+.size{
+width:500px;
+height:500px;
+}
+</style>
 	<body>
 		<!-- Spinner Start -->
 		<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -73,6 +78,7 @@
 						<a href="{{ path('app_concoursfront_index') }}" class="dropdown-item {% if app.request.attributes.get('_route') == 'app_concoursfront_index' %}active{% endif %}">Nos concours</a>
 					</div>
 				</div>
+				<a href="{{ path('team') }}" class="nav-item nav-link {% if app.request.attributes.get('_route') == 'team' %}active{% endif %}">Nos artiste</a>
 				{% if app.user %}
 					<div class="nav-item dropdown">
 						<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ app.user.nom }}</a>
@@ -96,7 +102,8 @@
 
 
 <!-- Carousel Start -->
-	<div class="container-fluid p-0 mb-5 wow fadeIn" data-wow-delay="0.1s"> <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
+<div class="container-fluid p-0 mb-5 wow fadeIn" data-wow-delay="0.1s">
+	<div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
 		<div class="carousel-inner">
 			<div class="carousel-item active">
 				<img class="w-100" src="{{asset('images/art1.jpg' )}}" alt="Image"/>
@@ -196,14 +203,14 @@
 					</div>
 					<p>
 						Le premier site web artistique en Tunisie" est une vision ambitieuse qui vise à créer une plateforme
-																							 novatrice et inspirante pour les artistes et les passionnés d'art. Notre site se veut être un lieu de
-																							  découverte et d'expression artistique, mettant en lumière la richesse et la diversité de la scène
-																							   artistique tunisienne.
+																													 novatrice et inspirante pour les artistes et les passionnés d'art. Notre site se veut être un lieu de
+																													  découverte et d'expression artistique, mettant en lumière la richesse et la diversité de la scène
+																													   artistique tunisienne.
 					</p>
 					<p class="mb-4">
 						En offrant un espace dédié aux artistes pour présenter leurs œuvres et partager
-																							    leur passion, nous souhaitons créer une communauté dynamique et créative qui célèbre l'art sous toutes
-																								 ses formes.
+																													    leur passion, nous souhaitons créer une communauté dynamique et créative qui célèbre l'art sous toutes
+																														 ses formes.
 					</p>
 					<div class="border-top mt-4 pt-4">
 						<div class="row g-4">
@@ -283,46 +290,35 @@
 
 	</div>
 	<div class="row g-4">
-		<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-			<div class="team-item position-relative">
-				<img class="img-fluid" src="{{asset('img/team-1.jpg' )}}" alt=""/>
-				<div class="team-text bg-white p-4">
-					<h5>Full Name</h5>
-					<span>Engineer</span>
+
+		{% for user in artists %}
+			{% if 'ROLE_ARTISTE' in user.roles %}
+				<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+					<div class="team-item position-relative">
+						<img class="img-fluid size"  src="{{ asset('uploads/' ~ user.image) }}" alt=""/>
+						<div class="team-text bg-white p-4">
+							<h5>{{ user.getNom() }}
+								{{ user.getPrenom() }}</h5>
+							<span>Email:
+								{{ user.getEmail() }}</span>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-		<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-			<div class="team-item position-relative">
-				<img class="img-fluid" src="{{asset('img/team-2.jpg' )}}" alt=""/>
-				<div class="team-text bg-white p-4">
-					<h5>Full Name</h5>
-					<span>Engineer</span>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-			<div class="team-item position-relative">
-				<img class="img-fluid" src="{{asset('img/team-3.jpg' )}}" alt=""/>
-				<div class="team-text bg-white p-4">
-					<h5>Full Name</h5>
-					<span>Engineer</span>
-				</div>
-			</div>
-		</div>
+			{% endif %}
+		{% endfor %}
+
+
 	</div>
 </div></div><!-- Team End --><!-- Testimonial Start --><div class="container-xxl py-5">
 <div class="container">
 	<div class="row g-5">
 		<div class="col-lg-5 wow fadeInUp" data-wow-delay="0.1s">
 			<div class="border-start border-5 border-primary ps-4 mb-5">
-				<h6 class="text-body text-uppercase mb-2">Testimonial</h6>
-				<h1 class="display-6 mb-0">What Our Happy Clients Say!</h1>
+				<h6 class="text-body text-uppercase mb-2">TÉMOIGNAGE</h6>
+				<h1 class="display-6 mb-0">Ce que disent nos clients satisfaits !</h1>
 			</div>
 			<p class="mb-4">
-				Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat
-																	              ipsum et lorem et sit, sed stet lorem sit clita duo justo magna
-																	              dolore erat amet
+				
 			</p>
 			<div class="row g-4">
 				<div class="col-sm-6">
@@ -347,8 +343,8 @@
 					<img class="img-fluid mb-4" src="{{asset('img/testimonial-1.jpg' )}}" alt=""/>
 					<p class="fs-5">
 						Dolores sed duo clita tempor justo dolor et stet lorem kasd
-																									                  labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy
-																									                  et labore et tempor diam tempor erat.
+																															                  labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy
+																															                  et labore et tempor diam tempor erat.
 					</p>
 					<div class="bg-primary mb-3" style="width: 60px; height: 5px"></div>
 					<h5>Client Name</h5>
@@ -358,8 +354,8 @@
 					<img class="img-fluid mb-4" src="{{asset('img/testimonial-2.jpg' )}}" alt=""/>
 					<p class="fs-5">
 						Dolores sed duo clita tempor justo dolor et stet lorem kasd
-																									                  labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy
-																									                  et labore et tempor diam tempor erat.
+																															                  labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy
+																															                  et labore et tempor diam tempor erat.
 					</p>
 					<div class="bg-primary mb-3" style="width: 60px; height: 5px"></div>
 					<h5>Client Name</h5>
@@ -376,7 +372,7 @@
 	</h1>
 	<p>
 		Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat
-									              ipsum et lorem et sit, sed stet lorem sit clita
+											              ipsum et lorem et sit, sed stet lorem sit clita
 	</p>
 	<div class="d-flex pt-2">
 		<a class="btn btn-square btn-outline-primary me-1" href="">

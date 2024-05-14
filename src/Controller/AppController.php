@@ -32,12 +32,19 @@ class AppController extends AbstractController
 {
 
     #[Route('/', name: 'main')]
-    public function main(FormationRepository $repo): Response
+    public function main(FormationRepository $repo,UserRepository $repoU): Response
     {
+        $artistes=$repoU->findAll();
+       
+        $artists = array_filter($artistes, function ($user) {
+            return in_array('ROLE_ARTISTE', $user->getRoles());
+        });
+
         $formations = $repo->findLimited(6);
     return $this->render('base.html.twig', [
         'controller_name' => 'AppController',
-        'formations' => $formations
+        'formations' => $formations,
+        'artists'=>$artists
     ]);
     }
 
@@ -55,13 +62,13 @@ class AppController extends AbstractController
             'controller_name' => 'AppController',
         ]);
     }
-    #[Route('/login2', name: 'login2')]
+  /*   #[Route('/login2', name: 'login2')]
     public function login(): Response
     {
         return $this->render('app/login.html.twig', [
             'controller_name' => 'AppController',
         ]);
-    }
+    } */
     #[Route('/register2', name: 'register2')]
     public function register(): Response
     {
