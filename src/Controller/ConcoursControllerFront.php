@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Core\User\UserInterface;
 #[Route('/concoursfront')]
 class ConcoursControllerFront extends AbstractController
 {
@@ -58,8 +58,10 @@ class ConcoursControllerFront extends AbstractController
     #[Route('/{refrence}', name: 'app_concoursfront_participate', methods: ['GET'])]
     public function participate(Request $request,Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager,UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
-        $user = new User();
-        $user = $userRepository->findOneBySomeField(38);
+        $user = $this->getUser();
+        if (!$user instanceof UserInterface) {
+            return $this->render('concoursfront/popup.html.twig');
+        }
         $currentDate = new DateTime();
         $candidature = new Candidature($currentDate,$user,$concour);
         $candidature->setIdConcours($concour);
