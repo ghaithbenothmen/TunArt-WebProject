@@ -7,6 +7,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use DateTime;
 use App\Entity\Commentaire;
 use App\Form\CommentaireType;
+use App\Repository\CommentaireRepository;
 use App\Entity\Actualite;
 use App\Form\ActualiteType;
 use App\Repository\ActualiteRepository;
@@ -213,7 +214,7 @@ class ActualiteController extends AbstractController
     }
 
     #[Route('/user/actualite/{id}/commentaire', name: 'app_actualite_commentaire', methods: ['GET', 'POST'])]
-    public function commentaire(Request $request, Actualite $actualite, EntityManagerInterface $entityManager): Response
+    public function commentaire(Request $request, Actualite $actualite, EntityManagerInterface $entityManager,CommentaireRepository $commentaireRepository): Response
     {
         $form = $this->createForm(ActualiteType::class, $actualite);
         $form->handleRequest($request);
@@ -245,11 +246,18 @@ class ActualiteController extends AbstractController
 
             return $this->redirectToRoute('app_actualite_index', [], Response::HTTP_SEE_OTHER);
         }
+    // Récupérer les commentaires associés à l'actualité
+    $commentaires = $commentaireRepository->findBy(
+        ['actualite' => $actualite],
+        ['idC' => 'DESC'], // trier par date de création, du plus récent au plus ancien
+        5 // limiter le nombre de résultats à 5
+    );
 
-        return $this->renderForm('app/commentaire.html.twig', [
-            'actualite' => $actualite,
-            'form' => $form,
-        ]);
+    return $this->renderForm('app/commentaire.html.twig', [
+        'actualite' => $actualite,
+        'form' => $form,
+        'commentaires' => $commentaires,
+    ]);
     }
 
 

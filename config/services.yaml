@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    #app.path.actualite_images: 'D:/xampp/htdocs/img'
+
     app.path.actualite_images: '%kernel.project_dir%/public/imageAct'
     #images_directory: '%kernel.project_dir%/public/imgAct'
     app.forbidden_words: ['word1','word2', 'word3','esprit']

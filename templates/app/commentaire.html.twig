@@ -99,6 +99,26 @@
             <p class="mb-4">
                 <td>{{ actualite.text }}</td>
             </p>
+            <!-- Anciens commentaires -->
+<div id="comments-container">
+    <h4>Les commentaires :</h4>
+    {% if commentaires %}
+        <ul>
+            {% for commentaire in commentaires %}
+                <li >
+                    {% if commentaire.getUser() %}
+                        <strong>{{ commentaire.getUser().getNom() }}</strong>: {{ commentaire.contenuc }}
+                    {% else %}
+                        Anonyme: {{ commentaire.contenuc }}
+                    {% endif %}
+                </li>
+                <!-- Vous pouvez afficher d'autres informations sur le commentaire si nécessaire -->
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun commentaire trouvé.</p>
+    {% endif %}
+</div>
             <form  id="comment-form" method="post" action="{{ path('addCommentaire', {'id': actualite.id}) }}">
                   <div class="mb-3">
                     <label for="commentaire" class="form-label">Votre commentaire</label>
