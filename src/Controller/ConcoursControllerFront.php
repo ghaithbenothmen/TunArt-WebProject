@@ -90,6 +90,7 @@ class ConcoursControllerFront extends AbstractController
             $mailer->send($message);
         }
 
+        /*
         $pagination = $paginator->paginate(
             $concoursRepository->findNonOutdated(), 
             $request->query->getInt('page', 1), 
@@ -99,7 +100,12 @@ class ConcoursControllerFront extends AbstractController
         return $this->render('concoursfront/indexfront.html.twig', [
             'pagination' => $pagination,
         ]);
+        */
 
+        $concours = $concoursRepository->findNonOutdated();
+        return $this->render('concoursfront/indexfront.html.twig', [
+            'concours' => $concours,
+        ]);
     }
 
     private function checkCandidature(int $idConcours, int $idUser): bool
