@@ -46,7 +46,7 @@ class FormationType extends AbstractType
                 [
                     'choices' => [
                         'Facile' => 'FACILE',  //choiceType pour statique
-                        'Moyenne' => 'MOYENNE',
+                        'Moyenne' => 'MOYEN',
                         'Difficile' => 'DIFFICILE'
                     ],
                     'expanded' => false

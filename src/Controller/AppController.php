@@ -31,6 +31,19 @@ use Symfony\Component\Translation\LocaleSwitcher;
 class AppController extends AbstractController
 {
 
+    #[Route('/upload-image', name: 'upload_image', methods: ['POST'])]
+public function uploadImage(Request $request): Response
+{
+    $fileContent = file_get_contents('php://input');
+    $fileName = md5(uniqid()) . '.png'; // You can modify the filename as needed
+    $filePath = $this->getParameter('upload_directory') . '/' . $fileName;
+
+    file_put_contents($filePath, $fileContent);
+
+    return new Response($fileName, Response::HTTP_OK);
+}
+
+
     #[Route('/', name: 'main')]
     public function main(FormationRepository $repo,UserRepository $repoU): Response
     {

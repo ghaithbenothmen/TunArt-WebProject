@@ -135,7 +135,7 @@ public function register(
             return $this->redirectToRoute('login');
         }
 
-        return $this->render('user/register.html.twig', [
+        return $this->render('app/register.html.twig', [
             'registration_form' => $form->createView(),
         ]);
     }

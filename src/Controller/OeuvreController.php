@@ -239,6 +239,57 @@ public function generateOeuvreQrCode(int $id): Response
         'qrCodeImage' => $qrCodeImage,
     ]);
 }
+#[Route('/oeuvre/qrcode/{id}', name: 'oeuvre_qrcodee')]
+public function generateOeuvreQrCodee(int $id): Response
+{
+    $oeuvre = $this->getDoctrine()->getRepository(Oeuvre::class)->find($id);
+    
+    if (!$oeuvre) {
+        throw $this->createNotFoundException('Oeuvre introuvable');
+    }
+    
+    $qrCodeContent = sprintf(
+        "Nom de l'oeuvre : %s\nType de l'oeuvre : %s\nDescription : %s\nDate de publication : %s\nNote : %d\nArtiste : %s\nImage : %s",
+        $oeuvre->getNomOeuvre(),
+        $oeuvre->getTypeOeuvre(),
+        $oeuvre->getDescription(),
+        $oeuvre->getDatePublication()->format('Y-m-d'), // Format the date as needed
+        $oeuvre->getNote(),
+        $oeuvre->getArtisteId()->getNom(),
+        $this->getParameter('kernel.project_dir') . '/public/uploads/' . $oeuvre->getImg(),
+        // Adjust the path to match the location of your images
+    );
+    
+    // Create the QR code with the content
+    $qrCode = QrCode::create($qrCodeContent)
+        ->setEncoding(new Encoding('UTF-8'))
+        ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
+        ->setSize(300) // Taille du QR code
+        ->setMargin(10) // Marge autour du QR code
+        ->setForegroundColor(new Color(0, 0, 0)) // Couleur du QR code
+        ->setBackgroundColor(new Color(255, 255, 255)); // Couleur de fond du QR code
+
+    // Optionally, you can add a logo to the QR code
+    // $logo = Logo::create('path_to_your_logo.png')->setResizeToWidth(60);
+
+    // Create a label for the QR code
+    $label = Label::create('')
+        ->setFont(new NotoSans(12)); // Police de caractères de l'étiquette
+
+    // Generate the QR code image with the logo and label
+    $writer = new PngWriter();
+    $qrCodeImage = $writer->write(
+        $qrCode,
+        null,
+        $label->setText('Scanner ici!!') // Texte de l'étiquette
+    )->getDataUri(); // Obtenir les données de l'image au format URI
+
+    // Pass the QR code image data to the Twig template for display
+    return $this->render('oeuvre/qrcode.html.twig', [
+        'qrCodeImage' => $qrCodeImage,
+    ]);
+}
+
 
 
 #[Route('/filterByType', name: 'app_filter_oeuvre_by_type')]

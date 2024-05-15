@@ -105,26 +105,31 @@
 				<img src="{{ asset('logopng.png')}}" alt="IMG">
 			</div>
 
-			<form class="login100-form validate-form">
+			<div class="login100-form validate-form">
+			 
 				<span class="login100-form-title">
 					Créer votre compte
 				</span>
+				{{ form_start(registration_form) }}
 				<div class="wrap-input100 validate-input">
-					<input class="input100" type="text" name="nom" placeholder="Nom">
-					<span class="focus-input100"></span>
-					<span class="symbol-input100">
+		<span class="symbol-input100">
 						<i class="fa fa-user" aria-hidden="true"></i>
 					</span>
+					<span class="focus-input100"></span>
+					 {{ form_row(registration_form.nom, {'attr': {'class': 'input100', 'placeholder': 'Nom','type':'text'}}) }}
+				
+				
 				</div>
 				<div class="wrap-input100 validate-input">
-					<input class="input100" type="text" name="prenom" placeholder="Prenom">
-					<span class="focus-input100"></span>
-					<span class="symbol-input100">
+				<span class="symbol-input100">
 						<i class="fa fa-user" aria-hidden="true"></i>
 					</span>
+					<span class="focus-input100"></span>
+					{{ form_row(registration_form.prenom, {'attr': {'class': 'input100', 'placeholder': 'Prenom','type':'text'}}) }}
 				</div>
 				<div class="wrap-input100 validate-input" data-validate="Valid email est obligé: ex@abc.xyz">
-					<input class="input100" type="text" name="email" placeholder="Email">
+					
+					{{ form_row(registration_form.email, {'attr': {'class': 'input100', 'placeholder': 'Emai','type':'text'}}) }}
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-envelope" aria-hidden="true"></i>
@@ -132,7 +137,8 @@
 				</div>
 
 				<div class="wrap-input100 validate-input" data-validate="Mot de passe est obligé">
-					<input class="input100" type="password" name="pass" placeholder="Mot de passe">
+					
+					{{ form_row(registration_form.mdp, {'attr': {'class': 'input100', 'placeholder': 'Mot De Passe','type':'password'}}) }}
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-lock" aria-hidden="true"></i>
@@ -140,14 +146,22 @@
 				</div>
 
 <div class="wrap-input100 validate-input">
-    <input class="input100" type="tel" name="phone" placeholder="Numéro de téléphone">
+    
+	{{ form_row(registration_form.tel, {'attr': {'class': 'input100', 'placeholder': 'Numéro de téléphone','type':'text'}}) }}
     <span class="focus-input100"></span>
     <span class="symbol-input100">
         <i class="fa fa-phone" aria-hidden="true"></i>
     </span>
 </div>
-
 <div class="wrap-input100 validate-input">
+    {{ form_widget(registration_form.roles, { 'attr': {'class': 'input100'} }) }}
+    <span class="focus-input100"></span>
+    <span class="symbol-input100">
+        <i class="fa fa-user" aria-hidden="true"></i>
+    </span>
+</div>
+
+{# <div class="wrap-input100 validate-input">
     <select class="input100" name="role">
         <option value="artiste">Artiste</option>
         <option value="client">Client</option>
@@ -156,21 +170,23 @@
     <span class="symbol-input100">
         <i class="fa fa-user" aria-hidden="true"></i>
     </span>
-</div>
+</div> #}
 <div class="wrap-input100 validate-input">
-    <label for="photo" class="input-label">Photo</label>
+  
     <div class="custom-file">
-        <input type="file" class="custom-file-input" id="photo" name="photo" accept="image/*">
-        <label class="custom-file-label" for="photo">Choisir fichier</label>
+	 {{ form_row(registration_form.image, {'attr': {'class': 'custom-file-input'}}) }}
+       <label class="custom-file-label" for="photo">Choisir fichier</label>
     </div>
 </div>
 
 
+
 				<div class="container-login100-form-btn">
-					<button class="login100-form-btn">
+					<button type="submit" class="login100-form-btn">
 						S'inscrire
 					</button>
 				</div>
+				{{ form_end(registration_form) }}
 
 				<div class="text-center p-t-12">
 
@@ -185,6 +201,7 @@
 						<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
 					</a>
 				</div>
+				  
 			</form>
 		</div>
 	</div>

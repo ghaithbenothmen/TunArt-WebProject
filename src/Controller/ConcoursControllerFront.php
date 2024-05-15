@@ -25,28 +25,24 @@ class ConcoursControllerFront extends AbstractController
     public function index(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
         //all concours
-
-        $pagination = $paginator->paginate(
-            $concoursRepository->findNonOutdated(), 
-            $request->query->getInt('page', 1), 
-            5
-        );
-
-        return $this->render('concoursfront/indexfront.html.twig', [
-            'pagination' => $pagination,
-        ]);
+ 
 
         //Concours not outdated
 
         $query = $request->query->get('query');
         
-        $queryBuilder = $concoursRepository->createQueryBuilder('a');
+
         if ($query) {
+            $currentDate = new DateTime();
+            $queryBuilder = $concoursRepository->createQueryBuilder('a');
             $queryBuilder->andWhere('a.nom LIKE :query')
-                ->setParameter('query', '%'.$query.'%');
-               
+                        ->andWhere('a.date > :someValue')
+                        ->setParameter('query', '%'.$query.'%')
+                        ->setParameter('someValue', $currentDate);
+            $concours = $queryBuilder->getQuery()->getResult();
         }
-        $concours = $queryBuilder->getQuery()->getResult();
+        else
+        $concours = $concoursRepository->findNonOutdated();
         return $this->render('concoursfront/indexfront.html.twig', [
             'concours' => $concours,
         ]);
