@@ -202,7 +202,7 @@
                         </li>
                         <li class="nav-item d-none d-md-block">
                             <a class="nav-link" href="javascript:void(0)">
-                                <div class="customize-input">
+                                <div class="customize-input">   
                                     <select
                                         class="custom-select form-control bg-white custom-radius custom-shadow border-0">
                                         <option selected>EN</option>
@@ -310,7 +310,26 @@
                         </li>
                         <li class="sidebar-item"> <a class="sidebar-link" 
                                 aria-expanded="false"><i data-feather="grid" class="feather-icon"></i><span
-                                    class="hide-menu">Liste des commentaires</span></a></li>
+                                    class="hide-menu">Liste des commentaires</span></a>
+                        </li>
+                                                <li class="sidebar-item"> <a class="sidebar-link has-arrow" href="javascript:void(0)"
+                                aria-expanded="false"><i data-feather="grid" class="feather-icon"></i><span
+                                    class="hide-menu">Concours </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level base-level-line">
+                                <li class="sidebar-item"><a href="{{path('app_concours_index')}}" class="sidebar-link"><span
+                                            class="hide-menu"> Liste des concours
+                                        </span></a>
+                                </li>
+                                <li class="sidebar-item"><a href="{{ path('app_candidature_index') }}" class="sidebar-link"><span
+                                        class="hide-menu"> Liste des candidatures
+                                        </span></a>
+                                </li>
+                                        <li class="sidebar-item"><a href="{{ path('app_vote_index') }}" class="sidebar-link"><span
+                                        class="hide-menu"> Liste des Votes
+                                        </span></a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="sidebar-item"> <a class="sidebar-link" href="{{path('app_admin_stats_user_statut')}}"
                                 aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
                                     class="hide-menu">Statistiques
@@ -443,14 +462,9 @@
                         <li class="list-divider"></li>
                         <li class="nav-small-cap"><span class="hide-menu">Authentication</span></li>
 
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="authentication-login1.html"
-                                aria-expanded="false"><i data-feather="lock" class="feather-icon"></i><span
-                                    class="hide-menu">Login
-                                </span></a>
-                        </li>
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link"
-                                href="authentication-register1.html" aria-expanded="false"><i data-feather="lock"
-                                    class="feather-icon"></i><span class="hide-menu">Register
+                         <li class="sidebar-item"> <a class="sidebar-link sidebar-link"
+                                href="{{ path('app_logout') }}" aria-expanded="false"><i data-feather="lock"
+                                    class="feather-icon"></i><span class="hide-menu">Logout
                                 </span></a>
                         </li>
 
@@ -506,9 +520,7 @@
                         <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="docs/docs.html"
                                 aria-expanded="false"><i data-feather="edit-3" class="feather-icon"></i><span
                                     class="hide-menu">Documentation</span></a></li>
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="authentication-login1.html"
-                                aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span
-                                    class="hide-menu">Logout</span></a></li>
+
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->

@@ -23,6 +23,14 @@ class VoteController extends AbstractController
         ]);
     }
 
+    #[Route('/', name: 'app_concours_index_artiste', methods: ['GET'])]
+    public function indexArtiste(RepositoryVoteRepository $voteRepository): Response
+    {
+        return $this->render('vote/index.html.twig', [
+            'votes' => $voteRepository->findAll(),
+        ]);
+    }
+
     #[Route('/new', name: 'app_vote_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
