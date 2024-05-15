@@ -24,11 +24,6 @@ class ConcoursControllerFront extends AbstractController
     #[Route('/', name: 'app_concoursfront_index', methods: ['GET'])]
     public function index(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
-        //all concours
- 
-
-        //Concours not outdated
-
         $query = $request->query->get('query');
         
 
