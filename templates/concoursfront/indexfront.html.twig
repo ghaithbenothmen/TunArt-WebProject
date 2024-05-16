@@ -34,7 +34,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Refrence</th>
                 <th>Nom</th>
                 <th>Date</th>
                 <th>Type</th>
@@ -47,7 +46,6 @@
         <tbody>
             {% for concour in concours %}
             <tr>
-                <td>{{ concour.refrence }}</td>
                 <td>{{ concour.nom }}</td>
                 <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
                 <td>{{ concour.type }}</td>

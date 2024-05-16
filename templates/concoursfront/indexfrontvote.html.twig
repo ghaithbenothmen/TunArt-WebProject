@@ -34,7 +34,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Refrence</th>
                 <th>Nom</th>
                 <th>Date</th>
                 <th>Type</th>
@@ -45,9 +44,8 @@
             </tr>
         </thead>
         <tbody>
-            {% for concour in pagination %}
+            {% for concour in concours %}
             <tr>
-                <td>{{ concour.refrence }}</td>
                 <td>{{ concour.nom }}</td>
                 <td>{{ concour.date ? concour.date|date('Y-m-d') : '' }}</td>
                 <td>{{ concour.type }}</td>
@@ -67,8 +65,8 @@
     </table>
 
     {# Pagination (if needed) #}
-    <div class="pagination">
+    {#<div class="pagination">
         {{ knp_pagination_render(pagination) }}
-    </div>
+    </div>#}
 </div>
 {% endblock %}

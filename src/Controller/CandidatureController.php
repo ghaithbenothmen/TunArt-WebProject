@@ -23,6 +23,14 @@ class CandidatureController extends AbstractController
         ]);
     }
 
+    #[Route('/List', name: 'app_candidature_index_artiste', methods: ['GET'])]
+    public function indexArtiste(CandidatureRepository $candidatureRepository): Response
+    {
+        return $this->render('candidature/indexArtiste.html.twig', [
+            'candidatures' => $candidatureRepository->findAll(),
+        ]);
+    }
+
     #[Route('/new', name: 'app_candidature_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

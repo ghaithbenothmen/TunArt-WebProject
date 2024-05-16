@@ -32,6 +32,22 @@ class ConcoursController extends AbstractController
 
     }
 
+    #[Route('/List', name: 'app_concours_index_artiste', methods: ['GET'])]
+    public function indexArtiste(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
+    {
+
+        $pagination = $paginator->paginate(
+            $concoursRepository->findAll(), 
+            $request->query->getInt('page', 1), 
+            5
+        );
+
+        return $this->render('concours/indexArtiste.html.twig', [
+            'pagination' => $pagination,
+        ]);
+
+    }
+
     #[Route('/new', name: 'app_concours_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

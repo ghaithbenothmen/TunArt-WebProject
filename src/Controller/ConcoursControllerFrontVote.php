@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/concoursfrontvote')]
 class ConcoursControllerFrontVote  extends AbstractController
@@ -28,7 +29,7 @@ class ConcoursControllerFrontVote  extends AbstractController
     public function index(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
         //all concours
-
+        /*
         $pagination = $paginator->paginate(
             $concoursRepository->findNonOutdated(), 
             $request->query->getInt('page', 1), 
@@ -52,16 +53,34 @@ class ConcoursControllerFrontVote  extends AbstractController
         return $this->render('concoursfront/indexfrontvote.html.twig', [
             'concours' => $concours,
         ]);
+        */
+        $query = $request->query->get('query');
+        
 
+        if ($query) {
+            $currentDate = new DateTime();
+            $queryBuilder = $concoursRepository->createQueryBuilder('a');
+            $queryBuilder->andWhere('a.nom LIKE :query')
+                        ->andWhere('a.date > :someValue')
+                        ->setParameter('query', '%'.$query.'%')
+                        ->setParameter('someValue', $currentDate);
+            $concours = $queryBuilder->getQuery()->getResult();
+        }
+        else
+        $concours = $concoursRepository->findNonOutdated();
+        return $this->render('concoursfront/indexfrontvote.html.twig', [
+            'concours' => $concours,
+        ]);
     }
 
 
     #[Route('/{refrence}', name: 'app_concoursfront_vote', methods: ['GET'])]
     public function participate(Request $request,Concours $concour,ConcoursRepository $concoursRepository,MailerInterface $mailer, EntityManagerInterface $entityManager,UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
-        $user = new User();
-        $user = $userRepository->findOneBySomeField(39);
-        echo $user->getId();
+        $user = $this->getUser();
+        if (!$user instanceof UserInterface) {
+            return $this->render('concoursfront/popup.html.twig');
+        }
         $currentDate = new DateTime();
         $vote = new Vote($currentDate,$user,$concour);
         $vote->setIdConcours($concour);

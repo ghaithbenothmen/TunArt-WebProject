@@ -24,11 +24,6 @@ class ConcoursControllerFront extends AbstractController
     #[Route('/', name: 'app_concoursfront_index', methods: ['GET'])]
     public function index(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
-        //all concours
- 
-
-        //Concours not outdated
-
         $query = $request->query->get('query');
         
 
@@ -90,6 +85,7 @@ class ConcoursControllerFront extends AbstractController
             $mailer->send($message);
         }
 
+        /*
         $pagination = $paginator->paginate(
             $concoursRepository->findNonOutdated(), 
             $request->query->getInt('page', 1), 
@@ -99,7 +95,12 @@ class ConcoursControllerFront extends AbstractController
         return $this->render('concoursfront/indexfront.html.twig', [
             'pagination' => $pagination,
         ]);
+        */
 
+        $concours = $concoursRepository->findNonOutdated();
+        return $this->render('concoursfront/indexfront.html.twig', [
+            'concours' => $concours,
+        ]);
     }
 
     private function checkCandidature(int $idConcours, int $idUser): bool
