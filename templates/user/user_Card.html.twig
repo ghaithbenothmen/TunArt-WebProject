@@ -1,6 +1,6 @@
 {# templates/user/user_Card.html.twig #}
 
-{% extends 'base.html.twig' %}
+{% extends 'artiste-dash.html.twig' %}
 
 {% block title %}Update User{% endblock %}
 
@@ -31,6 +31,7 @@
         hr {
             border-color: #ddd;
         }
+      
     </style>
 {% endblock %}
 
@@ -41,7 +42,7 @@
             <div class="col-md-6 text-center">
                 <h3 class="mb-3">User Image</h3>
                 {% if user.image is not null %}
-                    <img src="{{ asset('uploads/images/' ~ user.image) }}" alt="User Image" class="user-image">
+                    <img src="{{ asset('uploads/' ~ user.image) }}" style='width:400px' alt="User Image" class="user-image">
                 {% else %}
                     <p>No image available</p>
                 {% endif %}

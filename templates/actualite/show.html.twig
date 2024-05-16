@@ -26,7 +26,7 @@
             <tr>
                 <th>Image</th>
                                 <td> {% if actualite.image %}
-                    <img src="{{ asset('imageAct/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 250px; max-height: 250px;">
+                    <img src="{{ asset('uploads/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 250px; max-height: 250px;">
                         {% else %}
                             Pas d'image
                         {% endif %}</td>

@@ -5,11 +5,11 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     upload_directory: '%kernel.project_dir%/public/uploads'
-    user_directory: '%kernel.project_dir%/public/uploads/users'
+    user_directory: '%kernel.project_dir%/public/uploads'
     
 
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
-    app.path.actualite_images: '%kernel.project_dir%/public/imageAct'
+    app.path.actualite_images: '%kernel.project_dir%/public/uploads'
     #images_directory: '%kernel.project_dir%/public/imgAct'
     app.forbidden_words: ['word1','word2', 'word3','esprit']
 

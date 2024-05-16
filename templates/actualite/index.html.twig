@@ -101,7 +101,7 @@
                 <td>{{ actualite.date ? actualite.date|date('Y-m-d') : '' }}</td>
                 <td>{{ actualite.liked }}</td>
                 <td> {% if actualite.image %}
-                    <img src="{{ asset('imageAct/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 100px; max-height: 100px;">
+                    <img src="{{ asset('uploads/' ~ actualite.image) }}" alt="Image du actualite" style="max-width: 100px; max-height: 100px;">
                         {% else %}
                             Pas d'image
                         {% endif %}</td>
