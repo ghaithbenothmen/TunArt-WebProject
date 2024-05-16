@@ -7,10 +7,10 @@
         <h1>Concours</h1>
         <div class="customize-input">
             <input class="form-control custom-shadow custom-radius border-0 bg-white"
-                type="text" placeholder="Recherche" aria-label="Search" id="query" name="query">
-                <button type="submit" class="btn btn-primary">Rechercher</button>
+                type="text" placeholder="Recherche" aria-label="Search" id="searchInput" name="query">
+            <button type="submit" class="btn btn-primary" onclick="filterTable()">Rechercher</button>
         </div>
-        <table class="table">
+        <table class="table" id="zero_config">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Refrence</th>
@@ -38,8 +38,8 @@
                         <td>{{ concour.Maxparticipant }}</td>
                         <td>{{ concour.Nvote }}</td>
                         <td>
-                            <a href="{{ path('app_concours_show', {'refrence': concour.refrence}) }}" class="btn btn-primary">Show</a>
-                            <a href="{{ path('app_concours_edit', {'refrence': concour.refrence}) }}" class="btn btn-secondary">Edit</a>
+                            <a href="{{ path('app_concours_show', {'refrence': concour.refrence}) }}" class="btn btn-primary">Details</a>
+                            <a href="{{ path('app_concours_edit', {'refrence': concour.refrence}) }}" class="btn btn-secondary">Modifier</a>
                         </td>
                     </tr>
                 {% else %}
@@ -57,22 +57,25 @@
         <a href="{{ path('app_concours_new') }}" class="btn btn-success">Create New</a>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function filterTable() {
+            var query = $('#searchInput').val().toLowerCase().trim();
 
-		$(document).ready(function () {
-$('#searchInput').keyup(function () {
-var query = $(this).val().toLowerCase().trim();
+            $('#zero_config tbody tr').each(function () {
+                var currentText = $(this).find('td:nth-child(2)').text().toLowerCase().trim();
+                if (currentText.includes(query)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
 
-// Filtre le tableau des catégories en fonction de la requête de recherche
-$('#zero_config tbody tr').each(function () {
-var currentText = $(this).find('td:nth-child(2)').text().toLowerCase().trim();
-if (currentText.includes(query)) {
-$(this).show();
-} else {
-$(this).hide();
-}
-});
-});
-});
+        $(document).ready(function () {
+            $('#searchInput').on('keyup', function () {
+                filterTable();
+            });
+        });
     </script>
 {% endblock %}

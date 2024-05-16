@@ -32,7 +32,7 @@ class ConcoursController extends AbstractController
 
     }
 
-    #[Route('/Artiste', name: 'app_concours_index_artiste', methods: ['GET'])]
+    #[Route('/List', name: 'app_concours_index_artiste', methods: ['GET'])]
     public function indexArtiste(Request $request,ConcoursRepository $concoursRepository, PaginatorInterface $paginator): Response
     {
 

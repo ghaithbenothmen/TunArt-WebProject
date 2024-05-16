@@ -23,10 +23,10 @@ class CandidatureController extends AbstractController
         ]);
     }
 
-    #[Route('/', name: 'app_candidature_index_artiste', methods: ['GET'])]
+    #[Route('/List', name: 'app_candidature_index_artiste', methods: ['GET'])]
     public function indexArtiste(CandidatureRepository $candidatureRepository): Response
     {
-        return $this->render('candidature/index.html.twig', [
+        return $this->render('candidature/indexArtiste.html.twig', [
             'candidatures' => $candidatureRepository->findAll(),
         ]);
     }
